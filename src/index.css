@@ -1,2 +1,16 @@
-
 @import "tailwindcss";
+
+@font-face {
+  font-family: "kbo_bold";
+  src: url("../assets/fonts/KBO-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "kbo_regular";
+  src: url("../assets/fonts/KBO-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "kbo_light";
+  src: url("../assets/fonts/KBO-Light.woff") format("woff");
+}
