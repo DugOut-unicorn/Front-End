@@ -275,7 +275,7 @@ const LoginPage = () => {
           className="rounded-full w-40 h-40 mb-6"
         />
         <h1 className="text-xl font-bold mb-20">
-          DUGOUT에 오신 것을 환영합니다!!
+          DUGOUT에 오신 것을 환영합니다!!!
         </h1>
         <p className="text-gray-500 mb-6">
           SNS 계정으로 간편하게 로그인하세요
