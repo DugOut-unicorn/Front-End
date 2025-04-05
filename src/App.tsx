@@ -24,6 +24,10 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
+        path: 'login/:id',
+        element: <LoginPage />,
+      },
+      {
         path:'matching',
         element: <MatchingPage />,
       },
