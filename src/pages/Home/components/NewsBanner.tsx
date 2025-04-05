@@ -16,7 +16,7 @@ export default function NewsBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   return (
-    <section className="relative h-[400px] w-full overflow-hidden">
+    <section className="relative h-[400px] w-full overflow-hidden pb-16">
       {/* 배경 이미지 */}
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat blur-sm">
         <img
@@ -58,7 +58,7 @@ export default function NewsBanner() {
       </div>
 
       {/* 슬라이드 인디케이터 (배너 하단 중앙 배치) */}
-      <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2">
+      <div className="absolute bottom-12 left-1/2 flex -translate-x-1/2 items-center gap-2">
         {[...Array(10)].map((_, index) => (
           <button
             key={index}

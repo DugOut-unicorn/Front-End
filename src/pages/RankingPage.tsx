@@ -1,5 +1,3 @@
-import Layout from "../components/layout/Layout";
-
 export default function RankingPage() {
   return (
     <div>
