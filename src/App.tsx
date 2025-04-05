@@ -1,18 +1,46 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import { BrowserRouter, Routes, Route, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
 import MatchingPage from "./pages/MatchingPage";
 import RankingPage from "./pages/RankingPage";
 import SchedulePage from "./pages/SchedulePage";
+import LoginPage from "./pages/Login/LoginPage";
+import Layout from "./components/layout/Layout";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    errorElement: <NotFoundPage/>,
+    children:[
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path:'matching',
+        element: <MatchingPage />,
+      },
+      {
+        path:'schedule',
+        element: <SchedulePage />,
+      },
+      {
+        path:`ranking`,
+        element: <RankingPage />,
+      }
+    ]
+  },
+])
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/matching" element={<MatchingPage />} />
-        <Route path="/schedule" element={<SchedulePage />} />
-        <Route path="/ranking" element={<RankingPage />} />
-      </Routes>
-    </BrowserRouter>
+    <RouterProvider router={router} />
   );
 }
