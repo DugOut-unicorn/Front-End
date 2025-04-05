@@ -56,12 +56,12 @@ const Header = () => {
               />
             </>
           ) : (
-            <a
+            <Link
+              to="/login"
               className="text-xs no-underline hover:text-[#007bff]"
-              onClick={() => setIsLogin(true)}
             >
               로그인
-            </a>
+            </Link>
           )}
         </div>
       </div>
