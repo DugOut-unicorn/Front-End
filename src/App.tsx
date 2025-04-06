@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import MatchingPage from "./pages/MatchingPage";
-import RankingPage from "./pages/RankingPage";
+import RankingPage from "./pages/Ranking/RankingPage";
 import SchedulePage from "./pages/SchedulePage";
 import LoginPage from "./pages/Login/LoginPage";
 import Layout from "./components/layout/Layout";
@@ -13,38 +13,40 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
-    errorElement: <NotFoundPage/>,
-    children:[
+    errorElement: <NotFoundPage />,
+    children: [
       {
         index: true,
         element: <HomePage />,
       },
       {
-        path: 'login',
+        path: "login",
         element: <LoginPage />,
       },
       {
-        path: 'login/:id',
+        path: "login/:id",
         element: <LoginPage />,
       },
       {
-        path:'matching',
+        path: "matching",
         element: <MatchingPage />,
       },
       {
-        path:'schedule',
+        path: "schedule",
         element: <SchedulePage />,
       },
       {
-        path:`ranking`,
+        path: `ranking`,
         element: <RankingPage />,
-      }
-    ]
+      },
+      {
+        path: "ranking/:year",
+        element: <RankingPage />,
+      },
+    ],
   },
-])
+]);
 
 export default function App() {
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
