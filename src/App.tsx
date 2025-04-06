@@ -8,6 +8,7 @@ import RankingPage from "./pages/Ranking/RankingPage";
 import SchedulePage from "./pages/SchedulePage";
 import LoginPage from "./pages/Login/LoginPage";
 import Layout from "./components/layout/Layout";
+import TeamInfoPage from "./pages/TeamInfoPage";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "ranking/:year",
         element: <RankingPage />,
+      },
+      {
+        path: "team/:teamName",
+        element: <TeamInfoPage />,
       },
     ],
   },
