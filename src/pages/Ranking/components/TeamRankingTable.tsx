@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface TeamRankingData {
   rank: number;
@@ -20,6 +21,12 @@ interface TeamRankingTableProps {
 }
 
 export default function TeamRankingTable({ rankings }: TeamRankingTableProps) {
+  const navigate = useNavigate();
+
+  const handleTeamClick = (teamName: string) => {
+    navigate(`/team/${teamName.toLowerCase()}`);
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -46,7 +53,10 @@ export default function TeamRankingTable({ rankings }: TeamRankingTableProps) {
               className="border-b border-gray-200 hover:bg-gray-50"
             >
               <td className="p-3">{team.rank}</td>
-              <td className="flex items-center gap-2 p-3">
+              <td
+                className="flex cursor-pointer items-center gap-2 p-3"
+                onClick={() => handleTeamClick(team.teamName)}
+              >
                 <img
                   src={`/images/${team.teamName.toLowerCase()}_emb.png`}
                   alt={team.teamName}
