@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Header = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <div className="font-kbo_bold w-full pt-2.5 text-black">
@@ -45,9 +45,9 @@ const Header = () => {
                 로그아웃
               </a>
               <p className="text-xs">|</p>
-              <a className="text-xs no-underline hover:text-[#007bff]">
+              <Link to="/Mypage" className="text-xs no-underline hover:text-[#007bff]">
                 마이페이지
-              </a>
+              </Link>
               <p className="text-xs">|</p>
               <img
                 className="h-5 w-5 cursor-pointer"
