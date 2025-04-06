@@ -3,7 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import MatchingPage from "./pages/MatchingPage";
-import RankingPage from "./pages/RankingPage";
+import RankingPage from "./pages/Ranking/RankingPage";
 import SchedulePage from "./pages/SchedulePage";
 import LoginPage from "./pages/Login/LoginPage";
 import Layout from "./components/layout/Layout";
@@ -41,10 +41,6 @@ const router = createBrowserRouter([
         element: <SchedulePage />,
       },
       {
-        path: "ranking",
-        element: <RankingPage />,
-      },
-      {
         path: "mypage",
         element: <MyPage />,
         children: [
@@ -61,6 +57,14 @@ const router = createBrowserRouter([
             element: <ProfileEdit />,
           },
         ],
+      },
+      {
+        path: "ranking",
+        element: <RankingPage />,
+      },
+      {
+        path: "ranking/:year",
+        element: <RankingPage />,
       },
     ],
   },
