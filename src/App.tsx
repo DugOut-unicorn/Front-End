@@ -1,4 +1,3 @@
-// import { BrowserRouter, Routes, Route, createBrowserRouter } from "react-router-dom";
 import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
@@ -8,6 +7,12 @@ import RankingPage from "./pages/Ranking/RankingPage";
 import SchedulePage from "./pages/SchedulePage";
 import LoginPage from "./pages/Login/LoginPage";
 import Layout from "./components/layout/Layout";
+
+// Profile 관련 컴포넌트
+import MyPage from "./pages/Profile/MyPage"; // 공통 레이아웃 (사이드바 + Outlet)
+import MyInfo from "./pages/Profile/components/MyInfo";
+import Info from "./pages/Profile/components/Info";
+import ProfileEdit from "./pages/Profile/components/ProfileEdit";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +41,25 @@ const router = createBrowserRouter([
         element: <SchedulePage />,
       },
       {
-        path: `ranking`,
+        path: "mypage",
+        element: <MyPage />,
+        children: [
+          {
+            index: true, // 기본 자식 라우트로 MyInfo를 표시
+            element: <Info />,
+          },
+          {
+            path: "info",
+            element: <MyInfo />,
+          },
+          {
+            path: "edit",
+            element: <ProfileEdit />,
+          },
+        ],
+      },
+      {
+        path: "ranking",
         element: <RankingPage />,
       },
       {
