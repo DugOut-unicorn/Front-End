@@ -15,6 +15,7 @@ import MyPage from "./pages/Profile/MyPage"; // 공통 레이아웃 (사이드�
 import Info from "./pages/Profile/components/Info";
 import ProfileEdit from "./pages/Profile/components/ProfileEdit";
 import PlayerProfilePage from "./pages/playerProfile/PlayerProfilePage";
+import MatchingWritePage from "./pages/MatchingWrite/MatchingWritePage";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: "matching",
-        element: <MatchingPage />,
+        element: <MatchingWritePage />,
       },
       {
         path: "schedule",
