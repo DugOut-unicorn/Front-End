@@ -14,6 +14,7 @@ import Profile from "./pages/Profile/components/Profile";
 import MyPage from "./pages/Profile/MyPage"; // 공통 레이아웃 (사이드바 + Outlet)
 import Info from "./pages/Profile/components/Info";
 import ProfileEdit from "./pages/Profile/components/ProfileEdit";
+import PlayerProfilePage from "./pages/playerProfile/PlayerProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
         path: "team/:teamName",
         element: <TeamInfoPage />,
       },
+      {
+        path: "playerprofile/:playerId",
+        element: <PlayerProfilePage />,
+      }
     ],
   },
 ]);
