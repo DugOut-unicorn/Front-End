@@ -3,7 +3,7 @@ import NewMatchingList from "./components/NewMatchingList";
 import NewsBanner from "./components/NewsBanner";
 import PlayingGame from "./components/PlayingGame";
 import TeamSection from "./components/TeamSection";
-import Weather from "./components/Weather";
+import MapWeatherContainer from "./container/MapWeatherContainer";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       <TeamSection />
       <LastResult />
       <NewMatchingList />
-      <Weather />
+      <MapWeatherContainer />
     </>
   );
 }
