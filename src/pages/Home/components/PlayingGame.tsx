@@ -19,7 +19,7 @@ export default function PlayingGame() {
             <div className="flex items-center gap-2">
               <span className="text-lg font-semibold">두산</span>
               <img
-                src="/images/dusan_emb.png"
+                src="/images/doosan_emb.png"
                 alt="두산"
                 className="h-12 w-12"
               />
@@ -43,7 +43,7 @@ export default function PlayingGame() {
             <div className="flex items-center gap-2">
               <span className="text-lg font-semibold">두산</span>
               <img
-                src="/images/dusan_emb.png"
+                src="/images/doosan_emb.png"
                 alt="두산"
                 className="h-12 w-12"
               />
@@ -67,7 +67,7 @@ export default function PlayingGame() {
             <div className="flex items-center gap-2">
               <span className="text-lg font-semibold">두산</span>
               <img
-                src="/images/dusan_emb.png"
+                src="/images/doosan_emb.png"
                 alt="두산"
                 className="h-12 w-12"
               />
