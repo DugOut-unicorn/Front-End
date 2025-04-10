@@ -4,7 +4,7 @@ const data = [
     { season: '2023', era: '3.28', whip: '1.33', war: '4.21', qs: 18, g: 30, w: 11, l: 10, sv: 0, hld: 0, ip: '170 1/3', so: 147 },
     { season: '2022', era: '3.62', whip: '1.20', war: '3.69', qs: 18, g: 31, w: 12, l: 12, sv: 0, hld: 0, ip: '186 1/3', so: 160 },
   ];
-  
+  //const data 부분 수정 필요 -> 데이터 추가해야 됨
   export default function CareerStatsTable() {
     return (
       <div className="relative overflow-x-auto">

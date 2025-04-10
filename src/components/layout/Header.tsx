@@ -1,10 +1,12 @@
 import Logo from "../../assets/main_logo.png";
 import Notification from "../../assets/notification_icon.png";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const location = useLocation();
+  const isMatchingPage = location.pathname.startsWith("/matching");
 
   return (
     <div className="font-kbo_bold w-full pt-2.5 text-black">
@@ -39,7 +41,7 @@ const Header = () => {
           {isLogin ? (
             <>
               <a
-                className="text-xs no-underline hover:text-[#007bff]"
+                className="text-xs no-underline hover:text-[#007bff] cursor-pointer"
                 onClick={() => setIsLogin(false)}
               >
                 로그아웃
@@ -65,6 +67,21 @@ const Header = () => {
           )}
         </div>
       </div>
+
+    {/* 하위 탭: 매칭 관련 서브메뉴 */}
+    {isMatchingPage && (
+      <div className="border-t border-b border-gray-200">
+        <div className="mx-auto max-w-[780px] flex gap-4 text-sm px-4 py-2">
+          <Link to="/matching/articles" className="hover:underline">
+            직관 매칭글
+          </Link>
+          <Link to="/matching/chats" className="hover:underline">
+            채팅방 목록
+          </Link>
+        </div>
+      </div>
+    )}
+
     </div>
   );
 };
