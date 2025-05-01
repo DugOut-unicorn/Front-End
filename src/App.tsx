@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import MatchingPage from "./pages/Matching/MatchingPage";
 import RankingPage from "./pages/Ranking/RankingPage";
 import SchedulePage from "./pages/SchedulePage";
 import LoginPage from "./pages/Login/LoginPage";
@@ -14,10 +13,10 @@ import MyPage from "./pages/Profile/MyPage"; // 공통 레이아웃 (사이드�
 import Info from "./pages/Profile/components/Info";
 import ProfileEdit from "./pages/Profile/components/ProfileEdit";
 import PlayerProfilePage from "./pages/playerProfile/PlayerProfilePage";
-import MatchingWritePage from "./pages/Matching/MatchingWrite";
-import MatchingList from "./pages/Matching/MatchingList";
-import MatchingGameList from "./pages/Matching/MatchingGameList";
-import MatchingArticle from "./pages/Matching/MatchingArticle";
+import MatchingWritePage from "./pages/Matching/MatchingWritePage";
+import MatchingListPage from "./pages/Matching/MatchingListPage";
+import MatchingGameListPage from "./pages/Matching/MatchingGameListPage";
+import MatchingArticlePage from "./pages/Matching/MatchingArticlePage";
 
 const router = createBrowserRouter([
   {
@@ -25,24 +24,21 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <NotFoundPage />,
     children: [
-
-      { index: true,
-        element: <HomePage /> 
-      },
+      { index: true, element: <HomePage /> },
       {
         path: "matching",
-        element: <MatchingGameList />,
+        element: <MatchingGameListPage />,
         children: [
           {
             index: true, // 기본 자식 라우트로 MatchingGameList를 표시
             path: "gamelist/:date",
-            element: <MatchingGameList />,
+            element: <MatchingGameListPage />,
           },
         ],
       },
       {
         path: "article/:id",
-        element: <MatchingArticle />,
+        element: <MatchingArticlePage />,
       },
       {
         path: "write",
@@ -50,15 +46,15 @@ const router = createBrowserRouter([
       },
       {
         path: "list/:date/:team",
-        element: <MatchingList />,
+        element: <MatchingListPage />,
       },
       {
         path: "schedule",
         element: <SchedulePage />,
       },
-      { path: "login",     element: <LoginPage /> },      // SNS 기본
-      { path: "login/:id", element: <LoginPage /> },      // 예전 경로(필요하면 유지)
-      { path: "signup/:id", element: <LoginPage /> },     // ★ 새로 추가 ★
+      { path: "login", element: <LoginPage /> }, // SNS 기본
+      { path: "login/:id", element: <LoginPage /> }, // 예전 경로(필요하면 유지)
+      { path: "signup/:id", element: <LoginPage /> }, // ★ 새로 추가 ★
       {
         path: "mypage",
         element: <MyPage />,
@@ -77,18 +73,10 @@ const router = createBrowserRouter([
           },
         ],
       },
-      { path: "ranking",
-        element: <RankingPage /> 
-      },
-      { path: "ranking/:year",
-        element: <RankingPage />
-      },
-      { path: "team/:teamName",
-        element: <TeamInfoPage /> 
-      },
-      { path: "playerprofile/:playerId",
-        element: <PlayerProfilePage /> 
-      },
+      { path: "ranking", element: <RankingPage /> },
+      { path: "ranking/:year", element: <RankingPage /> },
+      { path: "team/:teamName", element: <TeamInfoPage /> },
+      { path: "playerprofile/:playerId", element: <PlayerProfilePage /> },
     ],
   },
 ]);
