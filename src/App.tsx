@@ -25,17 +25,9 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <NotFoundPage />,
     children: [
-      {
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: "login",
-        element: <LoginPage />,
-      },
-      {
-        path: "login/:id",
-        element: <LoginPage />,
+
+      { index: true,
+        element: <HomePage /> 
       },
       {
         path: "matching",
@@ -64,6 +56,9 @@ const router = createBrowserRouter([
         path: "schedule",
         element: <SchedulePage />,
       },
+      { path: "login",     element: <LoginPage /> },      // SNS 기본
+      { path: "login/:id", element: <LoginPage /> },      // 예전 경로(필요하면 유지)
+      { path: "signup/:id", element: <LoginPage /> },     // ★ 새로 추가 ★
       {
         path: "mypage",
         element: <MyPage />,
@@ -82,21 +77,17 @@ const router = createBrowserRouter([
           },
         ],
       },
-      {
-        path: "ranking",
-        element: <RankingPage />,
+      { path: "ranking",
+        element: <RankingPage /> 
       },
-      {
-        path: "ranking/:year",
-        element: <RankingPage />,
+      { path: "ranking/:year",
+        element: <RankingPage />
       },
-      {
-        path: "team/:teamName",
-        element: <TeamInfoPage />,
+      { path: "team/:teamName",
+        element: <TeamInfoPage /> 
       },
-      {
-        path: "playerprofile/:playerId",
-        element: <PlayerProfilePage />,
+      { path: "playerprofile/:playerId",
+        element: <PlayerProfilePage /> 
       },
     ],
   },
