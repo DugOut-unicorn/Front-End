@@ -1,16 +1,225 @@
 @import "tailwindcss";
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
 
-@font-face {
-  font-family: "kbo_bold";
-  src: url("../assets/fonts/KBO-Bold.woff") format("woff");
+@layer base {
+  :root {
+    /* Surface */
+    --surface-1: #ffffff;
+    --surface-2: #f4f4f5; /* zinc-100 */
+    --surface-3: #e4e4e7; /* zinc-200 */
+
+    /* on-surface */
+    --on-surface-default: #18181b; /* zinc-950 */
+    --on-surface-grey1: #3f3f47; /* zinc-700 */
+    --on-surface-grey2: #71717b; /* zinc-500 */
+    --on-surface-disabled: #d4d4d8; /* zinc-300 */
+
+    /* accent 예시 */
+    --accent-default: #e4e4e7; /* zinc-200 */
+    --accent-rose: #ffe4e6; /* rose-100 */
+    --accent-yellow: #fef9c2; /* yellow-100 */
+    --accent-emerald: #d0fae5; /* emerald-100 */
+    --accent-blue: #dbeaff; /* blue-100 */
+
+    /* fill 예시 */
+    --fill-default: #18181b; /* zinc-900 */
+    --fill-grey1: #d4d4d8; /* zinc-300 */
+    --fill-rose: #ff2056; /* rose-500 */
+    --fill-yellow: #ffdf20; /* yellow-300 */
+    --fill-emerald: #00bc7d; /* emerald-500 */
+    --fill-blue: #2b7fff; /* blue-500 */
+
+    /* divider */
+    --divider-dv1: #e4e4e7; /* zinc-200 */
+    --divider-dv2: #3f3f47; /* zinc-700 */
+
+    /* transparent dims */
+    --transparent-dim: rgba(0, 0, 0, 0.7);
+    --transparent-dim1: rgba(0, 0, 0, 0.5);
+    --transparent-dim2: rgba(0, 0, 0, 0.2);
+
+    /* Typography */
+    --text-h1: 24px;
+    --text-h2: 20px;
+    --text-h3: 16px;
+    --text-body1: 14px;
+    --text-body2: 14px;
+    --text-caption: 12px;
+    --text-caption-sb: 12px;
+    --text-button1: 16px;
+    --text-button2: 14px;
+    --text-footnote: 11px;
+
+    @media (min-width: 768px) {
+      --text-h1: 32px;
+      --text-h2: 28px;
+      --text-h3: 18px;
+      --text-body1: 16px;
+      --text-body2: 16px;
+      --text-caption: 14px;
+      --text-caption-sb: 14px;
+      --text-button1: 18px;
+      --text-button2: 16px;
+      --text-footnote: 12px;
+    }
+
+    @media (min-width: 1280px) {
+      --text-h1: 40px;
+      --text-h2: 32px;
+      --text-h3: 20px;
+      --text-body1: 16px;
+      --text-body2: 16px;
+      --text-caption: 14px;
+      --text-caption-sb: 14px;
+      --text-button1: 18px;
+      --text-button2: 16px;
+      --text-footnote: 12px;
+    }
+  }
+
+  /* Dark 모드일 때 :root 변수 재정의 */
+  .dark {
+    --surface-1: #27272a; /* zinc-800 */
+    --surface-2: #18181b; /* zinc-900 */
+    --surface-3: #09090b; /* zinc-950 */
+
+    --on-surface-default: #ffffff; /* zinc-50 */
+    --on-surface-grey1: #71717b; /* zinc-500 */
+    --on-surface-grey2: #52525c; /* zinc-600 */
+    --on-surface-disabled: #3f3f47; /* zinc-700 */
+
+    --accent-default: #52525c; /* zinc-600 */
+    --accent-rose: #4d0218; /* rose-950 */
+    --accent-yellow: #432004; /* yellow-950 */
+    --accent-emerald: #002c22; /* emerald-950 */
+    --accent-blue: #162456; /* blue-950 */
+
+    --fill-default: #18181b; /* zinc-900 */
+    --fill-grey1: #3f3f47; /* zinc-700 */
+    --fill-rose: #ff2056; /* rose-500 */
+    --fill-yellow: #ffdf20; /* yellow-300 */
+    --fill-emerald: #00bc7d; /* emerald-500 */
+    --fill-blue: #2b7fff; /* blue-500 */
+
+    --divider-dv1: #18181b; /* zinc-900 */
+    --divider-dv2: #71717b; /* zinc-500 */
+
+    --transparent-dim: rgba(0, 0, 0, 0.7);
+    --transparent-dim1: rgba(0, 0, 0, 0.5);
+    --transparent-dim2: rgba(0, 0, 0, 0.2);
+  }
 }
 
-@font-face {
-  font-family: "kbo_regular";
-  src: url("../assets/fonts/KBO-Regular.woff") format("woff");
+/* H1 */
+.h1 {
+  font-size: var(--text-h1);
+  font-weight: bold;
 }
 
-@font-face {
-  font-family: "kbo_light";
-  src: url("../assets/fonts/KBO-Light.woff") format("woff");
+/* H2 */
+.h2 {
+  font-size: var(--text-h2);
+  font-weight: 600;
+}
+
+/* H3 */
+.h3 {
+  font-size: var(--text-h3);
+  font-weight: 600;
+}
+
+/* Body1 */
+.body1 {
+  font-size: var(--text-body1);
+  font-weight: 500;
+}
+
+/* Body2 */
+.body2 {
+  font-size: var(--text-body2);
+  font-weight: 500;
+}
+
+/* Caption */
+.caption {
+  font-size: var(--text-caption);
+  font-weight: 500;
+}
+
+/* Caption (Semibold) */
+.caption-sb {
+  font-size: var(--text-caption-sb);
+  font-weight: 600;
+}
+
+/* Button1 */
+.button1 {
+  font-size: var(--text-button1);
+  font-weight: 600;
+}
+
+/* Button2 */
+.button2 {
+  font-size: var(--text-button2);
+  font-weight: 500;
+}
+
+/* Footnote */
+.footnote {
+  font-size: var(--text-footnote);
+  font-weight: 500;
+}
+
+@layer components {
+  /* H1 */
+  .h1 {
+    /* Pretendard-Bold + 모바일(24px) / 태블릿(32px) / 데스크탑(40px) */
+    @apply text-h1 md:text-md\:h1 lg:text-lg\:h1 font-bold;
+  }
+
+  /* H2 */
+  .h2 {
+    @apply text-h2 md:text-md\:h2 lg:text-lg\:h2 font-semibold;
+  }
+
+  /* H3 */
+  .h3 {
+    @apply text-h3 md:text-md\:h3 lg:text-lg\:h3 font-semibold;
+  }
+
+  /* Body1 */
+  .body1 {
+    @apply text-body1 md:text-md\:body1 lg:text-lg\:body1 font-medium;
+  }
+
+  /* Body2 */
+  .body2 {
+    @apply text-body2 md:text-md\:body2 lg:text-lg\:body2 font-medium;
+  }
+
+  /* Caption (normal) */
+  .caption {
+    @apply text-caption md:text-md\:caption lg:text-lg\:caption font-medium;
+  }
+
+  /* Caption (Semibold) */
+  .caption-sb {
+    @apply text-caption-sb md:text-md\:caption-sb lg:text-lg\:caption-sb font-semibold;
+  }
+
+  /* Button1 */
+  .button1 {
+    @apply text-button1 md:text-md\:button1 lg:text-lg\:button1 font-semibold;
+  }
+
+  /* Button2 */
+  .button2 {
+    @apply text-button2 md:text-md\:button2 lg:text-lg\:button2 font-medium;
+  }
+
+  /* Footnote */
+  .footnote {
+    @apply text-footnote md:text-md\:footnote lg:text-lg\:footnote font-medium;
+  }
 }
