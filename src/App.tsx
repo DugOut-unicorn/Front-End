@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import MatchingPage from "./pages/MatchingPage";
+import MatchingPage from "./pages/Matching/MatchingPage";
 import RankingPage from "./pages/Ranking/RankingPage";
 import SchedulePage from "./pages/SchedulePage";
 import LoginPage from "./pages/Login/LoginPage";
@@ -10,12 +10,14 @@ import Layout from "./components/layout/Layout";
 import TeamInfoPage from "./pages/TeamInfoPage";
 import Profile from "./pages/Profile/components/Profile";
 
-// Profile 관련 컴포넌트
 import MyPage from "./pages/Profile/MyPage"; // 공통 레이아웃 (사이드바 + Outlet)
 import Info from "./pages/Profile/components/Info";
 import ProfileEdit from "./pages/Profile/components/ProfileEdit";
 import PlayerProfilePage from "./pages/playerProfile/PlayerProfilePage";
-import MatchingWritePage from "./pages/MatchingWrite/MatchingWritePage";
+import MatchingWritePage from "./pages/Matching/MatchingWrite";
+import MatchingList from "./pages/Matching/MatchingList";
+import MatchingGameList from "./pages/Matching/MatchingGameList";
+import MatchingArticle from "./pages/Matching/MatchingArticle";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +39,26 @@ const router = createBrowserRouter([
       },
       {
         path: "matching",
+        element: <MatchingGameList />,
+        children: [
+          {
+            index: true, // 기본 자식 라우트로 MatchingGameList를 표시
+            path: "gamelist/:date",
+            element: <MatchingGameList />,
+          },
+        ],
+      },
+      {
+        path: "article/:id",
+        element: <MatchingArticle />,
+      },
+      {
+        path: "write",
         element: <MatchingWritePage />,
+      },
+      {
+        path: "list/:date/:team",
+        element: <MatchingList />,
       },
       {
         path: "schedule",
@@ -53,7 +74,7 @@ const router = createBrowserRouter([
           },
           {
             path: "info",
-            element: <Info/>,
+            element: <Info />,
           },
           {
             path: "edit",
@@ -76,7 +97,7 @@ const router = createBrowserRouter([
       {
         path: "playerprofile/:playerId",
         element: <PlayerProfilePage />,
-      }
+      },
     ],
   },
 ]);
