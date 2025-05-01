@@ -25,7 +25,7 @@ interface Game {
 }
 
 // schedule?date=2025-04-01 형식으로 변경.
-export default function SchedulePage() {
+export default function MatchingGameListPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const navigate = useNavigate(); // 추가
 
