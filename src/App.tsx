@@ -1,6 +1,6 @@
 // src/App.tsx
 import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider,useNavigate } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/Home/HomePage";
@@ -24,6 +24,18 @@ import MatchingChatListPage from "./pages/Matching/MatchingChatListPage";
 import MatchingListPage from "./pages/Matching/MatchingListPage";
 import MatchingArticlePage from "./pages/Matching/MatchingArticlePage";
 import MatchingWritePage from "./pages/Matching/MatchingWritePage";
+import Completion from "./pages/Login/components/Complection";
+
+function SignupStep3() {
+  const navigate = useNavigate();
+  return (
+    <>
+      <HomePage />
+      <Completion onGoToMain={() => navigate("/")} />
+    </>
+  );
+}
+
 
 const router = createBrowserRouter([
   {
@@ -70,6 +82,7 @@ const router = createBrowserRouter([
 
       { path: "login", element: <LoginPage /> },
       { path: "login/:id", element: <LoginPage /> },
+      { path: "signup/3", element: <SignupStep3 /> },
       { path: "signup/:id", element: <LoginPage /> },
     ],
   },

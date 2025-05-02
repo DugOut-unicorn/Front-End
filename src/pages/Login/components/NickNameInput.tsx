@@ -3,14 +3,21 @@ import React from 'react';
 interface NicknameInputProps {
   nickname: string;
   setNickname: React.Dispatch<React.SetStateAction<string>>;
-  nicknameCheckResult: 'available' | 'duplicate' | null; // 상태 값을 비교해야 하므로 수정
+  nicknameCheckResult: 'available' | 'duplicate' | null;
   setNicknameCheckResult: React.Dispatch<React.SetStateAction<'available' | 'duplicate' | null>>;
   onNext: () => void;
 }
 
-const NicknameInput: React.FC<NicknameInputProps> = ({ nickname, setNickname, nicknameCheckResult, setNicknameCheckResult, onNext }) => {
+const NicknameInput: React.FC<NicknameInputProps> = ({
+  nickname,
+  setNickname,
+  nicknameCheckResult,
+  setNicknameCheckResult,
+  onNext,
+}) => {
   const handleNicknameCheck = () => {
     if (nickname.trim() === '') return;
+    // 예시 로직
     if (nickname === 'test') {
       setNicknameCheckResult('duplicate');
     } else {
@@ -19,36 +26,82 @@ const NicknameInput: React.FC<NicknameInputProps> = ({ nickname, setNickname, ni
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 bg-gray-50">
-      <h1 className="text-2xl font-bold mb-8">회원가입</h1>
+    <div className="flex flex-col items-center bg-gray-50 min-h-screen py-16 px-4">
+      {/* 헤더 */}
+      <div className="text-center mb-12">
+        <h1 className="text-3xl font-bold text-[#081A3A]">
+          DUGOUT에 오신것을 환영해요
+        </h1>
+        <p className="mt-2 text-sm text-[#081A3A]">
+          시작을 위해 간단한 정보를 알려주세요
+        </p>
+      </div>
 
-      <div className="w-full max-w-md bg-white p-6 shadow-md rounded mb-6">
-        <label htmlFor="nickname" className="block mb-2 font-medium">닉네임</label>
+      {/* Step Indicator */}
+      <div className="w-full max-w-md flex items-center justify-start mb-6">
+        <span className="ml-2 text-base font-medium text-[#081A3A]">
+          닉네임
+        </span>
+      </div>
+
+
+      {/* 입력 카드 */}
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow">
+
         <div className="flex gap-2">
           <input
             id="nickname"
             type="text"
-            placeholder="사용할 닉네임을 입력하세요"
-            className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none"
+            placeholder="닉네임을 입력해주세요"
+            className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={(e) => {
+              setNickname(e.target.value);
+              setNicknameCheckResult(null);
+            }}
           />
-          <button className="bg-black text-white px-4 py-2 rounded" onClick={handleNicknameCheck}>
-            중복체크
+          <button
+            type="button"
+            className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+            onClick={handleNicknameCheck}
+          >
+            중복 확인
           </button>
         </div>
-
-        {/* 상태 값인 nicknameCheckResult로 비교 */}
         {nicknameCheckResult === 'available' && (
-          <div className="mt-2 text-sm text-green-500 text-center">사용 가능한 닉네임입니다.</div>
+          <p className="mt-2 text-sm text-green-500 text-center">
+            사용 가능한 닉네임입니다.
+          </p>
         )}
         {nicknameCheckResult === 'duplicate' && (
-          <div className="mt-2 text-sm text-red-500 text-center">이미 사용 중인 닉네임입니다.</div>
+          <p className="mt-2 text-sm text-red-500 text-center">
+            이미 사용 중인 닉네임입니다.
+          </p>
         )}
       </div>
 
-      <button className="bg-black text-white w-full max-w-md py-3 rounded mb-2 hover:bg-gray-800" onClick={onNext}>
-        다음
+      {/* 다음 단계 버튼 */}
+      <button
+        type="button"
+        disabled={nicknameCheckResult !== 'available'}
+        onClick={onNext}
+        className={`
+          mt-8 w-full max-w-md py-3 rounded
+          ${nicknameCheckResult === 'available'
+            ? 'bg-black text-white hover:bg-gray-800'
+            : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
+        `}
+      >
+        다음 단계로
+      </button>
+
+      {/* 이전 단계 링크 */}
+      <button
+        type="button"
+        onClick={() => window.history.back()}
+        className="mt-4 text-sm text-gray-600 hover:underline"
+      >
+        이전 단계로 돌아가기
       </button>
     </div>
   );
