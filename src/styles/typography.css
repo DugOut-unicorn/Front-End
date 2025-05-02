@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* 폰트 패밀리 */
+    --font-sans: Pretendard, sans-serif;
+
+    /* H1 */
+    --text-h1: 24px; /* mobile */
+    --text-h1-sm: 32px; /* tablet */
+    --text-h1-lg: 40px; /* desktop */
+    --leading-h1: 1.4;
+    --tracking-h1: -0.4px;
+
+    /* H2 */
+    --text-h2: 20px;
+    --text-h2-sm: 28px;
+    --text-h2-lg: 32px;
+    --leading-h2: 1.32;
+    --tracking-h2: -0.2px;
+
+    /* H3 */
+    --text-h3: 16px;
+    --text-h3-sm: 18px;
+    --text-h3-lg: 20px;
+    --leading-h3: 1.32;
+    --tracking-h3: 0px;
+
+    /* Body1 */
+    --text-body1: 14px;
+    --text-body1-lg: 16px;
+    --leading-body1: 1.3;
+    --tracking-body1: 0.2px;
+
+    /* Body2 */
+    --text-body2: 14px;
+    --text-body2-lg: 16px;
+    --leading-body2: 1.6;
+    --tracking-body2: 0.3px;
+
+    /* Caption */
+    --text-caption: 12px;
+    --text-caption-lg: 14px;
+    --leading-caption: 1.4;
+    --tracking-caption: 0.3px;
+
+    /* Caption Semibold */
+    --text-caption-sb: 12px;
+    --text-caption-sb-lg: 14px;
+    --leading-caption-sb: 1.4;
+    --tracking-caption-sb: 0.3px;
+
+    /* Button1 */
+    --text-button1: 16px;
+    --text-button1-lg: 18px;
+    --leading-button1: 1;
+    --tracking-button1: 1px;
+
+    /* Button2 */
+    --text-button2: 14px;
+    --text-button2-lg: 16px;
+    --leading-button2: 1;
+    --tracking-button2: 0.8px;
+
+    /* Footnote */
+    --text-footnote: 12px;
+    --text-footnote-sm: 11px;
+    --leading-footnote: 1;
+    --tracking-footnote: 1.5px;
+  }
+}
+
+@layer components {
+  /* H1 */
+  .t-h1 {
+    line-height: var(--leading-h1);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: var(--tracking-h1);
+    font-size: var(--text-h1);
+  }
+  @media (min-width: 768px) {
+    .t-h1 {
+      font-size: var(--text-h1-sm);
+    }
+  }
+  @media (min-width: 1280px) {
+    .t-h1 {
+      font-size: var(--text-h1-lg);
+    }
+  }
+
+  /* H2 */
+  .t-h2 {
+    line-height: var(--leading-h2);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: var(--tracking-h2);
+    font-size: var(--text-h2);
+  }
+  @media (min-width: 768px) {
+    .t-h2 {
+      font-size: var(--text-h2-sm);
+    }
+  }
+  @media (min-width: 1280px) {
+    .t-h2 {
+      font-size: var(--text-h2-lg);
+    }
+  }
+
+  /* H3 */
+  .t-h3 {
+    line-height: var(--leading-h3);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: var(--tracking-h3);
+    font-size: var(--text-h3);
+  }
+  @media (min-width: 768px) {
+    .t-h3 {
+      font-size: var(--text-h3-sm);
+    }
+  }
+  @media (min-width: 1280px) {
+    .t-h3 {
+      font-size: var(--text-h3-lg);
+    }
+  }
+
+  /* Body1 */
+  .t-body1 {
+    line-height: var(--leading-body1);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: var(--tracking-body1);
+    font-size: var(--text-body1);
+  }
+  @media (min-width: 1280px) {
+    .t-body1 {
+      font-size: var(--text-body1-lg);
+    }
+  }
+
+  /* Body2 */
+  .t-body2 {
+    line-height: var(--leading-body2);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: var(--tracking-body2);
+    font-size: var(--text-body2);
+  }
+  @media (min-width: 1280px) {
+    .t-body2 {
+      font-size: var(--text-body2-lg);
+    }
+  }
+
+  /* Caption */
+  .t-caption {
+    line-height: var(--leading-caption);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: var(--tracking-caption);
+    font-size: var(--text-caption);
+  }
+  @media (min-width: 1280px) {
+    .t-caption {
+      font-size: var(--text-caption-lg);
+    }
+  }
+
+  /* Caption Semibold */
+  .t-caption-sb {
+    line-height: var(--leading-caption-sb);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: var(--tracking-caption-sb);
+    font-size: var(--text-caption-sb);
+  }
+  @media (min-width: 1280px) {
+    .t-caption-sb {
+      font-size: var(--text-caption-sb-lg);
+    }
+  }
+
+  /* Button1 */
+  .t-button1 {
+    line-height: var(--leading-button1);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: var(--tracking-button1);
+    font-size: var(--text-button1);
+  }
+  @media (min-width: 1280px) {
+    .t-button1 {
+      font-size: var(--text-button1-lg);
+    }
+  }
+
+  /* Button2 */
+  .t-button2 {
+    line-height: var(--leading-button2);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: var(--tracking-button2);
+    font-size: var(--text-button2);
+  }
+  @media (min-width: 1280px) {
+    .t-button2 {
+      font-size: var(--text-button2-lg);
+    }
+  }
+
+  /* Footnote */
+  .t-footnote {
+    line-height: var(--leading-footnote);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: var(--tracking-footnote);
+    font-size: var(--text-footnote);
+  }
+  @media (min-width: 768px) {
+    .t-footnote {
+      font-size: var(--text-footnote-sm);
+    }
+  }
+}
