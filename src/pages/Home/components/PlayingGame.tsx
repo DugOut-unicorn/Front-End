@@ -1,79 +1,40 @@
+import GameRow from "./GameRow";
+
 export default function PlayingGame() {
   return (
-    <div className="relative z-20 -mt-6 px-4">
-      <div className="mx-auto flex max-w-[1080px] flex-row items-center justify-between rounded-2xl bg-white p-6 shadow-xl">
-        <h2 className="text-xl font-bold">진행 중인 경기</h2>
-        <div className="mx-4 h-12 w-px bg-gray-200"></div>
-        <div className="flex items-center">
-          {/* 첫 번째 경기 */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <img src="/images/lg_emb.png" alt="LG" className="h-12 w-12" />
-              <span className="text-lg font-semibold">LG</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">3</span>
-              <span className="font-medium text-gray-500">VS</span>
-              <span className="text-2xl font-bold">4</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-semibold">두산</span>
-              <img
-                src="/images/doosan_emb.png"
-                alt="두산"
-                className="h-12 w-12"
-              />
-            </div>
-          </div>
-
-          {/* 구분선 */}
-          <div className="mx-4 h-12 w-px bg-gray-200"></div>
-
-          {/* 두 번째 경기 */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <img src="/images/lg_emb.png" alt="LG" className="h-12 w-12" />
-              <span className="text-lg font-semibold">LG</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">3</span>
-              <span className="font-medium text-gray-500">VS</span>
-              <span className="text-2xl font-bold">4</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-semibold">두산</span>
-              <img
-                src="/images/doosan_emb.png"
-                alt="두산"
-                className="h-12 w-12"
-              />
-            </div>
-          </div>
-
-          {/* 구분선 */}
-          <div className="mx-4 h-12 w-px bg-gray-200"></div>
-
-          {/* 세 번째 경기 */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <img src="/images/lg_emb.png" alt="LG" className="h-12 w-12" />
-              <span className="text-lg font-semibold">LG</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">3</span>
-              <span className="font-medium text-gray-500">VS</span>
-              <span className="text-2xl font-bold">4</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-semibold">두산</span>
-              <img
-                src="/images/doosan_emb.png"
-                alt="두산"
-                className="h-12 w-12"
-              />
-            </div>
-          </div>
+    <div className="flex h-[526px] w-[395px] flex-col rounded-2xl bg-white p-4 shadow">
+      {/* 진행 중인 경기 */}
+      <div className="border-b border-[var(--divider-dv2)] px-4 pt-4 pb-0">
+        <div className="t-caption-sb mb-2 text-[var(--on-surface-grey2)]">
+          진행 중인 경기
         </div>
+        <GameRow
+          homeTeamLogo="/images/lg_emb.png"
+          homeTeamName="LG"
+          homeScore={4}
+          awayTeamLogo="/images/ssg_emb.png"
+          awayTeamName="SSG"
+          awayScore={3}
+          inning="6회 말"
+          isLive
+        />
+        {/* ...다른 경기들도 GameRow로 반복 */}
+      </div>
+      {/* 최근 경기 결과 */}
+      <div className="px-4 pt-0 pb-4">
+        <div className="t-caption-sb mb-2 text-[var(--on-surface-grey2)]">
+          최근 경기 결과
+        </div>
+        <GameRow
+          homeTeamLogo="/images/lg_emb.png"
+          homeTeamName="LG"
+          homeScore={4}
+          awayTeamLogo="/images/ssg_emb.png"
+          awayTeamName="SSG"
+          awayScore={3}
+          inning="종료"
+        />
+        {/* ...다른 경기들도 GameRow로 반복 */}
       </div>
     </div>
   );
