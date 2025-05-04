@@ -89,5 +89,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <div className="bg-[var(--surface-2)]">
+      <RouterProvider router={router} />
+    </div>
+  );
 }
