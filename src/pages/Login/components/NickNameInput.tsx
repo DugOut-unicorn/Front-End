@@ -1,3 +1,4 @@
+// src/pages/Login/components/NickNameInput.tsx
 import React from 'react';
 
 interface NicknameInputProps {
@@ -26,7 +27,7 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center bg-gray-50 min-h-screen py-16 px-4">
+    <div className="flex flex-col items-center bg-gray-100 min-h-screen py-16 px-4">
       {/* 헤더 */}
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-[#081A3A]">
@@ -44,10 +45,8 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
         </span>
       </div>
 
-
       {/* 입력 카드 */}
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow">
-
         <div className="flex gap-2">
           <input
             id="nickname"

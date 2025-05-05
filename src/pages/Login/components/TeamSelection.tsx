@@ -1,3 +1,4 @@
+// src/pages/Login/components/TeamSelection.tsx
 import React from 'react';
 import { Check } from 'lucide-react';
 
@@ -32,7 +33,7 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center bg-gray-50 min-h-screen px-4 py-16">
+    <div className="flex flex-col items-center bg-gray-100 min-h-screen px-4 py-16">
       {/* 헤더 */}
       <h1 className="text-3xl font-bold text-[#081A3A] mb-2">
         DUGOUT에 오신것을 환영해요
