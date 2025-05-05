@@ -1,11 +1,16 @@
-// LoginPage.tsx
-import React, { useState } from 'react';
+// src/pages/Login/LoginPage.tsx
+
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import NickNameInput from './components/NickNameInput';
 import TeamSelection from './components/TeamSelection';
-
-import logo from '../../assets/main_logo.png';
 import Completion from './components/Complection';
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
 
 const LoginPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // /signup/:id
@@ -17,63 +22,139 @@ const LoginPage: React.FC = () => {
     useState<'available' | 'duplicate' | null>(null);
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
 
-  /* --------- 단계별 이후 처리 --------- */
+  /* 1) 페이지 최초 로드 시 한 번만 Kakao SDK init */
+  useEffect(() => {
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
+    }
+  }, []);
+
+  /* 2) 카카오 로그인 핸들러 */
+  const kakaoLogin = () => {
+    if (!window.Kakao) {
+      return alert('카카오 SDK가 로드되지 않았습니다.');
+    }
+
+    window.Kakao.Auth.login({
+      scope: 'profile_nickname,account_email',
+      success: (authObj: any) => {
+        // **프록시를 탈 수 있도록** 상대 경로(`/callback`)로 호출
+        fetch(`/callback?token=${authObj.access_token}`, {
+          method: 'GET',
+        })
+          .then(res => res.json())
+          .then(user => {
+            localStorage.setItem('jwtToken', user.token);
+            navigate('/');
+          })
+          .catch(err => {
+            console.error(err);
+            alert('서버 처리 중 오류가 발생했습니다.');
+          });
+      },
+      fail: (err: any) => {
+        console.error(err);
+        alert('카카오 로그인에 실패했습니다.');
+      },
+    });
+  };
+
+  /* 단계별 이후 처리 */
   const goStep2 = () => {
-    if (nicknameCheckResult === 'available') {
-      navigate('/signup/2');
-    } else {
-      alert('닉네임 중복 체크를 완료해주세요!');
-    }
+    if (nicknameCheckResult === 'available') navigate('/signup/2');
+    else alert('닉네임 중복 체크를 완료해주세요!');
   };
-
   const goStep3 = () => {
-    if (selectedTeam) {
-      navigate('/signup/3');
-    } else {
-      alert('응원팀을 선택해주세요!');
-    }
+    if (selectedTeam) navigate('/signup/3');
+    else alert('응원팀을 선택해주세요!');
   };
 
-  const goHome = () => {
-    navigate('/');
-  };
-
-  /* =========================================================
-     ❶ URL 파라미터(id)가 없으면 SNS 로그인 기본 화면
-  ========================================================= */
+  /* ❶ id가 없으면 SNS 로그인 기본 화면 */
   if (!id) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <img
-          src={logo}
-          alt="dugout logo"
-          className="w-40 h-40 mb-6 rounded-full"
-        />
-        <h1 className="text-xl font-bold mb-8">
-          DUGOUT에 오신 것을 환영합니다!!!
-        </h1>
-        <p className="text-gray-500 mb-6">
-          SNS 계정으로 간편하게 로그인하세요
-        </p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+        <div className="w-full max-w-md mx-auto text-center">
+          <p className="text-gray-600 mb-1">야구를 더 가까이, 더 즐겁게</p>
+          <h1 className="text-4xl font-extrabold text-navy-800 mb-8">DUGOUT</h1>
 
-        <div className="flex gap-4">
-          {['kakao_icon.png', 'google_icon.png', 'naver_icon.png'].map((src) => (
+          <div className="flex items-center w-full mb-6">
+            <div className="flex-1 h-px bg-gray-300" />
+            <span className="px-4 text-gray-500 text-sm">
+              SNS로 간편 로그인
+            </span>
+            <div className="flex-1 h-px bg-gray-300" />
+          </div>
+
+          <div className="w-full space-y-4">
+            {/* 카카오톡 로그인 버튼 */}
             <button
-              key={src}
-              className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center"
-              onClick={() => navigate('/signup/1')}
+              onClick={kakaoLogin}
+              className="flex items-center justify-center h-12 w-full bg-[#FEE500] rounded-lg shadow hover:opacity-90 transition"
             >
-              <img src={`/images/${src}`} className="w-6 h-6" />
+              <img
+                src="/images/kakao_login.png"
+                alt="kakao"
+                className="w-6 h-6 mr-2"
+              />
+              <span className="text-base font-medium text-gray-900">
+                카카오톡으로 계속하기
+              </span>
             </button>
-          ))}
+
+            {/* 네이버 로그인 */}
+            <button
+              onClick={() => navigate('/signup/1')}
+              className="flex items-center justify-center h-12 w-full bg-[#03C75A] rounded-lg shadow hover:opacity-90 transition"
+            >
+              <img
+                src="/images/naver_login.png"
+                alt="naver"
+                className="w-6 h-6 mr-2"
+              />
+              <span className="text-base font-medium text-white">
+                네이버로 계속하기
+              </span>
+            </button>
+
+            {/* 구글 로그인 */}
+            <button
+              onClick={() => navigate('/signup/1')}
+              className="flex items-center justify-center h-12 w-full bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50 transition"
+            >
+              <img
+                src="/images/google_login.png"
+                alt="google"
+                className="w-6 h-6 mr-2"
+              />
+              <span className="text-base font-medium text-gray-800">
+                구글로 계속하기
+              </span>
+            </button>
+          </div>
+
+          <p className="mt-6 text-sm text-gray-500 text-center px-2">
+            계속 진행 시{' '}
+            <button
+              onClick={() => window.open('/terms', '_blank')}
+              className="underline hover:text-gray-700"
+            >
+              이용약관
+            </button>{' '}
+            및{' '}
+            <button
+              onClick={() => window.open('/privacy', '_blank')}
+              className="underline hover:text-gray-700"
+            >
+              개인정보처리방침
+            </button>{' '}
+            에 동의한 것으로 간주됩니다.
+          </p>
         </div>
       </div>
     );
   }
 
-  /* =========================================================
-     ❷,❸,❹ 단계: 하위 컴포넌트 렌더링
-  ========================================================= */
+  /* ❷~❹ 단계: 기존 하위 컴포넌트 렌더링 */
   switch (id) {
     case '1':
       return (
@@ -85,7 +166,6 @@ const LoginPage: React.FC = () => {
           onNext={goStep2}
         />
       );
-
     case '2':
       return (
         <TeamSelection
@@ -95,15 +175,8 @@ const LoginPage: React.FC = () => {
           onPrev={() => navigate('/signup/1')}
         />
       );
-
     case '3':
-      return (
-        <Completion
-          currentStep={3}
-          onGoToMain={goHome}
-        />
-      );
-
+      return <Completion currentStep={3} onGoToMain={() => navigate('/')} />;
     default:
       return (
         <div className="flex items-center justify-center h-screen">

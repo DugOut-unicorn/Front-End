@@ -1,82 +1,132 @@
+// src/pages/Profile/components/ProfileEdit.tsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft } from 'lucide-react';
 
-function Withdrawal() {
-  const [nickname, setNickname] = useState('');
-  const [introduction, setIntroduction] = useState('');
-  const [team, setTeam] = useState('롯데 자이언츠');
+const teams = [
+  '롯데 자이언츠',
+  '두산 베어스',
+  '키움 히어로즈',
+  'NC 다이노스',
+  'KIA 타이거즈',
+  'KT 위즈',
+  'LG 트윈스',
+  '삼성 라이온즈',
+  'SSG 랜더스',
+  '한화 이글스',
+];
+
+export default function ProfileEdit() {
+  const navigate = useNavigate();
+  const [nickname, setNickname] = useState('야구조아');
+  const [introduction, setIntroduction] = useState(
+    '안녕하세요, 경기도 고양사는 23살 대학생 입니다!'
+  );
+  const [team, setTeam] = useState(teams[0]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`닉네임: ${nickname}\n소개: ${introduction}\n응원팀: ${team}\n저장 완료!`);
+    // TODO: API 호출 로직
+    alert('변경사항이 저장되었습니다.');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto font-sans">
-      {/* 닉네임 변경 */}
-      <div className="mb-5">
-        <label htmlFor="nickname" className="block mb-2 font-bold">
-          닉네임 변경
-        </label>
-        <input
-          id="nickname"
-          type="text"
-          placeholder="새로운 닉네임을 입력해주세요."
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded"
-        />
-      </div>
-
-      {/* 자기 소개 변경 */}
-      <div className="mb-5">
-        <label htmlFor="introduction" className="block mb-2 font-bold">
-          자기 소개 변경
-        </label>
-        <textarea
-          id="introduction"
-          placeholder="내용을 입력해주세요."
-          value={introduction}
-          onChange={(e) => setIntroduction(e.target.value)}
-          rows={4}
-          className="w-full p-3 border border-gray-300 rounded resize-none"
-        />
-      </div>
-
-      {/* 응원 팀 변경 (드롭다운) */}
-      <div className="mb-5">
-        <label htmlFor="team" className="block mb-2 font-bold">
-          응원 팀 변경
-        </label>
-        <select
-          id="team"
-          value={team}
-          onChange={(e) => setTeam(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded"
-        >
-          <option value="롯데 자이언츠">롯데 자이언츠</option>
-          <option value="두산 베어스">두산 베어스</option>
-          <option value="키움 히어로즈">키움 히어로즈</option>
-          <option value="NC 다이노스">NC 다이노스</option>
-          <option value="KIA 타이거즈">KIA 타이거즈</option>
-          <option value="KT 위즈">KT 위즈</option>
-          <option value="LG 트윈스">LG 트윈스</option>
-          <option value="삼성 라이온즈">삼성 라이온즈</option>
-          <option value="SSG 랜더스">SSG 랜더스</option>
-          <option value="한화 이글스">한화 이글스</option>
-        </select>
-      </div>
-
-      {/* 저장 버튼 */}
-      <div className="text-right">
+    <div className="bg-gray-100 min-h-screen py-8">
+      <div className="max-w-lg mx-auto bg-white rounded-lg shadow p-6">
+        {/* 뒤로가기 + 제목 */}
         <button
-          type="submit"
-          className="w-28 h-10 bg-black text-white rounded cursor-pointer text-justify-end"
+          onClick={() => navigate(-1)}
+          className="flex items-center text-gray-700 mb-6"
         >
-          저장
+          <ChevronLeft size={24} />
+          <span className="ml-2 font-medium">프로필 수정</span>
         </button>
+
+        {/* 프로필 이미지 & 변경 버튼 */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-24 h-24 rounded-full overflow-hidden mb-3">
+            <img
+              src="/images/user_avatar.png"
+              alt="프로필"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <button
+            type="button"
+            className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition"
+          >
+            프로필 이미지 변경
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* 닉네임 */}
+          <div>
+            <label
+              htmlFor="nickname"
+              className="block mb-2 font-medium text-gray-800"
+            >
+              닉네임 변경
+            </label>
+            <input
+              id="nickname"
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* 자기소개 */}
+          <div>
+            <label
+              htmlFor="introduction"
+              className="block mb-2 font-medium text-gray-800"
+            >
+              자기소개 변경
+            </label>
+            <textarea
+              id="introduction"
+              rows={4}
+              value={introduction}
+              onChange={(e) => setIntroduction(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* 응원팀 선택 */}
+          <div>
+            <label
+              htmlFor="team"
+              className="block mb-2 font-medium text-gray-800"
+            >
+              응원팀 변경
+            </label>
+            <select
+              id="team"
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              {teams.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 저장 버튼 */}
+          <div className="text-center">
+            <button
+              type="submit"
+              className="w-40 h-10 bg-black text-white rounded hover:bg-gray-800 transition"
+            >
+              변경사항 저장
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   );
 }
-
-export default Withdrawal;

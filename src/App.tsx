@@ -1,6 +1,6 @@
 // src/App.tsx
 import React from "react";
-import { createBrowserRouter, RouterProvider,useNavigate } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/Home/HomePage";
@@ -24,8 +24,9 @@ import MatchingChatListPage from "./pages/Matching/MatchingChatListPage";
 import MatchingListPage from "./pages/Matching/MatchingListPage";
 import MatchingArticlePage from "./pages/Matching/MatchingArticlePage";
 import MatchingWritePage from "./pages/Matching/MatchingWritePage";
-import Completion from "./pages/Login/components/Complection";
 
+// SignupStep3: Home + Completion
+import Completion from "./pages/Login/components/Complection";
 function SignupStep3() {
   const navigate = useNavigate();
   return (
@@ -36,40 +37,36 @@ function SignupStep3() {
   );
 }
 
-
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     errorElement: <NotFoundPage />,
     children: [
+      // 홈
       { index: true, element: <HomePage /> },
 
-      // ─── 여기를 MatchingLayout 으로 바꿔 주세요 ─────────────────
+      // 매칭
       {
         path: "matching",
         element: <MatchingLayout />,
         children: [
-          // /matching → 게임 리스트
           { index: true, element: <MatchingGameListPage /> },
-          // /matching/chats → 채팅방 목록
           { path: "chats", element: <MatchingChatListPage /> },
-          // /matching/list/:date/:team → 매칭글 리스트
           { path: "list/:date/:team", element: <MatchingListPage /> },
-          // /matching/articles/:id → 단일 매칭글
           { path: "articles/:id", element: <MatchingArticlePage /> },
-          // /matching/write → 매칭글 작성
           { path: "write", element: <MatchingWritePage /> },
         ],
       },
-      // ──────────────────────────────────────────────────────────
 
+      // 기타 페이지
       { path: "schedule", element: <SchedulePage /> },
       { path: "ranking", element: <RankingPage /> },
       { path: "ranking/:year", element: <RankingPage /> },
       { path: "team/:teamName", element: <TeamInfoPage /> },
       { path: "playerprofile/:playerId", element: <PlayerProfilePage /> },
 
+      // 프로필(MyPage)
       {
         path: "mypage",
         element: <MyPage />,
@@ -80,17 +77,19 @@ const router = createBrowserRouter([
         ],
       },
 
-      { path: "login", element: <LoginPage /> },
-      { path: "login/:id", element: <LoginPage /> },
+      // 로그인 & 회원가입
+      // signup/3은 별도 처리 (Step3)
       { path: "signup/3", element: <SignupStep3 /> },
-      { path: "signup/:id", element: <LoginPage /> },
+      // login과 signup은 id 파라미터 optional
+      { path: "login/:id?", element: <LoginPage /> },
+      { path: "signup/:id?", element: <LoginPage /> },
     ],
   },
 ]);
 
 export default function App() {
   return (
-    <div className="bg-[var(--surface-2)]">
+    <div className="min-h-screen bg-[var(--surface-2)]">
       <RouterProvider router={router} />
     </div>
   );

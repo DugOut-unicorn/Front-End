@@ -1,4 +1,4 @@
-// Completion.tsx
+// src/pages/Login/components/Complection.tsx
 import React from 'react';
 import { X } from 'lucide-react';
 
@@ -8,8 +8,8 @@ interface CompletionProps {
 
 const Completion: React.FC<CompletionProps> = ({ onGoToMain }) => {
   return (
-    // 배경을 반투명 오버레이로 깔아서 메인 화면이 어스름하게 보이게
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-25">
+    // 배경을 연회색 반투명 오버레이로 변경 (흰색보다는 살짝 어두운 느낌)
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-300 bg-opacity-50">
       {/* 모달 박스 */}
       <div className="relative w-full max-w-md rounded-2xl overflow-hidden shadow-lg">
         {/* 닫기(X) 버튼 */}
