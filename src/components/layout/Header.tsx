@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <div className="font-kbo_bold w-full pt-2.5 text-black">
-      <div className="mx-auto flex w-full max-w-[1080px] items-center">
+      <div className="mx-auto flex w-full items-center px-8">
         <div className="flex w-[200px] items-center gap-5">
           <img className="h-10 w-10 rounded-full" src={Logo} alt="logo" />
           <Link to="/" className="text-xl no-underline">
@@ -30,7 +30,9 @@ const Header = () => {
           <Link
             to="/schedule"
             className={`text-base no-underline hover:text-[#007bff] ${
-              location.pathname.startsWith("/schedule") ? "font-bold text-black" : ""
+              location.pathname.startsWith("/schedule")
+                ? "font-bold text-black"
+                : ""
             }`}
           >
             경기 일정
@@ -38,7 +40,9 @@ const Header = () => {
           <Link
             to="/ranking"
             className={`text-base no-underline hover:text-[#007bff] ${
-              location.pathname.startsWith("/ranking") ? "font-bold text-black" : ""
+              location.pathname.startsWith("/ranking")
+                ? "font-bold text-black"
+                : ""
             }`}
           >
             순위/기록
@@ -48,7 +52,7 @@ const Header = () => {
           {isLogin ? (
             <>
               <a
-                className="text-xs no-underline hover:text-[#007bff] cursor-pointer"
+                className="cursor-pointer text-xs no-underline hover:text-[#007bff]"
                 onClick={() => setIsLogin(false)}
               >
                 로그아웃
@@ -81,7 +85,7 @@ const Header = () => {
       {/* 매칭 페이지 하위 탭 */}
       {isMatchingPage && (
         <div className="border-t border-b border-gray-200">
-          <div className="mx-auto max-w-[780px] flex gap-4 text-sm px-4 py-2">
+          <div className="mx-auto flex max-w-[780px] gap-4 px-4 py-2 text-sm">
             <Link
               to="/matching"
               className={`hover:underline ${

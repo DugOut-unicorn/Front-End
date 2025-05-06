@@ -1,12 +1,9 @@
-import LastResult from "./components/LastResult";
 import NewMatchingList from "./components/NewMatchingList";
-import NewsBanner from "./components/NewsBanner";
-import PlayingGame from "./components/PlayingGame";
-import TeamSection from "./components/TeamSection";
 import MapWeatherContainer from "./container/MapWeatherContainer";
 import TopBannerContainer from "./container/TopBannerContainer";
-import { Team, TeamOverviewSection } from "./container/TeamOverviewSection";
+import { Team, TeamOverviewContainer } from "./container/TeamOverviewContainer";
 import { useState } from "react";
+import EntryBanner from "./components/EntryBanner";
 
 export default function Home() {
   const [month, setMonth] = useState(new Date(2023, 5));
@@ -105,16 +102,17 @@ export default function Home() {
 
   return (
     <>
+      <EntryBanner />
       <TopBannerContainer />
-      <div className="h-[120px]" />
-      <TeamOverviewSection
-        teams={sampleTeams}
-        month={new Date()}
-        onMonthChange={newMonth => setMonth(newMonth)}
-      />
-      {/* <NewMatchingList />
-      <TeamSection /> */}
-      {/* <MapWeatherContainer /> */}
+      <div className="mt-30 mb-40 flex flex-col gap-20">
+        <NewMatchingList />
+        <TeamOverviewContainer
+          teams={sampleTeams}
+          month={new Date()}
+          onMonthChange={newMonth => setMonth(newMonth)}
+        />
+        <MapWeatherContainer />
+      </div>
     </>
   );
 }
