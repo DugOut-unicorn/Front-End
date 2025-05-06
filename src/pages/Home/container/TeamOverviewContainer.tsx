@@ -22,22 +22,21 @@ export interface Team {
   losses: number;
 }
 
-export interface TeamOverviewSectionProps {
+export interface TeamOverviewContainerProps {
   teams: Team[]; // 순위 데이터 (최대 10개)
   month?: Date; // 보여줄 달 (기본: 오늘)
   onMonthChange?: (d: Date) => void;
 }
 
-export function TeamOverviewSection({
+export function TeamOverviewContainer({
   teams,
   month = new Date(),
   onMonthChange,
-}: TeamOverviewSectionProps) {
-  // mock data for schedule
+}: TeamOverviewContainerProps) {
   return (
-    <div className="tablet:flex-row desktop:flex-row flex h-[620px] w-[1010px] flex-col gap-[16px]">
+    <div className="xs:flex-col flex w-252.5 flex-col items-center gap-4 md:flex-col xl:flex-row">
       <TeamRankingTable teams={teams} />
-      {/* <TeamScheduleSection month={month} onMonthChange={onMonthChange} /> */}
+      <TeamScheduleSection month={month} onMonthChange={onMonthChange} />
     </div>
   );
 }
