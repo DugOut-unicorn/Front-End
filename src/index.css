@@ -1,1 +1,9 @@
 @import "tailwindcss";
+@import "./styles/colors.css";
+@import "./styles/teamcolor.css";
+@import "./styles/theme.css";
+@import "./styles/typography.css";
+
+:root {
+  --breakpoint-xs: 30rem;
+}

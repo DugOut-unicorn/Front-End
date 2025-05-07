@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Doosan */
+    --team-doosan: #1a1748;
+    --team-doosan-rgb: 26, 23, 72;
+    /* LG */
+    --team-lg: #c30452;
+    --team-lg-rgb: 195, 4, 82;
+    /* Kia */
+    --team-kia: #8f1623;
+    --team-kia-rgb: 143, 22, 35;
+    /* Samsung */
+    --team-samsung: #1d66b3;
+    --team-samsung-rgb: 29, 102, 179;
+    /* Kiwoom */
+    --team-kiwoom: #570514;
+    --team-kiwoom-rgb: 87, 5, 20;
+    /* SSG (light) */
+    --team-ssg: #ce0e2d;
+    --team-ssg-rgb: 206, 14, 45;
+    /* NC */
+    --team-nc: #315288;
+    --team-nc-rgb: 49, 82, 136;
+    /* Lotte (light) */
+    --team-lotte: #041e42;
+    --team-lotte-rgb: 4, 30, 66;
+    /* Hanwha */
+    --team-hanwha: #e76c1b;
+    --team-hanwha-rgb: 231, 108, 27;
+    /* KT */
+    --team-kt: #232323;
+    --team-kt-rgb: 35, 35, 35;
+  }
+
+  .dark {
+    /* Doosan */
+    --team-doosan: #1a1748;
+    --team-doosan-rgb: 26, 23, 72;
+    /* LG */
+    --team-lg: #c30452;
+    --team-lg-rgb: 195, 4, 82;
+    /* Kia */
+    --team-kia: #8f1623;
+    --team-kia-rgb: 143, 22, 35;
+    /* Samsung */
+    --team-samsung: #1d66b3;
+    --team-samsung-rgb: 29, 102, 179;
+    /* Kiwoom */
+    --team-kiwoom: #570514;
+    --team-kiwoom-rgb: 87, 5, 20;
+    /* SSG (dark) */
+    --team-ssg: #c82330;
+    --team-ssg-rgb: 200, 35, 48;
+    /* NC */
+    --team-nc: #315288;
+    --team-nc-rgb: 49, 82, 136;
+    /* Lotte (dark) */
+    --team-lotte: #002856;
+    --team-lotte-rgb: 0, 40, 86;
+    /* Hanwha */
+    --team-hanwha: #e76c1b;
+    --team-hanwha-rgb: 231, 108, 27;
+    /* KT */
+    --team-kt: #232323;
+    --team-kt-rgb: 35, 35, 35;
+  }
+}

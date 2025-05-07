@@ -1,0 +1,113 @@
+@layer base {
+  :root {
+    /* Surface */
+    --surface-1: #ffffff;
+    --surface-2: var(--color-zinc-100);
+    --surface-3: var(--color-zinc-200);
+    --surface-invert1: #ffffff;
+    --surface-invert2: var(--color-zinc-100);
+    --surface-invert3: var(--color-zinc-200);
+
+    /* On Surface */
+    --on-surface-default: var(--color-zinc-950);
+    --on-surface-grey1: var(--color-zinc-700);
+    --on-surface-grey2: var(--color-zinc-500);
+    --on-surface-disabled: var(--color-zinc-300);
+    --on-surface-rose: var(--color-rose-500);
+    --on-surface-yellow: var(--color-yellow-400);
+    --on-surface-emerald: var(--color-emerald-500);
+    --on-surface-blue: var(--color-blue-500);
+
+    /* Accent */
+    --accent-default: var(--color-zinc-200);
+    --accent-rose: var(--color-rose-100);
+    --accent-yellow: var(--color-yellow-100);
+    --accent-emerald: var(--color-emerald-100);
+    --accent-blue: var(--color-blue-100);
+
+    /* On Accent */
+    --on-accent-default: var(--color-zinc-800);
+    --on-accent-rose: var(--color-rose-600);
+    --on-accent-yellow: var(--color-yellow-600);
+    --on-accent-emerald: var(--color-emerald-600);
+    --on-accent-blue: var(--color-blue-600);
+
+    /* Fill */
+    --fill-default: var(--color-zinc-900);
+    --fill-grey1: var(--color-zinc-300);
+    --fill-rose: var(--color-rose-500);
+    --fill-yellow: var(--color-yellow-500);
+    --fill-emerald: var(--color-emerald-500);
+    --fill-blue: var(--color-blue-500);
+
+    /* On Fill */
+    --on-fill-default: var(--color-zinc-50);
+    --on-fill-grey1: var(--color-zinc-900);
+    --on-fill-rose: var(--color-rose-50);
+    --on-fill-yellow: var(--color-yellow-50);
+    --on-fill-emerald: var(--color-emerald-50);
+    --on-fill-blue: var(--color-blue-50);
+
+    /* Divider */
+    --divider-dv1: var(--color-zinc-200);
+    --divider-dv2: var(--color-zinc-200);
+
+    /* Transparent dims */
+    --transparent-dim: rgba(0, 0, 0, 0.7);
+    --transparent-dim1: rgba(0, 0, 0, 0.5);
+    --transparent-dim2: rgba(0, 0, 0, 0.2);
+  }
+
+  /* 다크 모드 */
+  .dark {
+    --surface-1: var(--color-zinc-800);
+    --surface-2: var(--color-zinc-900);
+    --surface-3: var(--color-zinc-950);
+    --surface-invert1: var(--color-zinc-950);
+    --surface-invert2: var(--color-zinc-900);
+    --surface-invert3: var(--color-zinc-800);
+
+    --on-surface-default: var(--color-zinc-50);
+    --on-surface-grey1: var(--color-zinc-300);
+    --on-surface-grey2: var(--color-zinc-500);
+    --on-surface-disabled: var(--color-zinc-700);
+    --on-surface-rose: var(--color-rose-700);
+    --on-surface-yellow: var(--color-yellow-500);
+    --on-surface-emerald: var(--color-emerald-600);
+    --on-surface-blue: var(--color-blue-600);
+
+    --accent-default: var(--color-zinc-800);
+    --accent-rose: var(--color-rose-950);
+    --accent-yellow: var(--color-yellow-950);
+    --accent-emerald: var(--color-emerald-950);
+    --accent-blue: var(--color-blue-950);
+
+    --on-accent-default: var(--color-zinc-200);
+    --on-accent-rose: var(--color-rose-400);
+    --on-accent-yellow: var(--color-yellow-300);
+    --on-accent-emerald: var(--color-emerald-400);
+    --on-accent-blue: var(--color-blue-400);
+
+    --fill-default: var(--color-zinc-50);
+    --fill-grey1: var(--color-zinc-700);
+    --fill-rose: var(--color-rose-500);
+    --fill-yellow: var(--color-yellow-400);
+    --fill-emerald: var(--color-emerald-400);
+    --fill-blue: var(--color-blue-400);
+
+    --on-fill-default: var(--color-zinc-900);
+    --on-fill-grey1: var(--color-zinc-50);
+    --on-fill-rose: var(--color-rose-950);
+    --on-fill-yellow: var(--color-yellow-950);
+    --on-fill-emerald: var(--color-emerald-950);
+    --on-fill-blue: var(--color-blue-950);
+
+    --divider-dv1: var(--color-zinc-900);
+    --divider-dv2: var(--color-zinc-700);
+
+    /* 투명도는 동일 */
+    --transparent-dim: rgba(0, 0, 0, 0.7);
+    --transparent-dim1: rgba(0, 0, 0, 0.5);
+    --transparent-dim2: rgba(0, 0, 0, 0.2);
+  }
+}

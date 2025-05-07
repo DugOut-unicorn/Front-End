@@ -1,0 +1,229 @@
+@layer base {
+  :root {
+    /* 폰트 패밀리 */
+    --font-sans: Pretendard, sans-serif;
+
+    /* H1 */
+    --text-h1: 40px; /* desktop */
+    --text-h1-sm: 32px; /* tablet  */
+    --text-h1-lg: 24px; /* mobile  */
+    --leading-h1: 1.4;
+    --tracking-h1: -0.4px;
+
+    /* H2 */
+    --text-h2: 32px;
+    --text-h2-sm: 28px;
+    --text-h2-lg: 20px;
+    --leading-h2: 1.32;
+    --tracking-h2: -0.2px;
+
+    /* H3 */
+    --text-h3: 20px;
+    --text-h3-sm: 18px;
+    --text-h3-lg: 16px;
+    --leading-h3: 1.32;
+    --tracking-h3: 0px;
+
+    /* Body1 */
+    --text-body1: 16px;
+    --text-body1-lg: 14px;
+    --leading-body1: 1.3;
+    --tracking-body1: 0.2px;
+
+    /* Body2 */
+    --text-body2: 16px;
+    --text-body2-lg: 14px;
+    --leading-body2: 1.6;
+    --tracking-body2: 0.3px;
+
+    /* Caption */
+    --text-caption: 14px;
+    --text-caption-lg: 12px;
+    --leading-caption: 1.4;
+    --tracking-caption: 0.3px;
+
+    /* Caption Semibold */
+    --text-caption-sb: 14px;
+    --text-caption-sb-lg: 12px;
+    --leading-caption-sb: 1.4;
+    --tracking-caption-sb: 0.3px;
+
+    /* Button1 */
+    --text-button1: 18px;
+    --text-button1-lg: 16px;
+    --leading-button1: 1;
+    --tracking-button1: 1px;
+
+    /* Button2 */
+    --text-button2: 16px;
+    --text-button2-lg: 14px;
+    --leading-button2: 1;
+    --tracking-button2: 0.8px;
+
+    /* Footnote */
+    --text-footnote: 12px;
+    --text-footnote-sm: 11px;
+    --leading-footnote: 1;
+    --tracking-footnote: 1.5px;
+  }
+}
+
+@layer components {
+  /* H1 */
+  .t-h1 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: var(--tracking-h1);
+    line-height: var(--leading-h1);
+    /* 1) 모바일 기본 (24px) */
+    font-size: var(--text-h1-lg);
+  }
+  /* 2) 태블릿 이상 (32px) */
+  @media (min-width: 768px) {
+    .t-h1 {
+      font-size: var(--text-h1-sm);
+    }
+  }
+  /* 3) 데스크탑 이상 (40px) */
+  @media (min-width: 1280px) {
+    .t-h1 {
+      font-size: var(--text-h1);
+    }
+  }
+
+  /* H2 */
+  .t-h2 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: var(--tracking-h2);
+    line-height: var(--leading-h2);
+    font-size: var(--text-h2-lg);
+  }
+  @media (min-width: 768px) {
+    .t-h2 {
+      font-size: var(--text-h2-sm);
+    }
+  }
+  @media (min-width: 1280px) {
+    .t-h2 {
+      font-size: var(--text-h2);
+    }
+  }
+
+  /* H3 */
+  .t-h3 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: var(--tracking-h3);
+    line-height: var(--leading-h3);
+    font-size: var(--text-h3-lg);
+  }
+  @media (min-width: 768px) {
+    .t-h3 {
+      font-size: var(--text-h3-sm);
+    }
+  }
+  @media (min-width: 1280px) {
+    .t-h3 {
+      font-size: var(--text-h3);
+    }
+  }
+
+  /* Body1 */
+  .t-body1 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: var(--tracking-body1);
+    line-height: var(--leading-body1);
+    font-size: var(--text-body1-lg);
+  }
+  @media (min-width: 768px) {
+    .t-body1 {
+      font-size: var(--text-body1);
+    }
+  }
+
+  /* Body2 */
+  .t-body2 {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: var(--tracking-body2);
+    line-height: var(--leading-body2);
+    font-size: var(--text-body2-lg);
+  }
+  @media (min-width: 768px) {
+    .t-body2 {
+      font-size: var(--text-body2);
+    }
+  }
+
+  /* Caption */
+  .t-caption {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: var(--tracking-caption);
+    line-height: var(--leading-caption);
+    font-size: var(--text-caption-lg);
+  }
+  @media (min-width: 768px) {
+    .t-caption {
+      font-size: var(--text-caption);
+    }
+  }
+
+  /* Caption Semibold */
+  .t-caption-sb {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: var(--tracking-caption-sb);
+    line-height: var(--leading-caption-sb);
+    font-size: var(--text-caption-sb-lg);
+  }
+  @media (min-width: 768px) {
+    .t-caption-sb {
+      font-size: var(--text-caption-sb);
+    }
+  }
+
+  /* Button1 */
+  .t-button1 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: var(--tracking-button1);
+    line-height: var(--leading-button1);
+    font-size: var(--text-button1-lg);
+  }
+  @media (min-width: 768px) {
+    .t-button1 {
+      font-size: var(--text-button1);
+    }
+  }
+
+  /* Button2 */
+  .t-button2 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: var(--tracking-button2);
+    line-height: var(--leading-button2);
+    font-size: var(--text-button2-lg);
+  }
+  @media (min-width: 768px) {
+    .t-button2 {
+      font-size: var(--text-button2);
+    }
+  }
+
+  /* Footnote */
+  .t-footnote {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: var(--tracking-footnote);
+    line-height: var(--leading-footnote);
+    font-size: var(--text-footnote-sm);
+  }
+  @media (min-width: 768px) {
+    .t-footnote {
+      font-size: var(--text-footnote);
+    }
+  }
+}
