@@ -21,15 +21,16 @@ export default function Info() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen py-8">
-      <div className="max-w-lg mx-auto bg-white rounded-lg shadow p-6 space-y-6 relative">
-        {/* 뒤로가기 */}
+    <div className="bg-gray-100 w-[400px] h-[444px] mx-auto">
+      {/* 카드 컨테이너: pt-16으로 위쪽 패딩 확보 */}
+      <div className="relative max-w-lg mx-auto rounded-lg shadow pt-16 px-6 pb-6 space-y-6">
+        {/* 뒤로가기 버튼: 카드 안쪽 top-6 (24px) 위치 */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-gray-700 mb-4"
+          className="absolute top-6 left-6 flex items-center text-gray-700"
         >
           <ChevronLeft size={24} />
-          <span className="ml-2 font-medium">개인정보</span>
+          <span className="ml-2 t-button2">개인정보</span>
         </button>
 
         {/* 정보 폼 (읽기 전용) */}

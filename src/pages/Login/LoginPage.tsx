@@ -38,14 +38,24 @@ const LoginPage: React.FC = () => {
     window.Kakao.Auth.login({
       scope: 'profile_nickname,account_email',
       success: (authObj: any) => {
-        // **프록시를 탈 수 있도록** 상대 경로(`/callback`)로 호출
-        fetch(`/callback?token=${authObj.access_token}`, {
-          method: 'GET',
+        fetch(`/api/kakao/user-info`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            accessToken: authObj.access_token,
+          }),
         })
-          .then(res => res.json())
-          .then(user => {
+          .then(res => {
+            if (!res.ok) {
+              throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+          })
+          .then((user: { token: string }) => {
             localStorage.setItem('jwtToken', user.token);
-            navigate('/');
+            navigate('/signup/1');
           })
           .catch(err => {
             console.error(err);

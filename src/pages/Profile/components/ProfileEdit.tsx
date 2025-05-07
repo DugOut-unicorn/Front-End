@@ -31,101 +31,104 @@ export default function ProfileEdit() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen py-8">
-      <div className="max-w-lg mx-auto bg-white rounded-lg shadow p-6">
+    <div className="bg-gray-100 min-h-screen flex justify-center py-8 font-sans">
+      <div className="relative w-[400px] bg-gray rounded-lg shadow overflow-hidden">
         {/* 뒤로가기 + 제목 */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-gray-700 mb-6"
+          className="absolute top-4 left-4 flex items-center text-gray-700 z-10"
         >
           <ChevronLeft size={24} />
-          <span className="ml-2 font-medium">프로필 수정</span>
+          <span className="ml-2 t-button2">프로필 수정</span>
         </button>
 
-        {/* 프로필 이미지 & 변경 버튼 */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-24 h-24 rounded-full overflow-hidden mb-3">
-            <img
-              src="/images/user_avatar.png"
-              alt="프로필"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <button
-            type="button"
-            className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition"
-          >
-            프로필 이미지 변경
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 닉네임 */}
-          <div>
-            <label
-              htmlFor="nickname"
-              className="block mb-2 font-medium text-gray-800"
-            >
-              닉네임 변경
-            </label>
-            <input
-              id="nickname"
-              type="text"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          {/* 자기소개 */}
-          <div>
-            <label
-              htmlFor="introduction"
-              className="block mb-2 font-medium text-gray-800"
-            >
-              자기소개 변경
-            </label>
-            <textarea
-              id="introduction"
-              rows={4}
-              value={introduction}
-              onChange={(e) => setIntroduction(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          {/* 응원팀 선택 */}
-          <div>
-            <label
-              htmlFor="team"
-              className="block mb-2 font-medium text-gray-800"
-            >
-              응원팀 변경
-            </label>
-            <select
-              id="team"
-              value={team}
-              onChange={(e) => setTeam(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              {teams.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* 저장 버튼 */}
-          <div className="text-center">
+        {/* 카드 콘텐츠 */}
+        <div className="pt-16 px-6 pb-8 space-y-8">
+          {/* 프로필 이미지 & 변경 버튼 */}
+          <div className="flex flex-col items-center space-y-3">
+            <div className="w-24 h-24 rounded-full overflow-hidden">
+              <img
+                src="/images/user_avatar.png"
+                alt="프로필"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <button
-              type="submit"
-              className="w-40 h-10 bg-black text-white rounded hover:bg-gray-800 transition"
+              type="button"
+              className="t-button2 px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 transition"
             >
-              변경사항 저장
+              프로필 이미지 변경
             </button>
           </div>
-        </form>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* 닉네임 */}
+            <div>
+              <label
+                htmlFor="nickname"
+                className="block mb-2 t-body1 text-gray-800"
+              >
+                닉네임 변경
+              </label>
+              <input
+                id="nickname"
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
+            {/* 자기소개 */}
+            <div>
+              <label
+                htmlFor="introduction"
+                className="block mb-2 t-body1 text-gray-800"
+              >
+                자기소개 변경
+              </label>
+              <textarea
+                id="introduction"
+                rows={4}
+                value={introduction}
+                onChange={(e) => setIntroduction(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
+            {/* 응원팀 선택 */}
+            <div>
+              <label
+                htmlFor="team"
+                className="block mb-2 t-body1 text-gray-800"
+              >
+                응원팀 변경
+              </label>
+              <select
+                id="team"
+                value={team}
+                onChange={(e) => setTeam(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                {teams.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* 저장 버튼 */}
+            <div className="text-center">
+              <button
+                type="submit"
+                className="t-button1 w-40 h-10 bg-black text-white rounded hover:bg-gray-800 transition"
+              >
+                변경사항 저장
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
