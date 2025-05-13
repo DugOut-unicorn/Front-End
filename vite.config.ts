@@ -10,17 +10,23 @@ export default defineConfig({
       // 카카오 콜백용
       "/callback": {
         //target: "http://localhost:8080",
-         //target: "https://www.dug-out.store",
-         //target: "https://api.dug-out.store",
-         target: "https://dev.dug-out.store",
+        //target: "https://www.dug-out.store",
+        //target: "https://api.dug-out.store",
+        target: "https://dev.dug-out.store",
         changeOrigin: true,
         secure: false,
+      },
+      "/home": {
+        target: "https://dev.dug-out.store",
+        changeOrigin: true,
+        secure: false,
+        rewrite: path => path,
       },
       // /api 로 시작하는 모든 요청을 로컬 백엔드로 프록시
       "/api": {
         //target: "http://localhost:8080",
-         //target: "https://www.dug-out.store",
-         //target: "https://api.dug-out.store",
+        //target: "https://www.dug-out.store",
+        //target: "https://api.dug-out.store",
         target: "https://dev.dug-out.store",
         changeOrigin: true,
         secure: false,

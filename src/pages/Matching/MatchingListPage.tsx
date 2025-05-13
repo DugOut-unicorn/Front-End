@@ -101,11 +101,11 @@ export default function MatchingList() {
   const navigate = useNavigate(); // 추가
 
   const handleClick = () => {
-    navigate(`/write`); // 상대경로로 변경: /matching/list로 이동
+    navigate(`/matching/write`); // 상대경로로 변경: /matching/list로 이동
   };
 
   const handlePageClick = (id: number) => {
-    navigate(`/article/${id}`); // 매칭글 상세 페이지로 이동
+    navigate(`/matching/articles/${id}`); // 매칭글 상세 페이지로 이동
   };
 
   // 페이지 번호 배열 (1부터 totalPages까지)

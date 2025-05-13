@@ -10,18 +10,15 @@ const Header = () => {
   const isMatchingPage = location.pathname.startsWith("/matching");
 
   return (
-    <div className="font-kbo_bold w-full pt-2.5 text-black">
-      <div className="mx-auto flex w-full items-center px-8">
-        <div className="flex w-[200px] items-center gap-5">
-          <img className="h-10 w-10 rounded-full" src={Logo} alt="logo" />
-          <Link to="/" className="text-xl no-underline">
-            Dugout
-          </Link>
-        </div>
-        <div className="flex w-[650px] items-center gap-[50px] pl-5">
+    <div className="flex h-16 w-full flex-row items-center justify-between px-8">
+      <div className="flex flex-row items-center gap-11">
+        <Link to="/">
+          <img src="/images/blue.png" alt="logo" />
+        </Link>
+        <div className="flex flex-row gap-10">
           <Link
             to="/matching"
-            className={`text-base no-underline hover:text-[#007bff] ${
+            className={`t-body1 text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff] ${
               location.pathname === "/matching" ? "font-bold text-black" : ""
             }`}
           >
@@ -29,7 +26,7 @@ const Header = () => {
           </Link>
           <Link
             to="/schedule"
-            className={`text-base no-underline hover:text-[#007bff] ${
+            className={`t-body1 text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff] ${
               location.pathname.startsWith("/schedule")
                 ? "font-bold text-black"
                 : ""
@@ -39,7 +36,7 @@ const Header = () => {
           </Link>
           <Link
             to="/ranking"
-            className={`text-base no-underline hover:text-[#007bff] ${
+            className={`t-body1 text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff] ${
               location.pathname.startsWith("/ranking")
                 ? "font-bold text-black"
                 : ""
@@ -48,11 +45,13 @@ const Header = () => {
             순위/기록
           </Link>
         </div>
+      </div>
+      <div>
         <div className="ml-auto flex items-center gap-2.5">
           {isLogin ? (
             <>
               <a
-                className="cursor-pointer text-xs no-underline hover:text-[#007bff]"
+                className="t-body1 cursor-pointer text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff]"
                 onClick={() => setIsLogin(false)}
               >
                 로그아웃
@@ -60,7 +59,7 @@ const Header = () => {
               <p className="text-xs">|</p>
               <Link
                 to="/mypage"
-                className="text-xs no-underline hover:text-[#007bff]"
+                className="t-body1 cursor-pointer text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff]"
               >
                 마이페이지
               </Link>
@@ -74,41 +73,13 @@ const Header = () => {
           ) : (
             <Link
               to="/login"
-              className="text-xs no-underline hover:text-[#007bff]"
+              className="t-body1 cursor-pointer text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff]"
             >
               로그인
             </Link>
           )}
         </div>
       </div>
-
-      {/* 매칭 페이지 하위 탭 */}
-      {isMatchingPage && (
-        <div className="border-t border-b border-gray-200">
-          <div className="mx-auto flex max-w-[780px] gap-4 px-4 py-2 text-sm">
-            <Link
-              to="/matching"
-              className={`hover:underline ${
-                location.pathname === "/matching"
-                  ? "font-bold text-black"
-                  : "text-gray-500"
-              }`}
-            >
-              직관 매칭글
-            </Link>
-            <Link
-              to="/matching/chats"
-              className={`hover:underline ${
-                location.pathname.startsWith("/matching/chats")
-                  ? "font-bold text-black"
-                  : "text-gray-500"
-              }`}
-            >
-              채팅방 목록
-            </Link>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
