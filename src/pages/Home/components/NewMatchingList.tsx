@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Edit3, ChevronRight, CheckCircle2, X } from "lucide-react";
 
 interface MatchingData {
-  status: string;
+  userNickname: string;
   teamName: string;
   teamLogo: string;
   matchDate: string;
@@ -10,7 +10,7 @@ interface MatchingData {
 }
 
 const mockMatching: MatchingData = {
-  status: "야구 좋아",
+  userNickname: "야구 좋아",
   teamName: "롯데",
   teamLogo: "/images/lotte_emb.png",
   matchDate: "04.22",
@@ -77,7 +77,7 @@ export default function NewMatchingList() {
             className="flex h-41 w-73 flex-shrink-0 flex-col justify-between rounded-xl bg-[var(--surface-1)] p-4"
           >
             <div className="t-caption mb-3 text-[var(--on-surface-grey2)]">
-              {mockMatching.status}
+              {mockMatching.userNickname}
             </div>
             <div className="flex h-8 items-center justify-between">
               <span className="t-caption text-[var(--on-surface-default)]">
