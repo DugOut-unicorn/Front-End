@@ -15,7 +15,7 @@ export default function Profile() {
     <>
       {/* 헤더 배너 */}
       <section
-        className="w-full h-48 bg-blue-900 relative overflow-hidden rounded-xl shadow-sm mb-8"
+        className="w-full h-48 bg-blue-900 relative  mb-8"
         style={{
           backgroundImage: "url('/images/banner_bg.png')",
           backgroundSize: 'cover',
@@ -92,7 +92,7 @@ export default function Profile() {
       </section>
 
       {/* 작성한 매칭 글 */}
-      <section>
+      <section className="bg-white rounded-xl p-6 shadow-sm">
         <h2 className="text-lg font-medium mb-4 text-gray-800">
           작성한 매칭 글
         </h2>
