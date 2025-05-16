@@ -31,6 +31,7 @@ import MatchingWritePage from "./pages/Matching/MatchingWritePage";
 
 // SignupStep3: Home + Completion
 import Completion from "./pages/Login/components/Complection";
+import SidebarLayout from "./components/layout/SidebarLayout";
 function SignupStep3() {
   const navigate = useNavigate();
   return (
@@ -53,15 +54,15 @@ const router = createBrowserRouter([
       // 매칭
       {
         path: "matching",
-        element: <MatchingLayout />,
+        element: <SidebarLayout />,
         children: [
           { index: true, element: <MatchingGameListPage /> },
           { path: "chats", element: <MatchingChatListPage /> },
           { path: "list/:date/:team", element: <MatchingListPage /> },
           { path: "articles/:id", element: <MatchingArticlePage /> },
-          { path: "write", element: <MatchingWritePage /> },
         ],
       },
+      { path: "matching/write", element: <MatchingWritePage /> },
 
       // 기타 페이지
       { path: "schedule", element: <SchedulePage /> },

@@ -1,27 +1,51 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Edit3, ChevronRight, CheckCircle2, X } from "lucide-react";
+import { homeApi } from "../../../api/home/apis";
+import { TeamId, getTeamInfo } from "../../../types/Type";
 
 interface MatchingData {
+  postIdx: number;
+  title: string;
+  stadiumIdx: number;
+  gameIdx: number;
+  context: string;
   userNickname: string;
-  teamName: string;
-  teamLogo: string;
-  matchDate: string;
-  hasTicket: boolean;
+  userCheeringTeamId: TeamId;
+  status: number;
+  createdAt: string;
+  preferredMatchDate: string;
 }
-
-const mockMatching: MatchingData = {
-  userNickname: "야구 좋아",
-  teamName: "롯데",
-  teamLogo: "/images/lotte_emb.png",
-  matchDate: "04.22",
-  hasTicket: false,
-};
 
 export default function NewMatchingList() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [matchings, setMatchings] = useState<MatchingData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchMatchings = async () => {
+      try {
+        setIsLoading(true);
+        const data = await homeApi.getRecentMatchingPosts();
+        const convertedData: MatchingData[] = data.map(item => ({
+          ...item,
+          userCheeringTeamId: Number(item.userCheeringTeamId) as TeamId,
+        }));
+        setMatchings(convertedData);
+        setError(null);
+      } catch (err) {
+        setError("매칭 목록을 불러오는데 실패했습니다.");
+        console.error("Error fetching matchings:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMatchings();
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -71,49 +95,74 @@ export default function NewMatchingList() {
         onMouseLeave={handleMouseUp}
         onMouseMove={handleMouseMove}
       >
-        {Array.from({ length: 6 }).map((_, index) => (
-          <div
-            key={index}
-            className="flex h-41 w-73 flex-shrink-0 flex-col justify-between rounded-xl bg-[var(--surface-1)] p-4"
-          >
-            <div className="t-caption mb-3 text-[var(--on-surface-grey2)]">
-              {mockMatching.userNickname}
-            </div>
-            <div className="flex h-8 items-center justify-between">
-              <span className="t-caption text-[var(--on-surface-default)]">
-                응원하는 팀
-              </span>
-              <img
-                src={mockMatching.teamLogo}
-                alt={mockMatching.teamName}
-                className="h-8 w-8 rounded-full border border-[var(--divider-dv2)] bg-white object-contain"
-              />
-            </div>
-            <div className="flex h-8 items-center justify-between">
-              <span className="t-caption text-[var(--on-surface-default)]">
-                선호 경기일
-              </span>
-              <span className="t-caption text-[var(--on-surface-default)]">
-                {mockMatching.matchDate}
-              </span>
-            </div>
-            <div className="flex h-8 items-center justify-between">
-              <span className="t-caption text-[var(--on-surface-default)]">
-                티켓 보유여부
-              </span>
-              <span className="t-caption flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--surface-3)] text-[var(--on-surface-default)]">
-                {mockMatching.hasTicket ? (
-                  <CheckCircle2
-                    size={16}
-                    className="text-[var(--on-surface-default)]"
-                  />
-                ) : (
-                  <X size={16} className="text-[var(--on-surface-default)]" />
-                )}
-              </span>
-            </div>
+        {isLoading ? (
+          <div className="flex h-41 w-73 items-center justify-center">
+            <span className="t-body1 text-[var(--on-surface-grey2)]">
+              로딩 중...
+            </span>
           </div>
-        ))}
+        ) : error ? (
+          <div className="flex h-41 w-73 items-center justify-center">
+            <span className="t-body1 text-[var(--on-surface-grey2)]">
+              {error}
+            </span>
+          </div>
+        ) : matchings.length === 0 ? (
+          <div className="flex h-41 w-73 items-center justify-center">
+            <span className="t-body1 text-[var(--on-surface-grey2)]">
+              매칭 목록이 없습니다.
+            </span>
+          </div>
+        ) : (
+          matchings.map(matching => (
+            <div
+              key={matching.postIdx}
+              className="flex h-41 w-73 flex-shrink-0 flex-col justify-between rounded-xl bg-[var(--surface-1)] p-4"
+            >
+              <div className="mb-3 flex h-8 items-center justify-between">
+                <div className="t-caption text-[var(--on-surface-grey2)]">
+                  {matching.userNickname}
+                </div>
+                <img
+                  src={`/images/${getTeamInfo(matching.userCheeringTeamId).logo}.png`}
+                  alt={getTeamInfo(matching.userCheeringTeamId).name}
+                  className="h-8 w-8 rounded-full border border-[var(--divider-dv2)] bg-white object-contain"
+                />
+              </div>
+              <div className="flex h-8 items-center justify-between">
+                <span className="t-caption text-[var(--on-surface-default)]">
+                  제목
+                </span>
+                <span className="t-caption text-[var(--on-surface-default)]">
+                  {matching.title}
+                </span>
+              </div>
+              <div className="flex h-8 items-center justify-between">
+                <span className="t-caption text-[var(--on-surface-default)]">
+                  선호 경기일
+                </span>
+                <span className="t-caption text-[var(--on-surface-default)]">
+                  {matching.preferredMatchDate}
+                </span>
+              </div>
+              <div className="flex h-8 items-center justify-between">
+                <span className="t-caption text-[var(--on-surface-default)]">
+                  티켓 보유여부
+                </span>
+                <span className="t-caption flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--surface-3)] text-[var(--on-surface-default)]">
+                  {matching.status === 1 ? (
+                    <CheckCircle2
+                      size={16}
+                      className="text-[var(--on-surface-default)]"
+                    />
+                  ) : (
+                    <X size={16} className="text-[var(--on-surface-default)]" />
+                  )}
+                </span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

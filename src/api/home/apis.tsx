@@ -7,8 +7,8 @@ export const homeApi = {
       await axiosInstance.get<newsDto[]>("/home/news-fetch");
     return raw.map((item: any) => ({
       title: item.title,
-      url: item.context,
-      imageUrl: item.imageUrl,
+      url: item.url,
+      imageUrl: item.imageSrc,
     }));
   },
   getOngoingGames: async () => {
@@ -39,8 +39,10 @@ export const homeApi = {
       gameIdx: item.gameIdx,
       context: item.context,
       userNickname: item.userNickname,
+      userCheeringTeamId: item.userCheeringTeamId,
       status: item.status,
       createdAt: item.createdAt,
+      preferredMatchDate: item.preferredMatchDate,
     }));
   },
   getRecentResults: async () => {
