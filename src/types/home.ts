@@ -19,6 +19,8 @@ export type recentMatchingDto = {
   gameIdx: number;
   context: string;
   userNickname: string;
+  userCheeringTeamId: string;
   status: number;
   createdAt: string;
+  preferredMatchDate: string;
 };

@@ -7,7 +7,7 @@ export default function EntryBanner() {
         직관의 설렘, 오늘도 시작해볼까요?
       </div>
       <img
-        src="/images/hanwha_emb.png"
+        src="/images/hanwha_big_emb.png"
         alt="lotte_emb"
         className="h-98 w-98 opacity-60"
       />

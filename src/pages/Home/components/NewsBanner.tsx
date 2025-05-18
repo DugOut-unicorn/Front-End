@@ -17,11 +17,13 @@ export default function NewsBanner() {
     const fetchNews = async () => {
       try {
         const news = await homeApi.getNewsFetch();
+        console.log("API 응답 데이터:", news); // API 응답 데이터 로깅
         const formattedNews = news.map(item => ({
           title: item.title,
           imageUrl: item.imageUrl,
           url: item.url,
         }));
+        console.log("가공된 뉴스 데이터:", formattedNews); // 가공된 데이터 로깅
         setNewsItems(formattedNews);
         setError(null);
       } catch (err) {
@@ -83,14 +85,19 @@ export default function NewsBanner() {
             }`}
           >
             {item.imageUrl ? (
-              <img
-                src={item.imageUrl}
-                alt={item.title}
-                className="h-[526px] w-full rounded-[16px] object-cover"
-                onError={e => {
-                  e.currentTarget.src = "/images/newsbannerimg.png";
-                }}
-              />
+              <a href={item.url} target="_blank" rel="noopener noreferrer">
+                <div className="relative h-[526px] w-full">
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title}
+                    className="h-full w-full rounded-2xl object-cover"
+                    onError={e => {
+                      e.currentTarget.src = "/images/newsbannerimg.png";
+                    }}
+                  />
+                  <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(to_bottom,rgba(0,0,0,0.2),rgba(0,0,0,0.7))] opacity-80" />
+                </div>
+              </a>
             ) : (
               <div className="flex h-[526px] w-full items-center justify-center rounded-[16px] bg-gray-200">
                 <span className="text-gray-500">
@@ -101,12 +108,11 @@ export default function NewsBanner() {
           </div>
         ))}
       </div>
-      <div className="relative flex w-full -translate-y-[12px] flex-col items-start px-5 pb-5">
+      <div className="relative flex w-full -translate-y-[12px] flex-col items-start pr-30 pb-5 pl-5">
         <a
           href={newsItems[current]?.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:underline"
         >
           <h3 className="t-h2 text-white">{newsItems[current]?.title}</h3>
         </a>

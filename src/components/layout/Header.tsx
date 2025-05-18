@@ -10,7 +10,7 @@ const Header = () => {
   const isMatchingPage = location.pathname.startsWith("/matching");
 
   return (
-    <div className="flex h-16 w-full flex-row items-center justify-between px-8">
+    <div className="flex h-16 w-full flex-row items-center justify-between border-b border-[var(--divider-dv2)] bg-[var(--surface-1)] px-8">
       <div className="flex flex-row items-center gap-11">
         <Link to="/">
           <img src="/images/blue.png" alt="logo" />
