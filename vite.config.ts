@@ -7,29 +7,27 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      // 카카오 콜백용
+      // 카카오 콜백용: 원본 경로 그대로 포워딩
       "/callback": {
-        //target: "http://localhost:8080",
-        //target: "https://www.dug-out.store",
-        //target: "https://api.dug-out.store",
         target: "https://dev.dug-out.store",
         changeOrigin: true,
         secure: false,
+        // rewrite 를 빼면 요청 URL이 그대로 /callback?... 로 전달됩니다
       },
       "/home": {
         target: "https://dev.dug-out.store",
         changeOrigin: true,
         secure: false,
         rewrite: path => path,
+
       },
-      // /api 로 시작하는 모든 요청을 로컬 백엔드로 프록시
+
+      // /api → https://dev.dug-out.store 에 포워딩, /api 프리픽스는 제거
       "/api": {
-        //target: "http://localhost:8080",
-        //target: "https://www.dug-out.store",
-        //target: "https://api.dug-out.store",
         target: "https://dev.dug-out.store",
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

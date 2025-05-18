@@ -1,4 +1,3 @@
-// src/pages/Profile/components/ProfileEdit.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
@@ -24,15 +23,50 @@ export default function ProfileEdit() {
   );
   const [team, setTeam] = useState(teams[0]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: API 호출 로직
-    alert('변경사항이 저장되었습니다.');
+
+    // JWT만 확인합니다
+    const jwt = localStorage.getItem('jwtToken');
+    console.log('▶ jwtToken:', jwt);
+    if (!jwt) {
+      alert('로그인 정보가 유효하지 않습니다.');
+      return;
+    }
+
+    // 선택한 팀 이름을 teams 배열의 인덱스로 변환 (0 기반)
+    const cheeringTeamId = teams.findIndex((t) => t === team);
+
+    try {
+      const res = await fetch('/api/mypage/editPersonal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+          nickname,
+          bio: introduction,
+          cheeringTeamId,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || '프로필 수정 실패');
+      }
+
+      alert('프로필이 성공적으로 수정되었습니다.');
+      navigate('/mypage');
+    } catch (error: any) {
+      console.error(error);
+      alert(`오류: ${error.message}`);
+    }
   };
 
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center py-8 font-sans">
-      <div className="relative w-[400px] bg-gray rounded-lg shadow overflow-hidden">
+      <div className="relative w-[400px] bg-white rounded-lg shadow overflow-hidden">
         {/* 뒤로가기 + 제목 */}
         <button
           onClick={() => navigate(-1)}
@@ -75,7 +109,7 @@ export default function ProfileEdit() {
                 type="text"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full h-10 py-2 px-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
 
@@ -92,7 +126,7 @@ export default function ProfileEdit() {
                 rows={4}
                 value={introduction}
                 onChange={(e) => setIntroduction(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full h-24 py-2 px-3 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
 
@@ -108,7 +142,7 @@ export default function ProfileEdit() {
                 id="team"
                 value={team}
                 onChange={(e) => setTeam(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full h-10 py-2 px-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 {teams.map((t) => (
                   <option key={t} value={t}>
