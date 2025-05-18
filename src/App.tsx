@@ -1,6 +1,10 @@
 // src/App.tsx
 import React from "react";
-import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/Home/HomePage";

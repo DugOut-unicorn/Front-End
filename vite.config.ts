@@ -14,6 +14,13 @@ export default defineConfig({
         secure: false,
         // rewrite 를 빼면 요청 URL이 그대로 /callback?... 로 전달됩니다
       },
+      "/home": {
+        target: "https://dev.dug-out.store",
+        changeOrigin: true,
+        secure: false,
+        rewrite: path => path,
+
+      },
 
       // /api → https://dev.dug-out.store 에 포워딩, /api 프리픽스는 제거
       "/api": {
