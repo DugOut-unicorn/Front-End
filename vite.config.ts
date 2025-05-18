@@ -48,6 +48,13 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      //home
+      "/home": {
+        target: "https://dev.dug-out.store",
+        changeOrigin: true,
+        secure: false,
+        rewrite: path => path,
+      },
     },
   },
 });

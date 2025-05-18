@@ -101,18 +101,17 @@ export default function Home() {
   ];
 
   return (
-    <>
+    <div className="flex w-full flex-col items-center">
       <EntryBanner />
       <TopBannerContainer />
       <div className="mt-30 mb-40 flex flex-col gap-20">
         <NewMatchingList />
         <TeamOverviewContainer
-          teams={sampleTeams}
           month={new Date()}
           onMonthChange={newMonth => setMonth(newMonth)}
         />
         <MapWeatherContainer />
       </div>
-    </>
+    </div>
   );
 }
