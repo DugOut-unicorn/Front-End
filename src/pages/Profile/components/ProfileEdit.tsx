@@ -1,32 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 
+// 팀 목록을 새로운 ID 순서(1~10)에 맞춘 순서로 정의
 const teams = [
-  '롯데 자이언츠',
-  '두산 베어스',
-  '키움 히어로즈',
-  'NC 다이노스',
-  'KIA 타이거즈',
-  'KT 위즈',
-  'LG 트윈스',
-  '삼성 라이온즈',
-  'SSG 랜더스',
-  '한화 이글스',
+  'LG 트윈스',     // id 1
+  'SSG 랜더스',   // id 2
+  '삼성 라이온즈', // id 3
+  'KT 위즈',      // id 4
+  '롯데 자이언츠', // id 5
+  'NC 다이노스',   // id 6
+  '두산 베어스',   // id 7
+  '키움 히어로즈', // id 8
+  'KIA 타이거즈', // id 9
+  '한화 이글스',   // id 10
 ];
 
 export default function ProfileEdit() {
   const navigate = useNavigate();
-  const [nickname, setNickname] = useState('야구조아');
-  const [introduction, setIntroduction] = useState(
-    '안녕하세요, 경기도 고양사는 23살 대학생 입니다!'
-  );
+  const [nickname, setNickname] = useState('');
+  const [introduction, setIntroduction] = useState('');
   const [team, setTeam] = useState(teams[0]);
+
+  // 기존 프로필 불러와서 폼 초기화
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwtToken');
+    if (!jwt) {
+      alert('로그인 정보가 없습니다.');
+      navigate('/login');
+      return;
+    }
+    (async () => {
+      try {
+        const res = await fetch('/mypage/myTemp', {
+          headers: { Authorization: `Bearer ${jwt}` },
+        });
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        const data = await res.json();
+        setNickname(data.nickname);
+        setIntroduction(data.bio);
+        // API 반환 cheeringTeamId(1~10)에 맞춰 인덱스는 id-1
+        setTeam(teams[data.cheeringTeamId - 1]);
+      } catch (err) {
+        console.error('프로필 조회 실패:', err);
+        alert('프로필 정보를 불러오는데 실패했습니다.');
+        navigate(-1);
+      }
+    })();
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // JWT만 확인합니다
     const jwt = localStorage.getItem('jwtToken');
     console.log('▶ jwtToken:', jwt);
     if (!jwt) {
@@ -34,21 +59,17 @@ export default function ProfileEdit() {
       return;
     }
 
-    // 선택한 팀 이름을 teams 배열의 인덱스로 변환 (0 기반)
-    const cheeringTeamId = teams.findIndex((t) => t === team);
+    // 선택된 팀 이름으로 인덱스(0 기반) 찾은 뒤 API에 보낼 id는 index+1
+    const cheeringTeamId = teams.findIndex((t) => t === team) + 1;
 
     try {
-      const res = await fetch('/api/mypage/editPersonal', {
+      const res = await fetch('/mypage/editPersonal', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify({
-          nickname,
-          bio: introduction,
-          cheeringTeamId,
-        }),
+        body: JSON.stringify({ nickname, bio: introduction, cheeringTeamId }),
       });
 
       if (!res.ok) {
