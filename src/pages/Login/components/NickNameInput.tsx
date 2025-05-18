@@ -1,5 +1,5 @@
-// src/pages/Login/components/NickNameInput.tsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface NicknameInputProps {
   nickname: string;
@@ -16,13 +16,49 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
   setNicknameCheckResult,
   onNext,
 }) => {
-  const handleNicknameCheck = () => {
-    if (nickname.trim() === '') return;
-    // 예시 로직
-    if (nickname === 'test') {
-      setNicknameCheckResult('duplicate');
-    } else {
-      setNicknameCheckResult('available');
+  const navigate = useNavigate();
+
+  const handleNicknameCheck = async () => {
+    if (!nickname.trim()) return;
+
+    try {
+      const token = localStorage.getItem('jwtToken');
+      console.log('Nickname to check:', nickname);
+      console.log('Using token:', token);
+
+      const res = await fetch(
+        '/login/nickname',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ nickname }),
+        }
+      );
+
+      console.log('Response status:', res.status);
+      const data = await res.json().catch(() => null);
+      console.log('Response body:', data);
+
+      if (res.ok) {
+        setNicknameCheckResult('available');
+      } else if (res.status === 409) {
+        setNicknameCheckResult('duplicate');
+      } else if (res.status === 400 && data?.message?.includes('유효하지 않은 토큰')) {
+        // 토큰이 유효하지 않을 때 처리
+        alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+        localStorage.removeItem('accessToken');
+        navigate('/login');
+      } else {
+        console.error('Unexpected status or error:', res.status, data);
+        alert(data?.message || '닉네임 확인 중 오류가 발생했습니다.');
+      }
+    } catch (err) {
+      console.error('Nickname check error:', err);
+      alert('네트워크 오류로 닉네임 확인에 실패했습니다.');
     }
   };
 
@@ -61,8 +97,8 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
           />
           <button
             type="button"
-            className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
             onClick={handleNicknameCheck}
+            className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
           >
             중복 확인
           </button>
@@ -84,12 +120,13 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
         type="button"
         disabled={nicknameCheckResult !== 'available'}
         onClick={onNext}
-        className={`
-          mt-8 w-full max-w-md py-3 rounded
-          ${nicknameCheckResult === 'available'
-            ? 'bg-black text-white hover:bg-gray-800'
-            : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
-        `}
+        className={
+          `mt-8 w-full max-w-md py-3 rounded ${
+            nicknameCheckResult === 'available'
+              ? 'bg-black text-white hover:bg-gray-800'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          }`
+        }
       >
         다음 단계로
       </button>
@@ -97,7 +134,7 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
       {/* 이전 단계 링크 */}
       <button
         type="button"
-        onClick={() => window.history.back()}
+        onClick={() => navigate(-1)}
         className="mt-4 text-sm text-gray-600 hover:underline"
       >
         이전 단계로 돌아가기
