@@ -1,31 +1,25 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-interface PlayerData {
-  rank: number;
-  name: string;
-  team: string;
-  position: string;
-  stats: {
-    avg?: number;
-    fip?: number;
-    whip?: number;
-    war?: number;
-    os?: number;
-    games?: number;
-    wins?: number;
-    losses?: number;
-    saves?: number;
-    holds?: number;
-  };
-}
+// interface PlayerData {
+//   rank: number;
+//   name: string;
+//   team: string;
+//   position: string;
+//   stats: {
+//     avg?: number;
+//     fip?: number;
+//     whip?: number;
+//     war?: number;
+//     os?: number;
+//     games?: number;
+//     wins?: number;
+//     losses?: number;
+//     saves?: number;
+//     holds?: number;
+//   };
+// }
 
-interface PlayerRankingTableProps {
-  players: PlayerData[];
-}
-
-export default function PlayerRankingTable({
-  players,
-}: PlayerRankingTableProps) {
+export default function PlayerRankingTable() {
   const [selectedCategory, setSelectedCategory] = useState<"투수" | "타자">(
     "투수",
   );

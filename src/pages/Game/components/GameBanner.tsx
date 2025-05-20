@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Scoreboard() {
   return (
     <div className="mx-auto max-w-[1080px] p-4">

@@ -1,5 +1,3 @@
-// src/App.tsx
-import React from "react";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -22,7 +20,7 @@ import Info from "./pages/Profile/components/Info";
 import ProfileEdit from "./pages/Profile/components/ProfileEdit";
 
 // 매칭
-import MatchingLayout from "./pages/Matching/MatchingLayout";
+
 import MatchingGameListPage from "./pages/Matching/MatchingGameListPage";
 import MatchingChatListPage from "./pages/Matching/MatchingChatListPage";
 import MatchingListPage from "./pages/Matching/MatchingListPage";

@@ -16,7 +16,6 @@ export default function PlayingGame() {
             awayTeamName="SSG"
             awayScore={3}
             inning="6회 말"
-            isLive
           />
           <GameRow
             homeTeamLogo="/images/lg_emb.png"
@@ -26,7 +25,6 @@ export default function PlayingGame() {
             awayTeamName="SSG"
             awayScore={3}
             inning="6회 말"
-            isLive
           />
           <GameRow
             homeTeamLogo="/images/lg_emb.png"
@@ -36,7 +34,6 @@ export default function PlayingGame() {
             awayTeamName="SSG"
             awayScore={3}
             inning="6회 말"
-            isLive
           />
           <GameRow
             homeTeamLogo="/images/lg_emb.png"
@@ -46,7 +43,6 @@ export default function PlayingGame() {
             awayTeamName="SSG"
             awayScore={3}
             inning="6회 말"
-            isLive
           />
           <GameRow
             homeTeamLogo="/images/lg_emb.png"
@@ -56,7 +52,6 @@ export default function PlayingGame() {
             awayTeamName="SSG"
             awayScore={3}
             inning="6회 말"
-            isLive
           />
         </div>
       </div>

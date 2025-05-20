@@ -6,7 +6,6 @@ export default function GameRow({
   awayTeamName,
   awayScore,
   inning,
-  isLive,
 }: {
   homeTeamLogo: string;
   homeTeamName: string;
@@ -15,7 +14,6 @@ export default function GameRow({
   awayTeamName: string;
   awayScore: number;
   inning: string; // 예: "6회 말", "종료"
-  isLive?: boolean;
 }) {
   return (
     <li className="flex h-[40px] w-[363px] list-none items-center justify-between">

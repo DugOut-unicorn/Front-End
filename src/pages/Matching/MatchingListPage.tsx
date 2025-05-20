@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MatchData } from "../../types/Type";
 import { useNavigate } from "react-router-dom";
 // 예시 더미 데이터 (실제 데이터는 API나 부모 컴포넌트에서 받아옴)

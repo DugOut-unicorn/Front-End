@@ -1,14 +1,13 @@
-import bg_map from "../../../assets/bg_map.png";
 import { Stadium, Stadiums } from "../../../types/Stadium";
 import { useState } from "react";
 import {
   SunMedium,
   CloudSun,
   Cloud,
-  CloudFog,
+  // CloudFog,
   CloudLightning,
   CloudRainWind,
-  CloudSnow,
+  // CloudSnow,
 } from "lucide-react";
 
 // 깃발 GIF import

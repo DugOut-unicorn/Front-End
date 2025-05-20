@@ -1,4 +1,3 @@
-import React from "react";
 import { Medal } from "lucide-react";
 import { Team } from "../container/TeamOverviewContainer";
 
