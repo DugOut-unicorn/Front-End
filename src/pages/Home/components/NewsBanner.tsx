@@ -1,5 +1,4 @@
-// src/components/NewsBanner.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { homeApi } from "../../../api/home/apis";
 
 interface NewsItem {
@@ -17,18 +16,16 @@ export default function NewsBanner() {
     const fetchNews = async () => {
       try {
         const news = await homeApi.getNewsFetch();
-        console.log("API 응답 데이터:", news); // API 응답 데이터 로깅
         const formattedNews = news.map(item => ({
           title: item.title,
           imageUrl: item.imageUrl,
           url: item.url,
         }));
-        console.log("가공된 뉴스 데이터:", formattedNews); // 가공된 데이터 로깅
+
         setNewsItems(formattedNews);
         setError(null);
       } catch (err) {
         setError("뉴스를 불러오는데 실패했습니다.");
-        console.error("뉴스 데이터 로딩 실패:", err);
       } finally {
         setIsLoading(false);
       }

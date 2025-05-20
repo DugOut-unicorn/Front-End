@@ -1,13 +1,13 @@
 // src/components/TeamOverviewSection.tsx
-import React, { useState, useEffect } from "react";
-import {
-  ListOrdered,
-  Calendar as CalendarIcon,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import { DayPicker } from "react-day-picker";
-import { format } from "date-fns";
+import { useState, useEffect } from "react";
+// import {
+//   ListOrdered,
+//   Calendar as CalendarIcon,
+//   ChevronLeft,
+//   ChevronRight,
+// } from "lucide-react";
+// import { DayPicker } from "react-day-picker";
+// import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { TeamRankingTable } from "../components/TeamRankingTable";
 import { TeamScheduleSection } from "../components/TeamScheduleSection";

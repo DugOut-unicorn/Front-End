@@ -130,12 +130,12 @@ export default function MatchingGameListPage() {
     },
   ];
 
-  const matchEntryData = {
-    time: "13:00",
-    homeTeamEmblem: "/images/lg_twins_emb.png",
-    stadium: "잠실",
-    awayTeamEmblem: "/images/kiwoom_heroes_emb.png",
-  };
+  // const matchEntryData = {
+  //   time: "13:00",
+  //   homeTeamEmblem: "/images/lg_twins_emb.png",
+  //   stadium: "잠실",
+  //   awayTeamEmblem: "/images/kiwoom_heroes_emb.png",
+  // };
 
   return (
     <>

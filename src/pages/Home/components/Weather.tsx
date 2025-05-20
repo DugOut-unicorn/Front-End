@@ -1,30 +1,33 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { Stadium } from "../../../types/Stadium";
 import {
   SunMedium,
-  CloudSun,
-  Cloud,
-  CloudFog,
-  CloudLightning,
-  CloudRainWind,
-  CloudSnow,
+  // CloudSun,
+  // Cloud,
+  // CloudFog,
+  // CloudLightning,
+  // CloudRainWind,
+  // CloudSnow,
 } from "lucide-react";
 
 export default function Weather() {
   // 예시용 기본 데이터. 실제 상황에서는 props나 API 호출로 받은 데이터를 사용할 수 있습니다.
-  const [selectedStadium, setSelectedStadium] = useState<Stadium>({
-    name: "사직야구장",
-    color: "#002856",
-    flagCode: "SJ",
-    gameTime: "2025.04.10 (목) 18:30",
-    hasGame: true,
-    homeTeam: "kia",
-    awayTeam: "lotte",
-    temp: 14,
-    precipitation: "0mm",
-    humidity: 69,
-    windSpeed: 4,
-  });
+  const selectedStadium = useMemo<Stadium>(
+    () => ({
+      name: "사직야구장",
+      color: "#002856",
+      flagCode: "SJ",
+      gameTime: "2025.04.10 (목) 18:30",
+      hasGame: true,
+      homeTeam: "kia",
+      awayTeam: "lotte",
+      temp: 14,
+      precipitation: "0mm",
+      humidity: 69,
+      windSpeed: 4,
+    }),
+    [],
+  );
 
   return (
     <div className="flex h-148 w-96 flex-col items-center rounded-2xl bg-gradient-to-b from-blue-500 to-blue-300 px-4 pt-10 pb-4">

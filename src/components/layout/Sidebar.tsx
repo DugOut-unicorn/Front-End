@@ -1,5 +1,3 @@
-import React from "react";
-
 const Sidebar = () => {
   return (
     <div className="h-[calc(100vh-4rem)] w-100">
