@@ -14,8 +14,8 @@ jobs:
 
     env:
       # 개발용 Vite 환경 변수 (Secrets에 등록 필요)
-      VITE_API_URL: ${{ secrets.DEV_VITE_API_URL }}
-      VITE_KAKAO_CLIENT_ID: ${{ secrets.DEV_VITE_KAKAO_JS_KEY }}
+      VITE_API_URL: ${{ secrets.VITE_API_URL }}
+      VITE_KAKAO_JS_KEY: ${{ secrets.VITE_KAKAO_JS_KEY }}
 
     steps:
       - name: Checkout code
