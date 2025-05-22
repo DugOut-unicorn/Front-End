@@ -1,17 +1,16 @@
 import CareerStatsTable from "./components/CareerStateTable";
 import MonthlyNavigation from "./components/MonthlyNavigation";
 import MonthlyStats from "./components/MonthState";
-import PlayerInfoCard from "./components/playerInfoCard";
-
+import PlayerInfoCard from "./components/PlayerInfoCard";
 
 export default function PlayerProfilePage() {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
+    <div className="mx-auto max-w-5xl px-4 py-6">
       <PlayerInfoCard />
       <MonthlyNavigation />
       <MonthlyStats />
       <hr className="my-6 border-gray-300" />
-      <h2 className="text-lg font-semibold mb-2">통산기록</h2>
+      <h2 className="mb-2 text-lg font-semibold">통산기록</h2>
       <CareerStatsTable />
     </div>
   );

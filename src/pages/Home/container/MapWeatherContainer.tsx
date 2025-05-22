@@ -19,7 +19,7 @@ export default function MapWeatherContainer() {
       <p className="t-body1 mb-4 text-[var(--on-surface-grey1)]">
         구장별 날씨 정보를 확인해 보세요
       </p>
-      <div className="xs:flex-col flex gap-4">
+      <div className="xs:flex-col flex items-center gap-4 md:flex-col xl:flex-row">
         <Weather />
         <KoreaMap onStadiumClick={handleStadiumClick} />
       </div>

@@ -30,7 +30,7 @@ export default function MatchingGameListPage() {
   const navigate = useNavigate(); // 추가
 
   const handleClick = (date: string, team: string) => {
-    navigate(`/list/${date}/${team}`); // 상대경로로 변경: /matching/list로 이동
+    navigate(`/matching/list/${date}/${team}`); // 상대경로로 변경: /matching/list로 이동
   };
 
   // 임시 데이터
@@ -130,12 +130,12 @@ export default function MatchingGameListPage() {
     },
   ];
 
-  const matchEntryData = {
-    time: "13:00",
-    homeTeamEmblem: "/images/lg_twins_emb.png",
-    stadium: "잠실",
-    awayTeamEmblem: "/images/kiwoom_heroes_emb.png",
-  };
+  // const matchEntryData = {
+  //   time: "13:00",
+  //   homeTeamEmblem: "/images/lg_twins_emb.png",
+  //   stadium: "잠실",
+  //   awayTeamEmblem: "/images/kiwoom_heroes_emb.png",
+  // };
 
   return (
     <>

@@ -1,4 +1,3 @@
-import React from "react";
 import { Medal } from "lucide-react";
 import { Team } from "../container/TeamOverviewContainer";
 
@@ -41,7 +40,7 @@ export function TeamRankingTable({ teams }: TeamRankingTableProps) {
                 </td>
                 <td className="t-body1 h-[48px] w-9 text-left align-middle">
                   <img
-                    src={team.logo}
+                    src={`/images/${team.logo}_emb.png`}
                     alt={team.name}
                     className="h-6 w-9 object-contain"
                   />

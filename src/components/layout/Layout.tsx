@@ -1,15 +1,17 @@
 import Header from "./Header";
 import Footer from "./Footer";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const Layout = () => {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex flex-1 flex-col items-center">
+      <main className="flex-1 flex-col ">
         <Outlet />
       </main>
-      <Footer />
+      {isHome && <Footer />}
     </div>
   );
 };

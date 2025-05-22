@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import YearSelector from "../../components/common/YearSelector";
 import TeamRankingTable from "./components/TeamRankingTable";
 import PlayerRankingTable from "./components/PlayerRankingTable";
@@ -56,7 +56,7 @@ export default function RankingPage() {
           {activeTab === "team" ? (
             <TeamRankingTable rankings={mockRankings} />
           ) : (
-            <PlayerRankingTable players={[]} />
+            <PlayerRankingTable />
           )}
         </div>
       </div>

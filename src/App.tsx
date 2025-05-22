@@ -1,6 +1,8 @@
-// src/App.tsx
-import React from "react";
-import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/Home/HomePage";
@@ -18,7 +20,7 @@ import Info from "./pages/Profile/components/Info";
 import ProfileEdit from "./pages/Profile/components/ProfileEdit";
 
 // 매칭
-import MatchingLayout from "./pages/Matching/MatchingLayout";
+
 import MatchingGameListPage from "./pages/Matching/MatchingGameListPage";
 import MatchingChatListPage from "./pages/Matching/MatchingChatListPage";
 import MatchingListPage from "./pages/Matching/MatchingListPage";
@@ -27,6 +29,7 @@ import MatchingWritePage from "./pages/Matching/MatchingWritePage";
 
 // SignupStep3: Home + Completion
 import Completion from "./pages/Login/components/Complection";
+import SidebarLayout from "./components/layout/SidebarLayout";
 function SignupStep3() {
   const navigate = useNavigate();
   return (
@@ -49,15 +52,15 @@ const router = createBrowserRouter([
       // 매칭
       {
         path: "matching",
-        element: <MatchingLayout />,
+        element: <SidebarLayout />,
         children: [
           { index: true, element: <MatchingGameListPage /> },
           { path: "chats", element: <MatchingChatListPage /> },
           { path: "list/:date/:team", element: <MatchingListPage /> },
           { path: "articles/:id", element: <MatchingArticlePage /> },
-          { path: "write", element: <MatchingWritePage /> },
         ],
       },
+      { path: "matching/write", element: <MatchingWritePage /> },
 
       // 기타 페이지
       { path: "schedule", element: <SchedulePage /> },

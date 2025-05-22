@@ -1,14 +1,13 @@
-import bg_map from "../../../assets/bg_map.png";
 import { Stadium, Stadiums } from "../../../types/Stadium";
 import { useState } from "react";
 import {
   SunMedium,
   CloudSun,
   Cloud,
-  CloudFog,
+  // CloudFog,
   CloudLightning,
   CloudRainWind,
-  CloudSnow,
+  // CloudSnow,
 } from "lucide-react";
 
 // 깃발 GIF import
@@ -45,8 +44,11 @@ export default function KoreaMap({ onStadiumClick }: KoreaMapProps) {
     <div className="flex h-148 w-152.5 flex-row justify-between rounded-2xl bg-white px-4 py-2">
       <div className="flex flex-col gap-2 py-18">
         <div
-          style={{ boxShadow: "0px 4px 8px 0px rgba(9,9,11,0.12)" }}
-          className="flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 border-[var(--surface-3)] bg-[var(--surface-1)] pt-3 pr-3 pb-2 pl-4"
+          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
+            selectedStadium?.flagCode === "JS_OB"
+              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
+              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
+          } pt-3 pr-3 pb-2 pl-4`}
           onClick={() => handleStadiumClick("JS_OB")}
         >
           <div className="t-caption text-[var(--on-surface-grey1)]">
@@ -56,6 +58,87 @@ export default function KoreaMap({ onStadiumClick }: KoreaMapProps) {
             <div className="t-body1 text-[var(--on-surface-default)]">19도</div>
             <div>
               <SunMedium size={32} className="text-[var(--on-surface-grey1)]" />
+            </div>
+          </div>
+        </div>
+        <div
+          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
+            selectedStadium?.flagCode === "GC"
+              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
+              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
+          } pt-3 pr-3 pb-2 pl-4`}
+          onClick={() => handleStadiumClick("GC")}
+        >
+          <div className="t-caption text-[var(--on-surface-grey1)]">
+            고척스카이돔
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <div className="t-body1 text-[var(--on-surface-default)]">21도</div>
+            <div>
+              <CloudSun size={32} className="text-[var(--on-surface-grey1)]" />
+            </div>
+          </div>
+        </div>
+
+        <div
+          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
+            selectedStadium?.flagCode === "KC"
+              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
+              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
+          } pt-3 pr-3 pb-2 pl-4`}
+          onClick={() => handleStadiumClick("KC")}
+        >
+          <div className="t-caption text-[var(--on-surface-grey1)]">
+            광주기아챔피언스필드
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <div className="t-body1 text-[var(--on-surface-default)]">23도</div>
+            <div>
+              <Cloud size={32} className="text-[var(--on-surface-grey1)]" />
+            </div>
+          </div>
+        </div>
+
+        <div
+          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
+            selectedStadium?.flagCode === "DK"
+              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
+              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
+          } pt-3 pr-3 pb-2 pl-4`}
+          onClick={() => handleStadiumClick("DK")}
+        >
+          <div className="t-caption text-[var(--on-surface-grey1)]">
+            대구삼성라이온즈파크
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <div className="t-body1 text-[var(--on-surface-default)]">25도</div>
+            <div>
+              <CloudLightning
+                size={32}
+                className="text-[var(--on-surface-grey1)]"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
+            selectedStadium?.flagCode === "SJ"
+              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
+              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
+          } pt-3 pr-3 pb-2 pl-4`}
+          onClick={() => handleStadiumClick("SJ")}
+        >
+          <div className="t-caption text-[var(--on-surface-grey1)]">
+            사직야구장
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <div className="t-body1 text-[var(--on-surface-default)]">18도</div>
+            <div>
+              <CloudRainWind
+                size={32}
+                className="text-[var(--on-surface-grey1)]"
+              />
             </div>
           </div>
         </div>
