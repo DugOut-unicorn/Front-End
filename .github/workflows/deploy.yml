@@ -16,7 +16,7 @@ jobs:
     # 여기서 env로 VITE_ 시크릿을 주입
     env:
       VITE_API_URL: ${{ secrets.VITE_API_URL }}
-      VITE_KAKAO_CLIENT_ID: ${{ secrets.VITE_KAKAO_CLIENT_ID }}
+      VITE_KAKAO_JS_KEY: ${{ secrets.VITE_KAKAO_JS_KEY }}
 
     steps:
       - name: Checkout code
