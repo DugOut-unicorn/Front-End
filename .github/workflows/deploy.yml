@@ -47,7 +47,6 @@ jobs:
             ./dist/ \
             s3://${{ secrets.S3_BUCKET }}/ \
             --delete \
-            --acl public-read
 
       - name: Invalidate CloudFront cache
         run: |
