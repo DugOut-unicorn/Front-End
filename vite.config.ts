@@ -11,22 +11,22 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/login/nickname': {
-          target: env.VITE_API_BASE_URL,
+          target: env.VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
         '/login/cheeringTeamId': {
-          target: env.VITE_API_BASE_URL,
+          target: env.VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
         '/api/kakao': {
-          target: env.VITE_API_BASE_URL,
+          target: env.VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
         '/mypage/myTemp': {
-          target: env.VITE_API_BASE_URL,
+          target: env.VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
@@ -36,17 +36,17 @@ export default defineConfig(({ mode }) => {
           secure: false,
         },
         '/mypage/editPersonal': {
-          target: env.VITE_API_BASE_URL,
+          target: env.VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
         '/callback': {
-          target: env.VITE_API_BASE_URL,
+          target: env.VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
         '/home': {
-          target: env.VITE_API_BASE_URL,
+          target: env.VITE_API_URL,
           changeOrigin: true,
           secure: false,
           rewrite: path => path,
