@@ -86,6 +86,7 @@ export const homeApi = {
         games: day.games.map(game => ({
           ...game,
           startTime: `${String(game.startTime).padStart(4, "0").slice(0, 2)}:${String(game.startTime).padStart(4, "0").slice(2)}`,
+          stadiumName: game.stadiumName,
         })),
       })),
     };

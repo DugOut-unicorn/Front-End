@@ -30,6 +30,7 @@ export type calendarGameDto = {
   homeTeamName: string;
   awayTeamName: string;
   startTime: string;
+  stadiumName: string;
 };
 
 export type calendarDayDto = {
