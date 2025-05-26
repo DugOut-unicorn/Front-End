@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { CalendarSearch, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
-import { homeApi } from "../../../api/home/apis";
+import { homeApi, getEnglishTeamName } from "../../../api/home/apis";
 import { calendarGamesDetailDto } from "../../../types/home";
 
 export function TeamScheduleSection() {
@@ -18,10 +18,9 @@ export function TeamScheduleSection() {
   useEffect(() => {
     const fetchCalendarData = async () => {
       setIsLoading(true);
-      console.log("캘린더 데이터 요청:", { year, month });
       try {
-        const data = await homeApi.getCalendarGames(year, month);
-        console.log("캘린더 데이터 응답:", data);
+        // cheeringTeamIdx 5번으로 고정
+        const data = await homeApi.getCalendarGames(year, month, undefined, 5);
         setCalendarData(data);
       } catch (error) {
         console.error("캘린더 데이터 조회 실패:", error);
@@ -71,11 +70,6 @@ export function TeamScheduleSection() {
 
     const day = selectedDate.getDate();
     const dayData = calendarData.days.find(d => d.day === day);
-    console.log("선택된 날짜의 경기 정보:", {
-      selectedDate: selectedDate.toISOString(),
-      day,
-      dayData,
-    });
     return dayData?.games || [];
   }, [selectedDate, calendarData]);
 
@@ -87,7 +81,6 @@ export function TeamScheduleSection() {
       const date = new Date(year, month - 1, day.day);
       return date.toDateString();
     });
-    console.log("경기가 있는 날짜들:", dates);
     return new Set(dates);
   }, [calendarData, year, month]);
 
@@ -184,27 +177,46 @@ export function TeamScheduleSection() {
 
         {/* 선택된 날짜의 경기 정보 */}
         {selectedDate && (
-          <div className="mt-2 flex h-[106px] w-full flex-col gap-2 overflow-y-auto rounded-[8px] border border-[var(--divider-dv2)] bg-[var(--surface-1)] p-2">
+          <div className="mt-2 flex w-full flex-col gap-1 rounded-[8px] border border-[var(--divider-dv2)] bg-[var(--surface-1)] p-1">
             {selectedGames.length > 0 ? (
               selectedGames.map(game => (
                 <div
                   key={game.gameIdx}
-                  className="flex items-center justify-between rounded bg-white p-2"
+                  className="flex h-23 flex-col items-center justify-center rounded-lg bg-white p-2"
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="t-body2">{game.homeTeamName}</span>
-                    <span className="t-body2 text-[var(--on-surface-grey1)]">
-                      vs
+                  {/* 상단: 팀 로고, 이름, 상태 */}
+                  <div className="mb-3 flex items-center justify-center gap-4">
+                    {/* 홈팀: 이름 - 로고 */}
+                    <div className="flex items-center gap-1">
+                      <span className="t-footnote">{game.homeTeamName}</span>
+                      <img
+                        src={`/images/${getEnglishTeamName(game.homeTeamName)}_big_emb.png`}
+                        alt={game.homeTeamName}
+                        className="h-9 w-9 rounded-full border border-[var(--divider-dv2)]"
+                      />
+                    </div>
+                    {/* 상태 */}
+                    <span className="t-footnote rounded-full bg-gray-100 px-3 py-1 text-[var(--on-surface-grey1)]">
+                      예정
                     </span>
-                    <span className="t-body2">{game.awayTeamName}</span>
+                    {/* 어웨이팀: 로고 - 이름 */}
+                    <div className="flex items-center gap-1">
+                      <img
+                        src={`/images/${getEnglishTeamName(game.awayTeamName)}_big_emb.png`}
+                        alt={game.awayTeamName}
+                        className="h-9 w-9 rounded-full border border-[var(--divider-dv2)]"
+                      />
+                      <span className="t-footnote">{game.awayTeamName}</span>
+                    </div>
                   </div>
-                  <span className="t-body2 text-[var(--on-surface-grey1)]">
-                    {game.startTime}
-                  </span>
+                  {/* 하단: 날짜, 시간, 구장 */}
+                  <div className="t-footnote mt-0.5 text-center text-[var(--on-surface-default)]">
+                    {selectedDate.getDate()}일 오후 {game.startTime}
+                  </div>
                 </div>
               ))
             ) : (
-              <div className="flex h-full items-center justify-center">
+              <div className="flex h-23 items-center justify-center rounded-lg bg-white p-2">
                 <span className="t-footnote text-[var(--on-surface-grey2)]">
                   예정된 경기 일정이 없어요
                 </span>
