@@ -42,3 +42,18 @@ export type calendarGamesDetailDto = {
   month: number;
   days: calendarDayDto[];
 };
+
+export type StadiumWeatherDto = {
+  stadiumId: number;
+  stadiumName: string;
+  temperature: number;
+  humidity: number;
+  precipitation: number;
+  windSpeed: number;
+  windDirection: number;
+  condition: string;
+};
+
+export type cheeringTeamDto = {
+  cheeringTeamIdx: number;
+};

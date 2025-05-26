@@ -2,6 +2,7 @@
 import axios from "axios";
 
 const isProd = import.meta.env.MODE === "production";
+const token = localStorage.getItem("jwtToken");
 
 const axiosInstance = axios.create({
   baseURL: isProd
@@ -10,6 +11,7 @@ const axiosInstance = axios.create({
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
   },
 });
 
