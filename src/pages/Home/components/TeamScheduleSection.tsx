@@ -154,20 +154,20 @@ export function TeamScheduleSection() {
                 <button
                   key={day.toISOString()}
                   onClick={() => setSelectedDate(day)}
-                  className={`relative flex h-10 items-center justify-center rounded ${
+                  className={`relative flex h-full w-full items-center justify-center rounded ${
                     isCurrentMonth
                       ? "text-[var(--on-surface-default)]"
                       : "text-[var(--on-surface-grey2)]"
                   } ${
                     isSelected
-                      ? "bg-[var(--primary-hover)]"
+                      ? "bg-[var(--surface-3)]"
                       : "hover:bg-[var(--surface-3)]"
                   } `}
                   disabled={isLoading}
                 >
                   {day.getDate()}
                   {hasGame && (
-                    <span className="absolute -bottom-1 h-2 w-2 rounded-full bg-blue-500" />
+                    <span className="absolute bottom-0 h-2 w-2 rounded-full bg-blue-500" />
                   )}
                 </button>
               );
@@ -210,8 +210,13 @@ export function TeamScheduleSection() {
                     </div>
                   </div>
                   {/* 하단: 날짜, 시간, 구장 */}
-                  <div className="t-footnote mt-0.5 text-center text-[var(--on-surface-default)]">
-                    {selectedDate.getDate()}일 오후 {game.startTime}
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="t-footnote mt-0.5 text-center text-[var(--on-surface-default)]">
+                      {selectedDate.getDate()}일 오후 {game.startTime}
+                    </div>
+                    <div className="t-footnote mt-0.5 text-center text-[var(--on-surface-default)]">
+                      {game.stadiumName}
+                    </div>
                   </div>
                 </div>
               ))

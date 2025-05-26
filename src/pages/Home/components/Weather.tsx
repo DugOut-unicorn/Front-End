@@ -1,76 +1,107 @@
-import { useMemo } from "react";
+import { getEnglishTeamName } from "../../../api/home/apis";
 import { Stadium } from "../../../types/Stadium";
 import {
   SunMedium,
-  // CloudSun,
-  // Cloud,
-  // CloudFog,
-  // CloudLightning,
-  // CloudRainWind,
-  // CloudSnow,
+  CloudSun,
+  Cloud,
+  CloudFog,
+  CloudLightning,
+  CloudRainWind,
+  CloudSnow,
 } from "lucide-react";
+import { calendarGameDto, StadiumWeatherDto } from "../../../types/home";
 
-export default function Weather() {
-  // 예시용 기본 데이터. 실제 상황에서는 props나 API 호출로 받은 데이터를 사용할 수 있습니다.
-  const selectedStadium = useMemo<Stadium>(
-    () => ({
-      name: "사직야구장",
-      color: "#002856",
-      flagCode: "SJ",
-      gameTime: "2025.04.10 (목) 18:30",
-      hasGame: true,
-      homeTeam: "kia",
-      awayTeam: "lotte",
-      temp: 14,
-      precipitation: "0mm",
-      humidity: 69,
-      windSpeed: 4,
-    }),
-    [],
-  );
+type WeatherProps = {
+  selectedStadium: Stadium | null;
+  stadiumWeather?: StadiumWeatherDto;
+  game?: calendarGameDto;
+};
+
+// getWeatherIcon 함수 재사용 (KoreaMap.tsx와 동일하게 복사)
+function getWeatherIcon(condition: string) {
+  switch (condition) {
+    case "맑음":
+      return <SunMedium size={32} className="mb-5 h-25 w-25 text-yellow-200" />;
+    case "구름많음":
+      return <CloudSun size={32} className="mb-5 h-25 w-25 text-yellow-200" />;
+    case "흐림":
+      return <Cloud size={32} className="mb-5 h-25 w-25 text-yellow-200" />;
+    case "비":
+      return (
+        <CloudRainWind size={32} className="mb-5 h-25 w-25 text-yellow-200" />
+      );
+    case "천둥번개":
+      return (
+        <CloudLightning size={32} className="mb-5 h-25 w-25 text-yellow-200" />
+      );
+    case "눈":
+      return <CloudSnow size={32} className="mb-5 h-25 w-25 text-yellow-200" />;
+    case "안개":
+      return <CloudFog size={32} className="mb-5 h-25 w-25 text-yellow-200" />;
+    default:
+      return <SunMedium size={32} className="mb-5 h-25 w-25 text-yellow-200" />;
+  }
+}
+
+function formatGameDate(time: string) {
+  const today = new Date();
+  const week = ["일", "월", "화", "수", "목", "금", "토"];
+  const dayOfWeek = week[today.getDay()];
+  return `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")} (${dayOfWeek}) ${time}`;
+}
+
+export default function Weather({
+  selectedStadium,
+  stadiumWeather,
+  game,
+}: WeatherProps) {
+  const weather = stadiumWeather;
 
   return (
     <div className="flex h-148 w-96 flex-col items-center rounded-2xl bg-gradient-to-b from-blue-500 to-blue-300 px-4 pt-10 pb-4">
       <h3 className="t-h3 mb-2 text-[var(--on-fill-default)]">
-        {selectedStadium.name} 현재 날씨
+        {selectedStadium?.name || "구장 선택"} 현재 날씨
       </h3>
-      {selectedStadium.gameTime && (
+      {game && (
         <p className="t-body-1 mb-8 text-[var(--on-fill-blue)]">
-          경기 시간: {selectedStadium.gameTime}
+          경기 시간: {formatGameDate(game.startTime)}
         </p>
       )}
-
-      {selectedStadium.hasGame && (
+      {game ? (
         <div className="mb-6 flex w-full items-center justify-center gap-8">
           <img
-            src={`/images/${selectedStadium.homeTeam
-              ?.toLowerCase()
-              .replace(" ", "")}_emb.png`}
-            alt={selectedStadium.homeTeam}
+            src={`/images/${getEnglishTeamName(game.homeTeamName)}_big_emb.png`}
+            alt={game.homeTeamName}
             className="h-18 w-18 rounded-full bg-white object-contain object-center"
           />
           <span className="t-h1 text-[var(--on-fill-blue)] opacity-50">VS</span>
           <img
-            src={`/images/${selectedStadium.awayTeam
-              ?.toLowerCase()
-              .replace(" ", "")}_emb.png`}
-            alt={selectedStadium.awayTeam}
+            src={`/images/${getEnglishTeamName(game.awayTeamName)}_big_emb.png`}
+            alt={game.awayTeamName}
             className="h-18 w-18 rounded-full bg-white object-contain object-center"
           />
         </div>
+      ) : (
+        <div className="mb-6 flex w-full items-center justify-center gap-8">
+          <span className="t-body-1 text-[var(--on-fill-blue)]">
+            오늘은 경기가 없습니다.
+          </span>
+        </div>
       )}
-
-      <SunMedium className="mb-5 h-25 w-25 text-yellow-200" />
-      <p className="t-caption-sb mb-3 text-[var(--on-fill-default)]">맑음</p>
-      <p className="t-h2 text-[var(--surface-1)]">{selectedStadium.temp}°C</p>
-
+      {getWeatherIcon(weather?.condition ?? "")}
+      <p className="t-caption-sb mb-3 text-[var(--on-fill-default)]">
+        {weather?.condition ?? "-"}
+      </p>
+      <p className="t-h2 text-[var(--surface-1)]">
+        {weather?.temperature ?? "-"}°C
+      </p>
       <div className="mt-auto grid grid-cols-3 gap-2">
         <div className="h-24 w-28 rounded-xl bg-white/20 p-4 text-center backdrop-blur-sm">
           <div className="t-caption-sb mb-4.5 text-[var(--on-fill-default)]">
             강수량
           </div>
           <div className="t-h3 text-[var(--on-fill-default)]">
-            {selectedStadium.precipitation ?? "-mm"}
+            {weather?.precipitation ?? "-"}mm
           </div>
         </div>
         <div className="h-24 w-28 rounded-xl bg-white/20 p-4 text-center backdrop-blur-sm">
@@ -78,7 +109,7 @@ export default function Weather() {
             습도
           </div>
           <div className="t-h3 text-[var(--on-fill-default)]">
-            {selectedStadium.humidity ?? "-"}%
+            {weather?.humidity ?? "-"}%
           </div>
         </div>
         <div className="h-24 w-28 rounded-xl bg-white/20 p-4 text-center backdrop-blur-sm">
@@ -86,7 +117,7 @@ export default function Weather() {
             풍향,풍속
           </div>
           <div className="t-h3 text-[var(--on-fill-default)]">
-            {selectedStadium.windSpeed ?? "-"}m/s
+            {weather?.windSpeed ?? "-"}m/s
           </div>
         </div>
       </div>
