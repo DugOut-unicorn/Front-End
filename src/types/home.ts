@@ -24,3 +24,21 @@ export type recentMatchingDto = {
   createdAt: string;
   preferredMatchDate: string;
 };
+
+export type calendarGameDto = {
+  gameIdx: number;
+  homeTeamName: string;
+  awayTeamName: string;
+  startTime: string;
+};
+
+export type calendarDayDto = {
+  day: number;
+  games: calendarGameDto[];
+};
+
+export type calendarGamesDetailDto = {
+  year: number;
+  month: number;
+  days: calendarDayDto[];
+};

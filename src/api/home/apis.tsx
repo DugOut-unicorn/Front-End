@@ -1,4 +1,9 @@
-import { newsDto, rankingDto, recentMatchingDto } from "../../types/home";
+import {
+  calendarGamesDetailDto,
+  newsDto,
+  rankingDto,
+  recentMatchingDto,
+} from "../../types/home";
 import axiosInstance from "../axiosInstance";
 
 export const homeApi = {
@@ -52,6 +57,23 @@ export const homeApi = {
   getStadiumWeathers: async () => {
     const response = await axiosInstance.get("/home/stadium-weathers");
     return response.data;
+  },
+  getCalendarGames: async (year: number, month: number) => {
+    const { data: raw } = await axiosInstance.get<calendarGamesDetailDto>(
+      `/home/calendar-games?month=${year}-${String(month).padStart(2, "0")}`,
+    );
+
+    return {
+      year: raw.year,
+      month: raw.month,
+      days: raw.days.map(day => ({
+        day: day.day,
+        games: day.games.map(game => ({
+          ...game,
+          startTime: `${String(game.startTime).padStart(4, "0").slice(0, 2)}:${String(game.startTime).padStart(4, "0").slice(2)}`,
+        })),
+      })),
+    };
   },
 };
 
