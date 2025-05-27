@@ -64,6 +64,13 @@ export default defineConfig(({ mode }) => {
           secure: false,
           rewrite: path => path,
         },
+        // record API
+        "/record": {
+          target: VITE_API_URL,
+          changeOrigin: true,
+          secure: false,
+          rewrite: path => path,
+        },
       },
     },
     define: {
