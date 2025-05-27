@@ -8,20 +8,6 @@ export default function RankingPage() {
   const [activeTab, setActiveTab] = useState<"team" | "player">("team");
 
   // 임시 데이터 - 실제로는 API에서 가져올 데이터
-  const mockRankings = Array.from({ length: 10 }, (_, index) => ({
-    rank: index + 1,
-    teamName: "LG",
-    games: 7,
-    wins: 7,
-    losses: 7,
-    draws: 7,
-    winningPercentage: 0.872,
-    gamesBehind: 0.0,
-    streak: "3승",
-    last10: "6승-1패-0무",
-    runsScored: 0.252,
-    runsAllowed: 3.86,
-  }));
 
   return (
     <div>
