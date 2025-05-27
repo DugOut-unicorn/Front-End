@@ -53,11 +53,7 @@ export default function RankingPage() {
               개인 순위
             </button>
           </div>
-          {activeTab === "team" ? (
-            <TeamRankingTable rankings={mockRankings} />
-          ) : (
-            <PlayerRankingTable />
-          )}
+          {activeTab === "team" ? <TeamRankingTable /> : <PlayerRankingTable />}
         </div>
       </div>
     </div>
