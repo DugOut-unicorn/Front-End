@@ -49,7 +49,7 @@ function ChatRoomInner({
         // peerIdx를 직접 사용
         setOtherUserId(peerIdx);
       })
-      .catch(err => {
+      .catch(() => {
         setError("채팅 기록을 불러오지 못했습니다.");
       })
       .finally(() => setLoading(false));
