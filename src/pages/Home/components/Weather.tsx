@@ -60,7 +60,9 @@ export default function Weather({
   return (
     <div className="flex h-148 w-96 flex-col items-center rounded-2xl bg-gradient-to-b from-blue-500 to-blue-300 px-4 pt-10 pb-4">
       <h3 className="t-h3 mb-2 text-[var(--on-fill-default)]">
-        {selectedStadium?.name || "구장 선택"} 현재 날씨
+        {selectedStadium
+          ? `${selectedStadium.name} 현재 날씨`
+          : "구장을 선택해주세요"}
       </h3>
       {game && (
         <p className="t-body-1 mb-8 text-[var(--on-fill-blue)]">

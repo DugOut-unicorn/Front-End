@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@stomp/stompjs": "^7.1.1",
     "@tailwindcss/vite": "^4.0.17",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
@@ -21,13 +22,15 @@
     "react-day-picker": "^9.6.7",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.1",
+    "sockjs-client": "^1.6.1",
     "tailwindcss": "^4.0.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.24",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/sockjs-client": "^1.5.4",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
