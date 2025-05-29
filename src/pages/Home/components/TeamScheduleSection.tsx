@@ -176,7 +176,7 @@ export function TeamScheduleSection() {
         </div>
 
         {/* 선택된 날짜의 경기 정보 */}
-        {selectedDate && (
+        {selectedDate ? (
           <div className="mt-2 flex w-full flex-col gap-1 rounded-[8px] border border-[var(--divider-dv2)] bg-[var(--surface-1)] p-1">
             {selectedGames.length > 0 ? (
               selectedGames.map(game => (
@@ -197,7 +197,14 @@ export function TeamScheduleSection() {
                     </div>
                     {/* 상태 */}
                     <span className="t-footnote rounded-full bg-gray-100 px-3 py-1 text-[var(--on-surface-grey1)]">
-                      예정
+                      {(() => {
+                        const gameDate = new Date(selectedDate);
+                        const [hours, minutes] = game.startTime
+                          .split(":")
+                          .map(Number);
+                        gameDate.setHours(hours, minutes);
+                        return gameDate < new Date() ? "종료" : "예정";
+                      })()}
                     </span>
                     {/* 어웨이팀: 로고 - 이름 */}
                     <div className="flex items-center gap-1">
@@ -227,6 +234,12 @@ export function TeamScheduleSection() {
                 </span>
               </div>
             )}
+          </div>
+        ) : (
+          <div className="mt-2 flex h-25 items-center justify-center rounded-[8px] border border-[var(--divider-dv2)] bg-[var(--surface-1)] p-1">
+            <span className="t-footnote text-[var(--on-surface-grey2)]">
+              날짜를 선택해주세요
+            </span>
           </div>
         )}
       </div>

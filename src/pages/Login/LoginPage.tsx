@@ -54,6 +54,7 @@ const LoginPage: React.FC = () => {
 
     window.Kakao.Auth.login({
       scope: "profile_nickname,account_email",
+      throughTalk: false,
       success: async (authObj: any) => {
         try {
           // 1) 카카오 accessToken으로 백엔드 로그인

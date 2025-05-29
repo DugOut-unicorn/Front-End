@@ -74,11 +74,26 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
+        // record API
+        "/record": {
+          target: VITE_API_URL,
+          changeOrigin: true,
+          secure: false,
+          rewrite: path => path,
+        },
+        // chat API
+        "/api/chat": {
+          target: VITE_API_URL,
+          changeOrigin: true,
+          secure: false,
+          rewrite: path => path,
+        },
       },
     },
     define: {
       'import.meta.env.VITE_API_URL': JSON.stringify(VITE_API_URL),
       'import.meta.env.VITE_KAKAO_JS_KEY': JSON.stringify(VITE_KAKAO_JS_KEY),
+
     },
   };
 });
