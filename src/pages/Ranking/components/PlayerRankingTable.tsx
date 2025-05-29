@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { rankingApi } from "../../../api/ranking/apis";
 
 // interface PlayerData {
 //   rank: number;
@@ -19,7 +20,80 @@ import { useState } from "react";
 //   };
 // }
 
+interface PlayerCardData {
+  playerName: string;
+  backNumber: number;
+  playerImageUrl: string;
+  value: string | number;
+}
+
+const CARD_CONFIG = [
+  {
+    title: "다승",
+    fetch: rankingApi.getRankPitcherWinRate,
+    valueKey: "wpct",
+    valueLabel: "승률",
+  },
+  {
+    title: "평균자책",
+    fetch: rankingApi.getRankPitcherEra,
+    valueKey: "era",
+    valueLabel: "ERA",
+  },
+  {
+    title: "탈삼진",
+    fetch: rankingApi.getRankPitcherSo,
+    valueKey: "so",
+    valueLabel: "탈삼진",
+  },
+  {
+    title: "세이브",
+    fetch: rankingApi.getRankPitcherSv,
+    valueKey: "sv",
+    valueLabel: "세이브",
+  },
+];
+
 export default function PlayerRankingTable() {
+  const [cardData, setCardData] = useState<PlayerCardData[][]>([
+    [],
+    [],
+    [],
+    [],
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      setLoading(true);
+      try {
+        const results = await Promise.all(
+          CARD_CONFIG.map(async (card, idx) => {
+            const data = await card.fetch();
+            // valueKey에 따라 값 포맷팅
+            return data.slice(0, 3).map((item: any) => ({
+              playerName: item.playerName,
+              backNumber: item.backNumber,
+              playerImageUrl: item.playerImageUrl,
+              value:
+                card.valueKey === "wpct"
+                  ? (item.wpct * 100).toFixed(1) + "%"
+                  : card.valueKey === "era"
+                    ? item.era.toFixed(2)
+                    : item[card.valueKey],
+            }));
+          }),
+        );
+        setCardData(results);
+      } catch (e) {
+        setCardData([[], [], [], []]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAll();
+  }, []);
+
   const [selectedCategory, setSelectedCategory] = useState<"투수" | "타자">(
     "투수",
   );
@@ -95,44 +169,50 @@ export default function PlayerRankingTable() {
         </button>
       </div>
 
-      <div className="grid grid-cols-5 gap-4">
-        {mockPlayers.slice(0, 5).map((player, groupIndex) => (
-          <div key={groupIndex} className="bg-gray-50 p-4">
-            <div className="mb-2 text-sm text-gray-500">다승</div>
-            <div className="mb-2">
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-bold">1</span>
-                <img
-                  src={`images/${player.name.toLowerCase()}.png`}
-                  alt={player.name}
-                  className="h-12 w-10"
-                />
-                <div>
-                  <div className="font-bold">{player.name}</div>
-                  <div className="text-sm text-gray-500">{player.team}</div>
-                </div>
-              </div>
-            </div>
-            <div className="border-t border-gray-200 pt-2">
-              <div className="grid grid-cols-[1fr_40px]">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">1</span>
-                  <span className="text-sm">{player.name}</span>
-                  <span className="text-sm text-gray-500">{player.team}</span>
-                </div>
-                <span className="text-right text-sm">1승</span>
-              </div>
-              {[...Array(4)].map((_, idx) => (
-                <div key={idx} className="grid grid-cols-[1fr_40px]">
+      <div className="grid grid-cols-4 gap-4">
+        {CARD_CONFIG.map((card, idx) => (
+          <div key={card.title} className="bg-gray-50 p-4">
+            <div className="mb-2 text-sm text-gray-500">{card.title}</div>
+            {loading ? (
+              <div className="text-center">로딩 중...</div>
+            ) : cardData[idx].length === 0 ? (
+              <div className="text-center text-gray-400">데이터 없음</div>
+            ) : (
+              <>
+                <div className="mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">1</span>
-                    <span className="text-sm">{player.name}</span>
-                    <span className="text-sm text-gray-500">{player.team}</span>
+                    <span className="text-xl font-bold">1</span>
+                    <img
+                      src={cardData[idx][0]?.playerImageUrl}
+                      alt={cardData[idx][0]?.playerName}
+                      className="h-12 w-10 object-cover"
+                    />
+                    <div>
+                      <div className="font-bold">
+                        {cardData[idx][0]?.playerName}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        #{cardData[idx][0]?.backNumber}
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-right text-sm">1승</span>
                 </div>
-              ))}
-            </div>
+                <div className="border-t border-gray-200 pt-2">
+                  {cardData[idx].map((player, i) => (
+                    <div key={i} className="grid grid-cols-[1fr_40px]">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{i + 1}</span>
+                        <span className="text-sm">{player.playerName}</span>
+                        <span className="text-sm text-gray-500">
+                          #{player.backNumber}
+                        </span>
+                      </div>
+                      <span className="text-right text-sm">{player.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>

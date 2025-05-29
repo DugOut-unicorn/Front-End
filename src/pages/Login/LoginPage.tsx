@@ -46,6 +46,7 @@ const LoginPage: React.FC = () => {
 
     window.Kakao.Auth.login({
       scope: "profile_nickname,account_email",
+      throughTalk: false,
       success: async (authObj: any) => {
         try {
           const res = await fetch("/api/kakao/user-info", {

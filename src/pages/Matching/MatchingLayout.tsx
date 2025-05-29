@@ -3,9 +3,8 @@ import { Outlet } from "react-router-dom";
 
 export default function MatchingLayout() {
   return (
-    <>
-      {/* 자식 라우트 페이지만 렌더 */}
+    <div className="w-220">
       <Outlet />
-    </>
+    </div>
   );
 }

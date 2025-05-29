@@ -71,12 +71,20 @@ export default defineConfig(({ mode }) => {
           secure: false,
           rewrite: path => path,
         },
+        // chat API
+        "/api/chat": {
+          target: VITE_API_URL,
+          changeOrigin: true,
+          secure: false,
+          rewrite: path => path,
+        },
       },
     },
     define: {
       // 프로덕션 번들에서 import.meta.env.VITE_* 으로 접근 가능하게 강제 주입
       "import.meta.env.VITE_API_URL": JSON.stringify(VITE_API_URL),
       "import.meta.env.VITE_KAKAO_JS_KEY": JSON.stringify(VITE_KAKAO_JS_KEY),
+      global: "window",
     },
   };
 });
