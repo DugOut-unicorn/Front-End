@@ -26,31 +26,34 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
       console.log('Nickname to check:', nickname);
       console.log('Using token:', token);
 
-      const res = await fetch(
-        '/login/nickname',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ nickname }),
-        }
-      );
+      const res = await fetch('/login/nickname', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ nickname }),
+      });
 
-      console.log('Response status:', res.status);
-      const data = await res.json().catch(() => null);
-      console.log('Response body:', data);
+      console.log('▶ nickname check status:', res.status);
+      const data = await res.json().catch(() => ({}));
+      console.log('▶ nickname check response:', data);
 
       if (res.ok) {
+        // 200 → 사용 가능
         setNicknameCheckResult('available');
-      } else if (res.status === 409) {
+      } else if (
+        res.status === 400 &&
+        typeof data.message === 'string' &&
+        data.message.includes('이미 사용 중인 닉네임입니다')
+      ) {
+        // 400 + 메시지 확인 → 중복
         setNicknameCheckResult('duplicate');
-      } else if (res.status === 400 && data?.message?.includes('유효하지 않은 토큰')) {
-        // 토큰이 유효하지 않을 때 처리
+      } else if (res.status === 401) {
+        // 401 → 인증 실패
         alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('jwtToken');
         navigate('/login');
       } else {
         console.error('Unexpected status or error:', res.status, data);
@@ -120,13 +123,11 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
         type="button"
         disabled={nicknameCheckResult !== 'available'}
         onClick={onNext}
-        className={
-          `mt-8 w-full max-w-md py-3 rounded ${
-            nicknameCheckResult === 'available'
-              ? 'bg-black text-white hover:bg-gray-800'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-          }`
-        }
+        className={`mt-8 w-full max-w-md py-3 rounded ${
+          nicknameCheckResult === 'available'
+            ? 'bg-black text-white hover:bg-gray-800'
+            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        }`}
       >
         다음 단계로
       </button>

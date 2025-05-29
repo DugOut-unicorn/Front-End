@@ -1,215 +1,171 @@
-import DaySelector from "../../components/common/DaySelector";
+// src/pages/Matching/MatchingGameListPage.tsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MonthSelector from "../../components/common/MonthSelector";
-import { useNavigate } from "react-router-dom"; // 추가
+import DaySelector from "../../components/common/DaySelector";
 
 interface Game {
   time: string;
-  homeTeam: {
-    name: string;
-    logo: string;
-  };
-  awayTeam: {
-    name: string;
-    logo: string;
-  };
-  status: {
-    text: string;
-    type: "종료" | "진행중" | "진행전";
-  };
-  result?: {
-    score?: string;
-    winRate?: string;
-    winner?: "home" | "away";
-  };
+  homeTeam: { name: string; logo: string };
+  awayTeam: { name: string; logo: string };
+  stadium: string;
 }
 
-// schedule?date=2025-04-01 형식으로 변경.
 export default function MatchingGameListPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const navigate = useNavigate(); // 추가
+  const navigate = useNavigate();
 
-  const handleClick = (date: string, team: string) => {
-    navigate(`/matching/list/${date}/${team}`); // 상대경로로 변경: /matching/list로 이동
-  };
-
-  // 임시 데이터
   const games: Game[] = [
     {
       time: "13:00",
-      homeTeam: {
-        name: "LG 트윈스",
-        logo: "/images/lg_emb.png",
-      },
-      awayTeam: {
-        name: "키움 히어로즈",
-        logo: "/images/kiwoom_emb.png",
-      },
-      status: {
-        text: "경기 종료",
-        type: "종료",
-      },
-      result: {
-        score: "4:3",
-      },
+      homeTeam: { name: "LG 트윈스", logo: "/images/lg_emb.png" },
+      awayTeam: { name: "키움 히어로즈", logo: "/images/kiwoom_emb.png" },
+      stadium: "잠실",
     },
     {
       time: "13:00",
-      homeTeam: {
-        name: "LG 트윈스",
-        logo: "/images/lg_emb.png",
-      },
-      awayTeam: {
-        name: "키움 히어로즈",
-        logo: "/images/kiwoom_emb.png",
-      },
-      status: {
-        text: "경기 종료",
-        type: "종료",
-      },
-      result: {
-        score: "4:3",
-      },
-    },
-    {
-      time: "13:00",
-      homeTeam: {
-        name: "LG 트윈스",
-        logo: "/images/lg_emb.png",
-      },
-      awayTeam: {
-        name: "키움 히어로즈",
-        logo: "/images/kiwoom_emb.png",
-      },
-      status: {
-        text: "경기 중",
-        type: "진행중",
-      },
-      result: {
-        winRate: "72.3%",
-        winner: "home",
-      },
+      homeTeam: { name: "NC 다이노스", logo: "/images/nc_emb.png" },
+      awayTeam: { name: "롯데 자이언츠", logo: "/images/lotte_emb.png" },
+      stadium: "잠실",
     },
     {
       time: "14:00",
-      homeTeam: {
-        name: "LG 트윈스",
-        logo: "/images/lg_emb.png",
-      },
-      awayTeam: {
-        name: "키움 히어로즈",
-        logo: "/images/kiwoom_emb.png",
-      },
-      status: {
-        text: "경기 전",
-        type: "진행전",
-      },
-      result: {
-        winRate: "52.3%",
-        winner: "away",
-      },
-    },
-    {
-      time: "14:00",
-      homeTeam: {
-        name: "LG 트윈스",
-        logo: "/images/lg_emb.png",
-      },
-      awayTeam: {
-        name: "키움 히어로즈",
-        logo: "/images/kiwoom_emb.png",
-      },
-      status: {
-        text: "경기 전",
-        type: "진행전",
-      },
-      result: {
-        winRate: "52.3%",
-        winner: "away",
-      },
+      homeTeam: { name: "기아 타이거즈", logo: "/images/kia_emb.png" },
+      awayTeam: { name: "한화 이글스", logo: "/images/hanwha_emb.png" },
+      stadium: "광주",
     },
   ];
 
-  // const matchEntryData = {
-  //   time: "13:00",
-  //   homeTeamEmblem: "/images/lg_twins_emb.png",
-  //   stadium: "잠실",
-  //   awayTeamEmblem: "/images/kiwoom_heroes_emb.png",
-  // };
+  const handleClick = (date: string, team: string) => {
+    navigate(`/matching/list/${date}/${team}`);
+  };
+
+  // helper: YYYY-MM-DD 포맷
+  const fmt = (d: Date) => d.toISOString().slice(0, 10);
 
   return (
-    <>
-      <div className="mx-auto max-w-[1080px] px-4 py-8">
+    <div className="mx-auto max-w-[1080px] px-4 py-8">
+      {/* 1. Month selector with arrows */}
+      <div className="flex items-center justify-center space-x-4 mb-4">
+        <button
+          onClick={() => {
+            const prev = new Date(selectedDate);
+            prev.setMonth(prev.getMonth() - 1);
+            setSelectedDate(prev);
+          }}
+          className="p-2 rounded-full hover:bg-gray-100"
+        >
+          ◀
+        </button>
         <MonthSelector
           initialDate={selectedDate}
           onDateChange={setSelectedDate}
+          className="text-lg font-medium text-gray-800"
         />
-        <DaySelector
-          selectedDate={selectedDate}
-          onDateChange={setSelectedDate}
-        />
-        <div className="mt-6 overflow-hidden rounded-lg bg-white shadow">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="w-[120px] px-6 py-3 text-left text-sm font-medium text-gray-500">
-                  경기 시작 시간
-                </th>
-                <th className="w-[400px] px-6 py-3 text-center text-sm font-medium text-gray-500">
-                  팀 / 경기장
-                </th>
-                <th className="w-[120px] px-6 py-3 text-right text-sm font-medium text-gray-500">
-                  글 목록
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {games.map((game, index) => (
-                <tr key={index}>
-                  <td className="w-[120px] px-6 py-4 whitespace-nowrap">
-                    <div className="text-xl font-medium text-gray-700">
-                      {game.time}
-                    </div>
-                  </td>
-                  <td className="w-[400px] px-6 py-4">
-                    <div className="flex items-center justify-center space-x-4">
-                      <div className="flex items-center justify-end gap-2">
+        <button
+          onClick={() => {
+            const next = new Date(selectedDate);
+            next.setMonth(next.getMonth() + 1);
+            setSelectedDate(next);
+          }}
+          className="p-2 rounded-full hover:bg-gray-100"
+        >
+          ▶
+        </button>
+      </div>
+
+      {/* 2. Day selector: 날짜 아래에만 파란 점 표시 (커스텀 렌더러) */}
+      <DaySelector
+        selectedDate={selectedDate}
+        onDateChange={setSelectedDate}
+        className="mb-6"
+        renderDay={(date, isSelected) => {
+          const day = date.getDate();
+          return (
+            <div className="flex flex-col items-center w-8">
+              <span
+                className={`pb-1 ${
+                  isSelected ? "text-blue-600 font-semibold" : "text-gray-600"
+                }`}
+              >
+                {day}
+              </span>
+              {/* 파란 점 */}
+              <div
+                className={`h-1 w-1 rounded-full mt-0.5 ${
+                  isSelected ? "bg-blue-600" : "bg-transparent"
+                }`}
+              />
+            </div>
+          );
+        }}
+      />
+
+      {/* 3. 게임 리스트 카드 */}
+      <div className="overflow-hidden rounded-xl bg-white shadow">
+        <table className="min-w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+                경기 정보
+              </th>
+              <th className="px-6 py-3 text-right text-sm font-medium text-gray-500">
+                시작 시간
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {games.map((g, i) => {
+              const home = g.homeTeam.name.split(" ")[0];
+              const away = g.awayTeam.name.split(" ")[0];
+              const bg = i % 2 === 0 ? "" : "bg-gray-50";
+              return (
+                <tr
+                  key={i}
+                  className={`${bg} hover:bg-gray-100`}
+                  onClick={() => handleClick(fmt(selectedDate), home.toLowerCase())}
+                >
+                  {/* 경기 정보 */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-center space-x-6">
+                      {/* 홈팀 */}
+                      <div className="flex items-center space-x-1">
                         <img
-                          src={game.homeTeam.logo}
-                          alt={game.homeTeam.name}
-                          className="h-12 w-12"
+                          src={g.homeTeam.logo}
+                          alt={g.homeTeam.name}
+                          className="h-10 w-10"
                         />
-                        <span className="text-lg font-medium text-gray-900">
-                          {game.homeTeam.name.split(" ")[0]}
+                        <span className="text-base font-medium text-gray-900">
+                          {home}
                         </span>
                       </div>
-                      <span className="text-sm text-gray-500">잠실</span>
-                      <div className="flex items-center justify-start gap-2">
-                        <span className="text-lg font-medium text-gray-900">
-                          {game.awayTeam.name.split(" ")[0]}
+                      {/* 구장 */}
+                      <span className="text-sm text-gray-500">{g.stadium}</span>
+                      {/* 어웨이 */}
+                      <div className="flex items-center space-x-1">
+                        <span className="text-base font-medium text-gray-900">
+                          {away}
                         </span>
                         <img
-                          src={game.awayTeam.logo}
-                          alt={game.awayTeam.name}
-                          className="h-12 w-12"
+                          src={g.awayTeam.logo}
+                          alt={g.awayTeam.name}
+                          className="h-10 w-10"
                         />
                       </div>
                     </div>
                   </td>
-                  <td className="w-[120px] px-6 py-4 text-right whitespace-nowrap">
-                    <button
-                      onClick={() => handleClick("2025-04-15", "lg")} // 상대경로로 변경: /matching/list로 이동
-                      className="rounded-md border border-gray-300 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-50"
-                    >
-                      매칭글 보러가기
-                    </button>
+                  {/* 시작 시간 */}
+                  <td className="px-6 py-4 text-right">
+                    <span className="text-base font-medium text-gray-900">
+                      {g.time}
+                    </span>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-    </>
+    </div>
   );
 }
