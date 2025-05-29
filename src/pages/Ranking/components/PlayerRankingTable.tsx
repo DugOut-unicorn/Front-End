@@ -68,7 +68,7 @@ export default function PlayerRankingTable() {
       setLoading(true);
       try {
         const results = await Promise.all(
-          CARD_CONFIG.map(async (card, idx) => {
+          CARD_CONFIG.map(async card => {
             const data = await card.fetch();
             // valueKey에 따라 값 포맷팅
             return data.slice(0, 3).map((item: any) => ({
