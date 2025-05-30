@@ -1,3 +1,4 @@
+// src/App.tsx
 import {
   createBrowserRouter,
   RouterProvider,
@@ -20,7 +21,6 @@ import Info from "./pages/Profile/components/Info";
 import ProfileEdit from "./pages/Profile/components/ProfileEdit";
 
 // 매칭
-
 import MatchingGameListPage from "./pages/Matching/MatchingGameListPage";
 import MatchingChatListPage from "./pages/Matching/MatchingChatListPage";
 import MatchingListPage from "./pages/Matching/MatchingListPage";
@@ -30,6 +30,7 @@ import MatchingWritePage from "./pages/Matching/MatchingWritePage";
 // SignupStep3: Home + Completion
 import Completion from "./pages/Login/components/Complection";
 import SidebarLayout from "./components/layout/SidebarLayout";
+
 function SignupStep3() {
   const navigate = useNavigate();
   return (
@@ -54,12 +55,21 @@ const router = createBrowserRouter([
         path: "matching",
         element: <SidebarLayout />,
         children: [
+          // 1️⃣ 게임 리스트 진입
           { index: true, element: <MatchingGameListPage /> },
-          { path: "chats", element: <MatchingChatListPage /> },
+
+          // 2️⃣ 날짜/팀 파라미터 받는 상세 리스트
           { path: "list/:date/:team", element: <MatchingListPage /> },
+
+          // 채팅 리스트
+          { path: "chats", element: <MatchingChatListPage /> },
+
+          // 게시글 상세
           { path: "articles/:id", element: <MatchingArticlePage /> },
         ],
       },
+
+      // 매칭 글쓰기
       { path: "matching/write", element: <MatchingWritePage /> },
 
       // 기타 페이지
@@ -81,9 +91,7 @@ const router = createBrowserRouter([
       },
 
       // 로그인 & 회원가입
-      // signup/3은 별도 처리 (Step3)
       { path: "signup/3", element: <SignupStep3 /> },
-      // login과 signup은 id 파라미터 optional
       { path: "login/:id?", element: <LoginPage /> },
       { path: "signup/:id?", element: <LoginPage /> },
     ],
