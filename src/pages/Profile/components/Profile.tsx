@@ -44,14 +44,17 @@ export default function Profile() {
         const token = localStorage.getItem("jwtToken");
         console.log("Fetch token:", token);
 
-        const res = await fetch("/mypage/myTemp", {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/mypage/myTemp`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         if (!res.ok) {
           throw new Error(`HTTP error ${res.status}`);
