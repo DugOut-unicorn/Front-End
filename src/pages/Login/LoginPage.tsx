@@ -79,7 +79,7 @@ const LoginPage: React.FC = () => {
 
           // 3) 가입 여부 조회 (/login/hasSignedIn)
           const hasRes = await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/login/hasSignedIn`,
+            `${import.meta.env.VITE_API_URL}/login/hasSignedIn`,
             {
               method: "GET",
               headers: {
