@@ -1,6 +1,7 @@
 // src/pages/Profile/components/Profile.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { mypageApi } from "../../../api/Mypage/apis";
 
 interface ProfileData {
   userIdx: number;
@@ -35,39 +36,20 @@ export default function Profile() {
   const [cheeringTeamId, setCheeringTeamId] = useState<number | null>(null);
   const [bio, setBio] = useState("");
   const [profileImageUrl, setProfileImageUrl] = useState("");
-  const [userTemp, setUserTemp] = useState<number | null>(null);
+  const [userTemp, setUserTemp] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
       try {
-        // JWT 또는 AccessToken 읽기
-        const token = localStorage.getItem("jwtToken");
-        console.log("Fetch token:", token);
-
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/mypage/myTemp`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        if (!res.ok) {
-          throw new Error(`HTTP error ${res.status}`);
-        }
-
-        const data: ProfileData = await res.json();
-        setNickname(data.nickname);
-        setCheeringTeamId(data.cheeringTeamId);
-        setBio(data.bio);
-        setProfileImageUrl(data.profileImageUrl);
-        setUserTemp(data.userTemp);
+        const data: ProfileData = await mypageApi.getMyTemp();
+        setNickname(data.nickname || "");
+        setCheeringTeamId(data.cheeringTeamId || null);
+        setBio(data.bio || "");
+        setProfileImageUrl(data.profileImageUrl || "");
+        setUserTemp(data.userTemp || 0);
       } catch (err: any) {
         console.error("프로필 불러오기 실패:", err);
+        setUserTemp(0);
       }
     })();
   }, []);
@@ -163,14 +145,14 @@ export default function Profile() {
         <div className="mb-4 flex items-center justify-between">
           <span className="text-lg font-medium text-gray-800">직관 온도</span>
           <span className="text-lg font-semibold text-red-500">
-            {userTemp !== null ? `${userTemp.toFixed(1)}℃` : "–"}
+            {`${userTemp.toFixed(1)}℃`}
           </span>
         </div>
         <div className="relative h-3 overflow-hidden rounded-full bg-gray-200">
           <div
             className="absolute top-0 left-0 h-full bg-red-500"
             style={{
-              width: userTemp !== null ? `${(userTemp / 50) * 100}%` : "0%",
+              width: `${(userTemp / 50) * 100}%`,
             }}
           />
         </div>
