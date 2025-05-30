@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -102,12 +102,46 @@ export default function Info() {
     setIsEditingBirthday(false);
     setIsEditingPhone(false);
     setIsEditingGender(false);
-    // 선택적으로 원래 값으로 되돌리려면 fetch 다시 호출
+    // 필요 시, 원래 값으로 복원하려면 fetch 다시 호출
   };
 
-  const handleConfirmWithdrawal = () => {
-    alert("회원탈퇴가 완료되었습니다.");
-    setIsModalOpen(false);
+  const handleConfirmWithdrawal = async () => {
+    const jwt = localStorage.getItem("jwtToken");
+    if (!jwt) {
+      alert("로그인 정보가 없습니다.");
+      setIsModalOpen(false);
+      navigate("/login");
+      return;
+    }
+
+    if (!window.confirm("정말로 회원 탈퇴하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/mypage/withdraw", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => null);
+        throw new Error(errJson?.message || `HTTP error ${res.status}`);
+      }
+
+      alert("회원 탈퇴가 완료되었습니다.");
+      localStorage.removeItem("jwtToken");
+      localStorage.removeItem("userIdx");
+      setIsModalOpen(false);
+      navigate("/");
+    } catch (error: any) {
+      console.error("회원 탈퇴 실패:", error);
+      alert(`회원 탈퇴 중 오류가 발생했습니다: ${error.message}`);
+      setIsModalOpen(false);
+    }
   };
 
   const { nickname, email, birthday, phone, gender } = profile;
@@ -124,6 +158,7 @@ export default function Info() {
         </button>
 
         <div className="space-y-5">
+          {/* 이름 */}
           <div>
             <label className="mb-1 block font-bold">이름</label>
             <input
@@ -133,14 +168,14 @@ export default function Info() {
               className="w-full cursor-not-allowed rounded border border-gray-300 bg-gray-100 p-3"
             />
           </div>
-
+          {/* 생년월일 */}
           <div>
             <label className="mb-1 block font-bold">생년월일</label>
             <input
               type="date"
               value={birthday}
-              onChange={e =>
-                setProfile(prev => ({ ...prev, birthday: e.target.value }))
+              onChange={(e) =>
+                setProfile((prev) => ({ ...prev, birthday: e.target.value }))
               }
               readOnly={!isEditingBirthday}
               className={`w-full rounded border border-gray-300 p-3 ${
@@ -148,7 +183,7 @@ export default function Info() {
               }`}
             />
           </div>
-
+          {/* 성별 */}
           <div>
             <label className="mb-1 block font-bold">성별</label>
             {isEditingGender ? (
@@ -159,7 +194,7 @@ export default function Info() {
                     name="gender"
                     checked={gender === 0}
                     onChange={() =>
-                      setProfile(prev => ({ ...prev, gender: 0 }))
+                      setProfile((prev) => ({ ...prev, gender: 0 }))
                     }
                     className="mr-2"
                   />
@@ -171,7 +206,7 @@ export default function Info() {
                     name="gender"
                     checked={gender === 1}
                     onChange={() =>
-                      setProfile(prev => ({ ...prev, gender: 1 }))
+                      setProfile((prev) => ({ ...prev, gender: 1 }))
                     }
                     className="mr-2"
                   />
@@ -187,7 +222,7 @@ export default function Info() {
               />
             )}
           </div>
-
+          {/* 이메일 */}
           <div>
             <label className="mb-1 block font-bold">이메일</label>
             <input
@@ -197,14 +232,14 @@ export default function Info() {
               className="w-full cursor-not-allowed rounded border border-gray-300 bg-gray-100 p-3"
             />
           </div>
-
+          {/* 전화번호 */}
           <div>
             <label className="mb-1 block font-bold">전화번호</label>
             <input
               type="tel"
               value={phone}
-              onChange={e =>
-                setProfile(prev => ({ ...prev, phone: e.target.value }))
+              onChange={(e) =>
+                setProfile((prev) => ({ ...prev, phone: e.target.value }))
               }
               readOnly={!isEditingPhone}
               className={`w-full rounded border border-gray-300 p-3 ${
@@ -214,6 +249,7 @@ export default function Info() {
           </div>
         </div>
 
+        {/* 버튼 그룹 */}
         <div className="flex items-center justify-end space-x-4 pt-4">
           {isEditing ? (
             <>
@@ -251,6 +287,7 @@ export default function Info() {
         </div>
       </div>
 
+      {/* 회원탈퇴 모달 */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-sm">
           <div className="relative w-full max-w-sm rounded-xl bg-white/90 p-6 shadow-lg">
@@ -282,5 +319,5 @@ export default function Info() {
         </div>
       )}
     </div>
-  );
+);
 }

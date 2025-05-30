@@ -27,17 +27,25 @@ const LoginPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [nickname, setNickname] = useState<string>("");
-  const [nicknameCheckResult, setNicknameCheckResult] = useState<
-    "available" | "duplicate" | null
-  >(null);
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+  // 이미 jwtToken이 있으면 /login(id === undefined)이 아니라 바로 홈으로
+  useEffect(() => {
+    const token = localStorage.getItem("jwtToken");
+    if (!id && token) {
+      navigate("/");
+    }
+  }, [id, navigate]);
 
+  // 카카오 SDK 초기화
   useEffect(() => {
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
     }
   }, []);
+
+  const [nickname, setNickname] = useState<string>("");
+  const [nicknameCheckResult, setNicknameCheckResult] =
+    useState<"available" | "duplicate" | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
 
   const kakaoLogin = () => {
     if (!window.Kakao) {
@@ -46,33 +54,46 @@ const LoginPage: React.FC = () => {
 
     window.Kakao.Auth.login({
       scope: "profile_nickname,account_email",
+      throughTalk: false,
       success: async (authObj: any) => {
         try {
+          // 1) 카카오 accessToken으로 백엔드 로그인
           const res = await fetch("/api/kakao/user-info", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ accessToken: authObj.access_token }),
           });
-
-          if (!res.ok) {
-            throw new Error(`HTTP ${res.status}`);
-          }
-
-          // JSON 자동 파싱
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const resp = (await res.json()) as KakaoUserInfoResponse;
-          console.log("✅ 파싱된 응답 객체:", resp);
 
-          // JWT 저장
-          localStorage.setItem("jwtToken", resp.data.accessToken);
-          // (선택) userIdx 저장
+          // 2) JWT 저장
+          const jwt = resp.data.accessToken;
+          localStorage.setItem("jwtToken", jwt);
           if (resp.data.id !== undefined) {
             localStorage.setItem("userIdx", String(resp.data.id));
           }
 
-          // 로그인/회원가입 이동
-          if (resp.data.has_signed_up) {
-            navigate("/mypage");
+          // 3) 가입 여부 조회 (/login/hasSignedIn)
+          const hasRes = await fetch("/login/hasSignedIn", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          });
+          if (!hasRes.ok) throw new Error(`hasSignedIn 호출 실패: ${hasRes.status}`);
+          const hasJson = (await hasRes.json()) as {
+            success: boolean;
+            message: string;
+            data: { hasSignedIn: boolean };
+          };
+
+          // 4) 분기 처리
+          if (hasJson.data.hasSignedIn) {
+            // 이미 모두 완료된 회원: 홈으로
+            navigate("/");
           } else {
+            // 닉네임/응원팀 설정 필요
             if (resp.data.properties?.nickname) {
               setNickname(resp.data.properties.nickname);
             }
@@ -94,11 +115,13 @@ const LoginPage: React.FC = () => {
     if (nicknameCheckResult === "available") navigate("/signup/2");
     else alert("닉네임 중복 체크를 완료해주세요!");
   };
+
   const goStep3 = () => {
     if (selectedTeam) navigate("/signup/3");
     else alert("응원팀을 선택해주세요!");
   };
 
+  // id 파라미터 없으면 순수 로그인 화면
   if (!id) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 px-4">
@@ -107,9 +130,7 @@ const LoginPage: React.FC = () => {
           <h1 className="text-navy-800 mb-8 text-4xl font-extrabold">DUGOUT</h1>
           <div className="mb-6 flex w-full items-center">
             <div className="h-px flex-1 bg-gray-300" />
-            <span className="px-4 text-sm text-gray-500">
-              SNS로 간편 로그인
-            </span>
+            <span className="px-4 text-sm text-gray-500">SNS로 간편 로그인</span>
             <div className="h-px flex-1 bg-gray-300" />
           </div>
           <div className="w-full space-y-4">
@@ -154,20 +175,19 @@ const LoginPage: React.FC = () => {
             </button>
           </div>
           <p className="mt-6 px-2 text-center text-sm text-gray-500">
-            계속 진행 시{" "}
+            계속 진행 시{' '}
             <button
               onClick={() => window.open("/terms", "_blank")}
               className="underline hover:text-gray-700"
             >
               이용약관
-            </button>{" "}
-            및{" "}
+            </button>{' '}및{' '}
             <button
               onClick={() => window.open("/privacy", "_blank")}
               className="underline hover:text-gray-700"
             >
               개인정보처리방침
-            </button>{" "}
+            </button>{' '}
             에 동의한 것으로 간주됩니다.
           </p>
         </div>
@@ -175,6 +195,7 @@ const LoginPage: React.FC = () => {
     );
   }
 
+  // signup 스텝별 렌더링
   switch (id) {
     case "1":
       return (

@@ -70,7 +70,7 @@ export default function NewMatchingList() {
   };
 
   return (
-    <div className="w-252.5">
+    <div className="flex w-252.5 flex-col md:w-180 xl:w-252.5">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Edit3 size={24} className="text-[var(--on-surface-grey1)]" />

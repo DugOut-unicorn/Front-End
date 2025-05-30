@@ -2,7 +2,7 @@ import GameRow from "./GameRow";
 
 export default function PlayingGame() {
   return (
-    <div className="flex h-[526px] w-[395px] flex-col gap-5 rounded-[16px] bg-[var(--surface-1)] p-4">
+    <div className="flex h-[526px] w-[395px] flex-row gap-5 rounded-[16px] bg-[var(--surface-1)] p-4 xl:flex-col">
       <div className="border-b border-[var(--divider-dv2)]">
         <div className="t-caption-sb mb-1 text-[var(--on-surface-grey2)]">
           진행 중인 경기

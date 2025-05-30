@@ -1,14 +1,14 @@
 import { Stadium, Stadiums } from "../../../types/Stadium";
-import { useState } from "react";
 import {
   SunMedium,
   CloudSun,
   Cloud,
-  // CloudFog,
+  CloudFog,
   CloudLightning,
   CloudRainWind,
-  // CloudSnow,
+  CloudSnow,
 } from "lucide-react";
+import { calendarGameDto, StadiumWeatherDto } from "../../../types/home";
 
 // 깃발 GIF import
 import flag_GC from "/images/flag_GC.gif";
@@ -24,18 +24,51 @@ import flag_UL from "/images/flag_UL.gif";
 import flag_CJ from "/images/flag_CJ.gif";
 import flag_PH from "/images/flag_PH.gif";
 
-interface KoreaMapProps {
-  stadiums?: Stadium[];
-  onStadiumClick?: (stadium: Stadium) => void;
+type KoreaMapProps = {
+  stadiums: Stadium[];
+  todayGames: calendarGameDto[];
+  stadiumWeathers: StadiumWeatherDto[];
+  selectedStadium: Stadium | null;
+  onStadiumClick: (stadium: Stadium) => void;
+  stadiumNameMap: Record<string, string>;
+};
+
+function getWeatherIcon(condition: string) {
+  switch (condition) {
+    case "맑음":
+      return <SunMedium size={32} className="text-[var(--on-surface-grey1)]" />;
+    case "구름많음":
+      return <CloudSun size={32} className="text-[var(--on-surface-grey1)]" />;
+    case "흐림":
+      return <Cloud size={32} className="text-[var(--on-surface-grey1)]" />;
+    case "비":
+      return (
+        <CloudRainWind size={32} className="text-[var(--on-surface-grey1)]" />
+      );
+    case "천둥번개":
+      return (
+        <CloudLightning size={32} className="text-[var(--on-surface-grey1)]" />
+      );
+    case "눈":
+      return <CloudSnow size={32} className="text-[var(--on-surface-grey1)]" />;
+    case "안개":
+      return <CloudFog size={32} className="text-[var(--on-surface-grey1)]" />;
+    default:
+      return <SunMedium size={32} className="text-[var(--on-surface-grey1)]" />;
+  }
 }
 
-export default function KoreaMap({ onStadiumClick }: KoreaMapProps) {
-  const [selectedStadium, setSelectedStadium] = useState<Stadium | null>(null);
-
+export default function KoreaMap({
+  stadiums,
+  todayGames,
+  stadiumWeathers,
+  selectedStadium,
+  onStadiumClick,
+  stadiumNameMap,
+}: KoreaMapProps) {
   const handleStadiumClick = (flagCode: string) => {
     const stadium = Stadiums.find(s => s.flagCode === flagCode);
     if (stadium) {
-      setSelectedStadium(stadium);
       onStadiumClick?.(stadium);
     }
   };
@@ -43,105 +76,50 @@ export default function KoreaMap({ onStadiumClick }: KoreaMapProps) {
   return (
     <div className="flex h-148 w-152.5 flex-row justify-between rounded-2xl bg-white px-4 py-2">
       <div className="flex flex-col gap-2 py-18">
-        <div
-          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
-            selectedStadium?.flagCode === "JS_OB"
-              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
-              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
-          } pt-3 pr-3 pb-2 pl-4`}
-          onClick={() => handleStadiumClick("JS_OB")}
-        >
-          <div className="t-caption text-[var(--on-surface-grey1)]">
-            잠실야구장
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <div className="t-body1 text-[var(--on-surface-default)]">19도</div>
-            <div>
-              <SunMedium size={32} className="text-[var(--on-surface-grey1)]" />
-            </div>
-          </div>
-        </div>
-        <div
-          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
-            selectedStadium?.flagCode === "GC"
-              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
-              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
-          } pt-3 pr-3 pb-2 pl-4`}
-          onClick={() => handleStadiumClick("GC")}
-        >
-          <div className="t-caption text-[var(--on-surface-grey1)]">
-            고척스카이돔
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <div className="t-body1 text-[var(--on-surface-default)]">21도</div>
-            <div>
-              <CloudSun size={32} className="text-[var(--on-surface-grey1)]" />
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
-            selectedStadium?.flagCode === "KC"
-              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
-              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
-          } pt-3 pr-3 pb-2 pl-4`}
-          onClick={() => handleStadiumClick("KC")}
-        >
-          <div className="t-caption text-[var(--on-surface-grey1)]">
-            광주기아챔피언스필드
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <div className="t-body1 text-[var(--on-surface-default)]">23도</div>
-            <div>
-              <Cloud size={32} className="text-[var(--on-surface-grey1)]" />
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
-            selectedStadium?.flagCode === "DK"
-              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
-              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
-          } pt-3 pr-3 pb-2 pl-4`}
-          onClick={() => handleStadiumClick("DK")}
-        >
-          <div className="t-caption text-[var(--on-surface-grey1)]">
-            대구삼성라이온즈파크
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <div className="t-body1 text-[var(--on-surface-default)]">25도</div>
-            <div>
-              <CloudLightning
-                size={32}
-                className="text-[var(--on-surface-grey1)]"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
-            selectedStadium?.flagCode === "SJ"
-              ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
-              : "border-[var(--surface-3)] bg-[var(--surface-1)]"
-          } pt-3 pr-3 pb-2 pl-4`}
-          onClick={() => handleStadiumClick("SJ")}
-        >
-          <div className="t-caption text-[var(--on-surface-grey1)]">
-            사직야구장
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <div className="t-body1 text-[var(--on-surface-default)]">18도</div>
-            <div>
-              <CloudRainWind
-                size={32}
-                className="text-[var(--on-surface-grey1)]"
-              />
-            </div>
-          </div>
-        </div>
+        {stadiums
+          .filter(stadium =>
+            todayGames.some(
+              g =>
+                (stadiumNameMap[g.stadiumName] || g.stadiumName) ===
+                stadium.name,
+            ),
+          )
+          .map(stadium => {
+            const weather = stadiumWeathers.find(
+              w =>
+                (stadiumNameMap[w.stadiumName] || w.stadiumName) ===
+                  stadium.name ||
+                w.stadiumName ===
+                  (stadiumNameMap[stadium.name] || stadium.name),
+            );
+            return (
+              <div
+                key={stadium.name}
+                className={`flex h-20 w-47 cursor-pointer flex-col rounded-lg border-1 transition-all duration-200 ${
+                  selectedStadium?.name === stadium.name
+                    ? "scale-105 border-[var(--primary)] bg-[var(--surface-2)]"
+                    : "border-[var(--surface-3)] bg-[var(--surface-1)]"
+                } pt-3 pr-3 pb-2 pl-4`}
+                onClick={() => onStadiumClick(stadium)}
+              >
+                <div className="t-caption text-[var(--on-surface-grey1)]">
+                  {stadium.name}
+                </div>
+                <div className="flex flex-row items-center justify-between">
+                  <div className="t-body1 text-[var(--on-surface-default)]">
+                    {weather && typeof weather.temperature === "number"
+                      ? `${weather.temperature}℃`
+                      : "-"}
+                  </div>
+                  <div>
+                    {weather
+                      ? getWeatherIcon(weather.condition)
+                      : getWeatherIcon("")}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
       </div>
       <div className="relative aspect-[0.627] w-92.75">
         {/* 배경 레이어 */}
