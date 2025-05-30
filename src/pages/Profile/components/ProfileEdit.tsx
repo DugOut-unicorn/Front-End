@@ -9,11 +9,18 @@ const teams = [
   '두산 베어스', '키움 히어로즈', 'KIA 타이거즈', '한화 이글스',
 ];
 
+enum CheckResult {
+  None = 'none',
+  Available = 'available',
+  Duplicate = 'duplicate',
+}
+
 export default function ProfileEdit() {
   const navigate = useNavigate();
 
   // personal info
   const [nickname, setNickname] = useState('');
+  const [checkResult, setCheckResult] = useState<CheckResult>(CheckResult.None);
   const [introduction, setIntroduction] = useState('');
   const [team, setTeam] = useState(teams[0]);
 
@@ -21,7 +28,7 @@ export default function ProfileEdit() {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  // 기존 프로필 불러와서 폼 초기화
+  // existing profile load
   useEffect(() => {
     const jwt = localStorage.getItem('jwtToken');
     if (!jwt) {
@@ -35,7 +42,7 @@ export default function ProfileEdit() {
           credentials: 'include',
           headers: { Authorization: `Bearer ${jwt}` },
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
         setNickname(data.nickname);
         setIntroduction(data.bio);
@@ -49,66 +56,81 @@ export default function ProfileEdit() {
     })();
   }, [navigate]);
 
-  // 파일 선택 시 미리보기
+  // nickname check
+  const checkNickname = async () => {
+    if (!nickname.trim()) {
+      alert('닉네임을 입력해주세요.');
+      return;
+    }
+    const jwt = localStorage.getItem('jwtToken');
+    if (!jwt) { alert('로그인 정보가 없습니다.'); return; }
+    try {
+      const res = await fetch('/login/nickname', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ nickname }),
+      });
+      if (res.status === 200) {
+        setCheckResult(CheckResult.Available);
+        alert('사용 가능한 닉네임입니다.');
+      } else if (res.status === 400) {
+        setCheckResult(CheckResult.Duplicate);
+        alert('이미 사용 중인 닉네임입니다.');
+      } else {
+        throw new Error(res.statusText);
+      }
+    } catch (err) {
+      console.error('닉네임 중복 확인 실패:', err);
+      alert('닉네임 중복 확인 중 오류가 발생했습니다.');
+    }
+  };
+
+  // file preview
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
     setFile(f);
     if (f) setPreviewUrl(URL.createObjectURL(f));
   };
 
-  // 이미지 업로드
   const handleImageUpload = async () => {
-    if (!file) {
-      alert('업로드할 이미지를 선택하세요.');
-      return;
-    }
+    if (!file) return alert('업로드할 이미지를 선택하세요.');
     const jwt = localStorage.getItem('jwtToken');
-    const form = new FormData();
-    form.append('file', file);
-
+    const form = new FormData(); form.append('file', file);
     const res = await fetch('/mypage/profile-image', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { Authorization: `Bearer ${jwt}` },
-      body: form,
+      method: 'POST', credentials: 'include',
+      headers: { Authorization: `Bearer ${jwt}` }, body: form,
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error(res.statusText);
     const body = await res.json();
     if (!body.success) throw new Error(body.message);
-
-    // 새 이미지 URL 전달 (캐시 방지용 timestamp 추가)
     const newUrl = `${body.data}?t=${Date.now()}`;
     alert('이미지가 성공적으로 변경되었습니다.');
     navigate('/mypage', { state: { newImageUrl: newUrl } });
   };
 
-  // 개인 정보 저장
+  // submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const jwt = localStorage.getItem('jwtToken');
-    if (!jwt) {
-      alert('로그인 정보가 유효하지 않습니다.');
-      return;
+    if (checkResult !== CheckResult.Available) {
+      return alert('닉네임 중복 확인을 해주세요.');
     }
-    const cheeringTeamId = teams.findIndex(t => t === team) + 1;
-
+    const jwt = localStorage.getItem('jwtToken');
+    if (!jwt) return alert('로그인 정보가 유효하지 않습니다.');
+    const cheeringTeamId = teams.indexOf(team) + 1;
     try {
       const res = await fetch('/mypage/editPersonal', {
-        method: 'POST',
-        credentials: 'include',
+        method: 'POST', credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify({
-          nickname,
-          bio: introduction,
-          cheeringTeamId,
-        }),
+        body: JSON.stringify({ nickname, bio: introduction, cheeringTeamId }),
       });
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || '프로필 수정 실패');
+        const err = await res.json(); throw new Error(err.message);
       }
       alert('프로필이 성공적으로 수정되었습니다.');
       navigate('/mypage');
@@ -120,84 +142,45 @@ export default function ProfileEdit() {
 
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center py-8">
-      <div className="relative w-[400px] bg-white rounded-lg shadow overflow-hidden">
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 flex items-center text-gray-700 z-10"
-        >
-          <ChevronLeft size={24} />
-          <span className="ml-2">프로필 수정</span>
+      <div className="relative w-[400px] bg-white rounded-lg shadow">
+        <button onClick={() => navigate(-1)} className="absolute top-4 left-4 flex items-center">
+          <ChevronLeft size={24} /><span className="ml-2">프로필 수정</span>
         </button>
-
-        <div className="pt-16 px-6 pb-8 space-y-8">
-          {/* 이미지 섹션 */}
+        <div className="pt-16 px-6 pb-8 space-y-6">
           <div className="flex flex-col items-center space-y-3">
             <div className="w-24 h-24 rounded-full overflow-hidden">
-              <img
-                src={previewUrl || '/images/user_avatar.png'}
-                alt="프로필"
-                className="w-full h-full object-cover"
-              />
+              <img src={previewUrl || '/images/user_avatar.png'} alt="프로필" className="object-cover w-full h-full" />
             </div>
-            <label className="px-4 py-2 border border-gray-300 rounded cursor-pointer hover:bg-gray-50">
+            <label className="px-4 py-2 border rounded cursor-pointer hover:bg-gray-50">
               이미지 선택
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleFileChange}
-              />
+              <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
             </label>
-            <button
-              type="button"
-              onClick={handleImageUpload}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
-            >
+            <button type="button" onClick={handleImageUpload} className="px-4 py-2 bg-blue-600 text-white rounded">
               이미지 업로드
             </button>
           </div>
-
-          {/* personal info form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="nickname" className="block mb-1">닉네임</label>
-              <input
-                id="nickname"
-                type="text"
-                value={nickname}
-                onChange={e => setNickname(e.target.value)}
-                className="w-full border px-3 py-2 rounded"
-              />
+              <div className="flex">
+                <input id="nickname" type="text" value={nickname} onChange={e => { setNickname(e.target.value); setCheckResult(CheckResult.None); }} className="flex-1 border px-3 py-2 rounded-l" />
+                <button type="button" onClick={checkNickname} className="px-4 bg-gray-200 border-t border-b border-r rounded-r">
+                  중복 확인
+                </button>
+              </div>
             </div>
             <div>
               <label htmlFor="introduction" className="block mb-1">자기소개</label>
-              <textarea
-                id="introduction"
-                rows={3}
-                value={introduction}
-                onChange={e => setIntroduction(e.target.value)}
-                className="w-full border px-3 py-2 rounded"
-              />
+              <textarea id="introduction" rows={3} value={introduction} onChange={e => setIntroduction(e.target.value)} className="w-full border px-3 py-2 rounded" />
             </div>
             <div>
               <label htmlFor="team" className="block mb-1">응원팀</label>
-              <select
-                id="team"
-                value={team}
-                onChange={e => setTeam(e.target.value)}
-                className="w-full border px-3 py-2 rounded"
-              >
-                {teams.map(t => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
+              <select id="team" value={team} onChange={e => setTeam(e.target.value)} className="w-full border px-3 py-2 rounded">
+                {teams.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
-
             <div className="text-center">
-              <button
-                type="submit"
-                className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800"
-              >
+              <button type="submit" className="px-6 py-2 bg-black text-white rounded">
                 변경사항 저장
               </button>
             </div>

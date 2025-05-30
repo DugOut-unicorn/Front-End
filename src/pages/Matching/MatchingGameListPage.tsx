@@ -60,7 +60,6 @@ export default function MatchingGameListPage() {
         <MonthSelector
           initialDate={selectedDate}
           onDateChange={setSelectedDate}
-          className="text-lg font-medium text-gray-800"
         />
         <button
           onClick={() => {
@@ -74,31 +73,10 @@ export default function MatchingGameListPage() {
         </button>
       </div>
 
-      {/* 2. Day selector: 날짜 아래에만 파란 점 표시 (커스텀 렌더러) */}
+      {/* 2. Day selector */}
       <DaySelector
         selectedDate={selectedDate}
         onDateChange={setSelectedDate}
-        className="mb-6"
-        renderDay={(date, isSelected) => {
-          const day = date.getDate();
-          return (
-            <div className="flex flex-col items-center w-8">
-              <span
-                className={`pb-1 ${
-                  isSelected ? "text-blue-600 font-semibold" : "text-gray-600"
-                }`}
-              >
-                {day}
-              </span>
-              {/* 파란 점 */}
-              <div
-                className={`h-1 w-1 rounded-full mt-0.5 ${
-                  isSelected ? "bg-blue-600" : "bg-transparent"
-                }`}
-              />
-            </div>
-          );
-        }}
       />
 
       {/* 3. 게임 리스트 카드 */}

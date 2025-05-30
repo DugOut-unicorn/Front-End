@@ -93,7 +93,7 @@ export default defineConfig(({ mode }) => {
     define: {
       'import.meta.env.VITE_API_URL': JSON.stringify(VITE_API_URL),
       'import.meta.env.VITE_KAKAO_JS_KEY': JSON.stringify(VITE_KAKAO_JS_KEY),
-
+      global:"window",
     },
   };
 });
