@@ -35,9 +35,12 @@ export default function Info() {
     }
     (async () => {
       try {
-        const res = await fetch("/mypage/myTemp", {
-          headers: { Authorization: `Bearer ${jwt}` },
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/mypage/myTemp`,
+          {
+            headers: { Authorization: `Bearer ${jwt}` },
+          },
+        );
         if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         const data = await res.json();
         setProfile({
@@ -74,14 +77,17 @@ export default function Info() {
         gender: String(profile.gender),
         phoneNumber: profile.phone,
       };
-      const res = await fetch("/mypage/editInfo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/mypage/editInfo`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: JSON.stringify(body),
         },
-        body: JSON.stringify(body),
-      });
+      );
       if (!res.ok) {
         const errJson = await res.json().catch(() => null);
         throw new Error(errJson?.message || `HTTP error ${res.status}`);
@@ -174,8 +180,8 @@ export default function Info() {
             <input
               type="date"
               value={birthday}
-              onChange={(e) =>
-                setProfile((prev) => ({ ...prev, birthday: e.target.value }))
+              onChange={e =>
+                setProfile(prev => ({ ...prev, birthday: e.target.value }))
               }
               readOnly={!isEditingBirthday}
               className={`w-full rounded border border-gray-300 p-3 ${
@@ -194,7 +200,7 @@ export default function Info() {
                     name="gender"
                     checked={gender === 0}
                     onChange={() =>
-                      setProfile((prev) => ({ ...prev, gender: 0 }))
+                      setProfile(prev => ({ ...prev, gender: 0 }))
                     }
                     className="mr-2"
                   />
@@ -206,7 +212,7 @@ export default function Info() {
                     name="gender"
                     checked={gender === 1}
                     onChange={() =>
-                      setProfile((prev) => ({ ...prev, gender: 1 }))
+                      setProfile(prev => ({ ...prev, gender: 1 }))
                     }
                     className="mr-2"
                   />
@@ -238,8 +244,8 @@ export default function Info() {
             <input
               type="tel"
               value={phone}
-              onChange={(e) =>
-                setProfile((prev) => ({ ...prev, phone: e.target.value }))
+              onChange={e =>
+                setProfile(prev => ({ ...prev, phone: e.target.value }))
               }
               readOnly={!isEditingPhone}
               className={`w-full rounded border border-gray-300 p-3 ${
@@ -319,5 +325,5 @@ export default function Info() {
         </div>
       )}
     </div>
-);
+  );
 }
