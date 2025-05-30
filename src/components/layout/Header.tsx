@@ -19,7 +19,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <div className="flex h-16 w-full items-center justify-between border-b bg-[var(--surface-1)] px-8">
+    <div className="flex h-16 w-full items-center justify-between bg-[var(--surface-1)] px-8">
       {/* 로고 + 네비게이션 */}
       <div className="flex items-center gap-11">
         <Link to="/">
@@ -72,7 +72,7 @@ const Header: React.FC = () => {
             <Bell className="cursor-pointer" />
             <Link
               to="/mypage"
-              className="t-body1 no-underline text-[var(--on-surface-grey1)] hover:text-[#007bff]"
+              className="t-body1 text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff]"
             >
               <User2 />
             </Link>
@@ -80,7 +80,7 @@ const Header: React.FC = () => {
         ) : (
           <Link
             to="/login"
-            className="t-body1 no-underline text-[var(--on-surface-grey1)] hover:text-[#007bff]"
+            className="t-body1 text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff]"
           >
             로그인
           </Link>
