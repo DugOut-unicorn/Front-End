@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronLeft } from "lucide-react";
-import { chatApi } from "../../api/chat/apis";
+import { chatApi } from "../../api/Chat/apis";
 import {
   ChatMessageDTO,
   ChatMessageDetailDTO,
