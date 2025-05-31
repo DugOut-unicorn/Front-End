@@ -10,7 +10,6 @@ export function TeamScheduleSection() {
   const [calendarData, setCalendarData] =
     useState<calendarGamesDetailDto | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [cheeringTeamIdx, setCheeringTeamIdx] = useState<number | null>(null);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1; // API는 1-12월 사용
