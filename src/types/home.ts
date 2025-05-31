@@ -55,6 +55,7 @@ export type StadiumWeatherDto = {
   condition: string;
 };
 
-export type cheeringTeamDto = {
-  cheeringTeamIdx: number;
+export type entryBannerDto = {
+  cheeringTeamId: number;
+  nickname: string;
 };
