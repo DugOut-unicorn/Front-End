@@ -18,7 +18,7 @@ export default function ChatRoomList({
   useEffect(() => {
     chatApi
       .getChatRooms()
-      .then(res => {
+      .then((res: ChatRoomDTO[]) => {
         setChatRooms(res);
         setLoading(false);
       })

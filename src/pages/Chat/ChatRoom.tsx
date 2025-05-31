@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { chatApi } from "../../api/chat/apis";
-import { ChatMessageDTO, ChatMessageDetailDTO } from "../../types/Chat";
+import {
+  ChatMessageDTO,
+  ChatMessageDetailDTO,
+  ChatMessagesDTO,
+} from "../../types/Chat";
 import { chatClient } from "../../hooks/useStompClient";
 
 type ChatRoomProps = {
@@ -43,10 +47,9 @@ function ChatRoomInner({
 
     chatApi
       .getChatHistory(idx)
-      .then(res => {
+      .then((res: ChatMessagesDTO) => {
         setMessages(res.messages);
         setMyId(res.myId);
-        // peerIdx를 직접 사용
         setOtherUserId(peerIdx);
       })
       .catch(() => {
