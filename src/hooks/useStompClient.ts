@@ -46,7 +46,7 @@ class ChatClient {
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       connectHeaders: {
-        // 서버쪽 HandshakeHandler에서 Authorization 헤더 대신 token 파라미터 사용
+        Authorization: `Bearer ${token}`,
       },
       onConnect: () => {
         console.log("[STOMP] WebSocket 연결 성공");
