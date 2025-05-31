@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -16,6 +16,11 @@ export default function MonthSelector({
 }: MonthSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(initialDate);
+
+  // initialDate가 변경될 때 selectedDate 업데이트
+  useEffect(() => {
+    setSelectedDate(initialDate);
+  }, [initialDate]);
 
   const handleMonthChange = (newDate: Date) => {
     setSelectedDate(newDate);

@@ -4,6 +4,7 @@ import {
   newsDto,
   rankingDto,
   recentMatchingDto,
+  recentResultsDto,
   StadiumWeatherDto,
 } from "../../types/home";
 import axiosInstance from "../axiosInstance";
@@ -62,10 +63,6 @@ export const homeApi = {
       preferredMatchDate: item.preferredMatchDate,
     }));
   },
-  getRecentResults: async () => {
-    const response = await axiosInstance.get("/home/recent-results");
-    return response.data;
-  },
 
   getCalendarGames: async (
     year: number,
@@ -116,6 +113,31 @@ export const homeApi = {
       windDirection: item.windDirection,
       condition: item.condition,
     }));
+  },
+  getRecentResults: async (date?: string, limit: number = 5) => {
+    const queryParams = new URLSearchParams();
+
+    if (date) {
+      queryParams.append("date", date);
+    }
+    queryParams.append("limit", String(limit));
+
+    const { data: raw } = await axiosInstance.get<recentResultsDto>(
+      `/home/recent-results?${queryParams.toString()}`,
+    );
+    return {
+      baseDate: raw.baseDate,
+      matchDate: raw.matchDate,
+      results: raw.results.map(result => ({
+        gameIdx: result.gameIdx,
+        homeTeamIdx: result.homeTeamIdx,
+        awayTeamIdx: result.awayTeamIdx,
+        homeScore: result.homeScore,
+        awayScore: result.awayScore,
+        recordedAt: result.recordedAt,
+        scheduledAt: result.scheduledAt,
+      })),
+    };
   },
 };
 

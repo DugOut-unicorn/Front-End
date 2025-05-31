@@ -29,6 +29,8 @@ export type calendarGameDto = {
   gameIdx: number;
   homeTeamName: string;
   awayTeamName: string;
+  homeTeamIdx: number;
+  awayTeamIdx: number;
   startTime: string;
   stadiumName: string;
 };
@@ -58,4 +60,20 @@ export type StadiumWeatherDto = {
 export type entryBannerDto = {
   cheeringTeamId: number;
   nickname: string;
+};
+
+export type recentResultsDto = {
+  baseDate: string;
+  matchDate: string;
+  results: recentResultGameDto[];
+};
+
+export type recentResultGameDto = {
+  gameIdx: number;
+  homeTeamIdx: number;
+  awayTeamIdx: number;
+  homeScore: number;
+  awayScore: number;
+  recordedAt: string;
+  scheduledAt: string;
 };
