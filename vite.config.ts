@@ -1,75 +1,76 @@
 // vite.config.ts
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig, loadEnv } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig(({ mode }) => {
-  const fileEnv = loadEnv(mode, process.cwd(), '');
+  const fileEnv = loadEnv(mode, process.cwd(), "");
   const VITE_API_URL = process.env.VITE_API_URL ?? fileEnv.VITE_API_URL;
-  const VITE_KAKAO_JS_KEY = process.env.VITE_KAKAO_JS_KEY ?? fileEnv.VITE_KAKAO_JS_KEY;
+  const VITE_KAKAO_JS_KEY =
+    process.env.VITE_KAKAO_JS_KEY ?? fileEnv.VITE_KAKAO_JS_KEY;
 
   return {
     plugins: [react(), tailwindcss()],
     server: {
       proxy: {
-        '/login/nickname': {
+        "/login/nickname": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/login/cheeringTeamId': {
+        "/login/cheeringTeamId": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/login/hasSignedIn': {
+        "/login/hasSignedIn": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/api/kakao': {
+        "/api/kakao": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/mypage/myTemp': {
+        "/mypage/myTemp": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/mypage/editInfo': {
+        "/mypage/editInfo": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/mypage/editPersonal': {
+        "/mypage/editPersonal": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/mypage/withdraw': {
+        "/mypage/withdraw": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/callback': {
+        "/callback": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
-        '/home': {
+        "/home": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
-          rewrite: (path) => path,
+          rewrite: path => path,
         },
-        '/mypage/profile-image': {
+        "/mypage/profile-image": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
         },
         // Map weather API proxy
-        '/map/weather': {
+        "/map/weather": {
           target: VITE_API_URL,
           changeOrigin: true,
           secure: false,
@@ -88,12 +89,19 @@ export default defineConfig(({ mode }) => {
           secure: false,
           rewrite: path => path,
         },
+        // ai API
+        "/api": {
+          target: VITE_API_URL,
+          changeOrigin: true,
+          secure: false,
+          rewrite: path => path,
+        },
       },
     },
     define: {
-      'import.meta.env.VITE_API_URL': JSON.stringify(VITE_API_URL),
-      'import.meta.env.VITE_KAKAO_JS_KEY': JSON.stringify(VITE_KAKAO_JS_KEY),
-      global:"window",
+      "import.meta.env.VITE_API_URL": JSON.stringify(VITE_API_URL),
+      "import.meta.env.VITE_KAKAO_JS_KEY": JSON.stringify(VITE_KAKAO_JS_KEY),
+      global: "window",
     },
   };
 });

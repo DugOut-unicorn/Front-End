@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { chatApi } from "../../api/Chat/apis";
+import { chatApi } from "../../api/chat/apis";
 import { ChatRoomDTO } from "../../types/Chat";
 
 export default function ChatRoomList({
