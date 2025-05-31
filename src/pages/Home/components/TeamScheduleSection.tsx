@@ -10,6 +10,7 @@ export function TeamScheduleSection() {
   const [calendarData, setCalendarData] =
     useState<calendarGamesDetailDto | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [cheeringTeamIdx, setCheeringTeamIdx] = useState<number | null>(null);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1; // API는 1-12월 사용
@@ -20,7 +21,13 @@ export function TeamScheduleSection() {
       setIsLoading(true);
       try {
         // cheeringTeamIdx 5번으로 고정
-        const data = await homeApi.getCalendarGames(year, month, undefined, 5);
+        const cheeringTeamIdx = await homeApi.getEntryBanner();
+        const data = await homeApi.getCalendarGames(
+          year,
+          month,
+          undefined,
+          cheeringTeamIdx[0].cheeringTeamId,
+        );
         setCalendarData(data);
       } catch (error) {
         console.error("캘린더 데이터 조회 실패:", error);
