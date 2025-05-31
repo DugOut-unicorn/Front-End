@@ -39,7 +39,7 @@ class ChatClient {
       // Handshake 시 쿼리 파라미터로 토큰 전달
       webSocketFactory: () =>
         new SockJS(
-          `https://dev.dug-out.store/ws-chat?token=${encodeURIComponent(`Bearer ${token}`)}`,
+          `https://dev.dug-out.store/ws-chat?token=${encodeURIComponent(token)}`,
         ),
       debug: str => console.log("[STOMP]", str),
       reconnectDelay: 5000,

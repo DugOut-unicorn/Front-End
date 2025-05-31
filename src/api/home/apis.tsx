@@ -1,6 +1,6 @@
 import {
   calendarGamesDetailDto,
-  cheeringTeamDto,
+  entryBannerDto,
   newsDto,
   rankingDto,
   recentMatchingDto,
@@ -9,6 +9,16 @@ import {
 import axiosInstance from "../axiosInstance";
 
 export const homeApi = {
+  getEntryBanner: async () => {
+    const { data: raw } =
+      await axiosInstance.get<entryBannerDto>("/home/entry-banner");
+    return [
+      {
+        cheeringTeamId: raw.cheeringTeamId,
+        nickname: raw.nickname,
+      },
+    ];
+  },
   getNewsFetch: async () => {
     const { data: raw } =
       await axiosInstance.get<newsDto[]>("/home/news-fetch");
@@ -106,13 +116,6 @@ export const homeApi = {
       windDirection: item.windDirection,
       condition: item.condition,
     }));
-  },
-
-  getCheeringTeam: async () => {
-    const { data: raw } = await axiosInstance.get<cheeringTeamDto[]>(
-      "/home/users/cheering-team",
-    );
-    return raw;
   },
 };
 
