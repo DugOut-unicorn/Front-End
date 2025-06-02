@@ -67,15 +67,6 @@ function RankingCard({ title, loading, data, valueLabel }: RankingCardProps) {
   );
 }
 
-function getDisplayValue(item: any) {
-  if (item.value !== undefined) return item.value;
-  if (item.so !== undefined) return item.so;
-  if (item.sv !== undefined) return item.sv;
-  if (item.era !== undefined) return item.era;
-  if (item.wpct !== undefined) return item.wpct;
-  return "-";
-}
-
 export default function PlayerRankingTable() {
   const [winData, setWinData] = useState<PlayerCardData[]>([]);
   const [eraData, setEraData] = useState<PlayerCardData[]>([]);
@@ -140,33 +131,6 @@ export default function PlayerRankingTable() {
   const [selectedCategory, setSelectedCategory] = useState<"투수" | "타자">(
     "투수",
   );
-
-  const categories = {
-    투수: [
-      "평균자책",
-      "FIP",
-      "WHIP",
-      "WAR",
-      "OS",
-      "경기",
-      "승",
-      "패",
-      "세이브",
-      "홀드",
-    ],
-    타자: [
-      "타율",
-      "홈런",
-      "타점",
-      "도루",
-      "출루율",
-      "OPS",
-      "장타율",
-      "득점",
-      "안타",
-      "2루타",
-    ],
-  };
 
   return (
     <div>
