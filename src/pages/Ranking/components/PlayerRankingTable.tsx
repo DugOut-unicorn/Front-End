@@ -14,10 +14,9 @@ interface RankingCardProps {
   title: string;
   loading: boolean;
   data: PlayerCardData[];
-  valueLabel: string;
 }
 
-function RankingCard({ title, loading, data, valueLabel }: RankingCardProps) {
+function RankingCard({ title, loading, data }: RankingCardProps) {
   return (
     <div className="bg-gray-50 p-4">
       <div className="mb-2 text-sm text-gray-500">{title}</div>
@@ -65,15 +64,6 @@ function RankingCard({ title, loading, data, valueLabel }: RankingCardProps) {
       )}
     </div>
   );
-}
-
-function getDisplayValue(item: any) {
-  if (item.value !== undefined) return item.value;
-  if (item.so !== undefined) return item.so;
-  if (item.sv !== undefined) return item.sv;
-  if (item.era !== undefined) return item.era;
-  if (item.wpct !== undefined) return item.wpct;
-  return "-";
 }
 
 export default function PlayerRankingTable() {
@@ -141,33 +131,6 @@ export default function PlayerRankingTable() {
     "투수",
   );
 
-  const categories = {
-    투수: [
-      "평균자책",
-      "FIP",
-      "WHIP",
-      "WAR",
-      "OS",
-      "경기",
-      "승",
-      "패",
-      "세이브",
-      "홀드",
-    ],
-    타자: [
-      "타율",
-      "홈런",
-      "타점",
-      "도루",
-      "출루율",
-      "OPS",
-      "장타율",
-      "득점",
-      "안타",
-      "2루타",
-    ],
-  };
-
   return (
     <div>
       <div className="mt-4 mb-4 flex gap-2">
@@ -194,30 +157,10 @@ export default function PlayerRankingTable() {
       </div>
 
       <div className="grid grid-cols-4 gap-4">
-        <RankingCard
-          title="다승"
-          loading={loading}
-          data={winData}
-          valueLabel="승률"
-        />
-        <RankingCard
-          title="평균자책"
-          loading={loading}
-          data={eraData}
-          valueLabel="ERA"
-        />
-        <RankingCard
-          title="탈삼진"
-          loading={loading}
-          data={soData}
-          valueLabel="탈삼진"
-        />
-        <RankingCard
-          title="세이브"
-          loading={loading}
-          data={svData}
-          valueLabel="세이브"
-        />
+        <RankingCard title="다승" loading={loading} data={winData} />
+        <RankingCard title="평균자책" loading={loading} data={eraData} />
+        <RankingCard title="탈삼진" loading={loading} data={soData} />
+        <RankingCard title="세이브" loading={loading} data={svData} />
       </div>
 
       <div className="mt-8">
@@ -241,8 +184,6 @@ export default function PlayerRankingTable() {
                 <th className="p-3 text-center">볼넷</th>
                 <th className="p-3 text-center">사구</th>
                 <th className="p-3 text-center">탈삼진</th>
-                <th className="p-3 text-center">실점</th>
-                <th className="p-3 text-center">자책</th>
                 <th className="p-3 text-center">WHIP</th>
               </tr>
             ) : (
@@ -293,8 +234,6 @@ export default function PlayerRankingTable() {
                     <td className="p-3 text-center">{player.bb}</td>
                     <td className="p-3 text-center">{player.hbp}</td>
                     <td className="p-3 text-center">{player.so}</td>
-                    <td className="p-3 text-center">{player.runs}</td>
-                    <td className="p-3 text-center">{player.er}</td>
                     <td className="p-3 text-center">{player.whip}</td>
                   </tr>
                 ))
