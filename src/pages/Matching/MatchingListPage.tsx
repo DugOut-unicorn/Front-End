@@ -1,126 +1,153 @@
-import { useState } from "react";
-import { MatchData } from "../../types/Type";
-import { useNavigate } from "react-router-dom";
-// 예시 더미 데이터 (실제 데이터는 API나 부모 컴포넌트에서 받아옴)
-const DUMMY_DATA: MatchData[] = [
-  {
-    id: 1,
-    writer: "홍길동",
-    team: "LG 트윈스",
-    title: "20일 함께 응원할 분 구합니다.",
-    hasTicket: true,
-  },
-  {
-    id: 2,
-    writer: "김철수",
-    team: "두산 베어스",
-    title: "티켓 같이 구매하실 분 있으신가요?",
-    hasTicket: false,
-  },
-  {
-    id: 3,
-    writer: "이영희",
-    team: "롯데 자이언츠",
-    title: "매칭글 제목 예시입니다.",
-    hasTicket: true,
-  },
-  {
-    id: 4,
-    writer: "박민수",
-    team: "LG 트윈스",
-    title: "응원 동행 구합니다.",
-    hasTicket: false,
-  },
-  {
-    id: 5,
-    writer: "정해인",
-    team: "두산 베어스",
-    title: "티켓 보유자 매칭 부탁드립니다.",
-    hasTicket: true,
-  },
-  {
-    id: 6,
-    writer: "오상진",
-    team: "SSG 랜더스",
-    title: "매칭글 제목입니다.",
-    hasTicket: false,
-  },
-  {
-    id: 7,
-    writer: "김하늘",
-    team: "롯데 자이언츠",
-    title: "응원 동행 구합니다.",
-    hasTicket: true,
-  },
-  {
-    id: 8,
-    writer: "이동현",
-    team: "LG 트윈스",
-    title: "매칭글 예시입니다.",
-    hasTicket: true,
-  },
-  {
-    id: 9,
-    writer: "최민식",
-    team: "두산 베어스",
-    title: "매칭글 제목 예시입니다.",
-    hasTicket: false,
-  },
-  {
-    id: 10,
-    writer: "홍길동",
-    team: "SSG 랜더스",
-    title: "응원 동행 구합니다.",
-    hasTicket: true,
-  },
-  {
-    id: 11,
-    writer: "박지성",
-    team: "두산 베어스",
-    title: "추가 예시 글입니다.",
-    hasTicket: true,
-  },
-  {
-    id: 12,
-    writer: "이영수",
-    team: "LG 트윈스",
-    title: "또 다른 매칭글입니다.",
-    hasTicket: false,
-  },
-];
+// src/pages/Matching/MatchingListPage.tsx
 
-export default function MatchingList() {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const pageSize = 10; // 한 페이지에 표시할 항목 수를 10개로 설정
+import { useState, useEffect } from "react";
+import {
+  useParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import axios from "axios";
 
-  const totalCount = DUMMY_DATA.length;
-  const totalPages = Math.ceil(totalCount / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const pageData = DUMMY_DATA.slice(startIndex, startIndex + pageSize);
+// ────────────────────────────────────────────────────────────
+// 1) Swagger 스펙에 맞춘 API 응답 DTO 타입 예시 (필요에 따라 수정하세요)
+interface MatchingPostDto {
+  matchingPostIdx: number;
+  authorNickname: string;
+  title: string;
+  context: string;
+  haveTicket: boolean;
+  isMatched: boolean;
+  createdAt: string; // 예: "2025-05-31T08:43:30.096Z"
+}
 
-  const navigate = useNavigate(); // 추가
+// 2) 페이지네이션 메타+배열 형태로 내려오는 스펙 예시
+//    실제 API 스펙에 맞춰 수정하세요.
+interface MatchingListResponse {
+  posts: MatchingPostDto[];
+  totalPages: number;
+  totalElements: number;
+}
+// ────────────────────────────────────────────────────────────
 
-  const handleClick = () => {
-    navigate(`/matching/write`); // 상대경로로 변경: /matching/list로 이동
+export default function MatchingListPage() {
+  // 1) URL 파라미터로 넘어오는 date, team, gameIdx
+  const { date, team, gameIdx } = useParams<{
+    date: string;
+    team: string;
+    gameIdx: string;
+  }>();
+  const navigate = useNavigate();
+
+  // 2) 쿼리스트링에서 page 값을 읽어옴 (백엔드 API가 0-indexed page를 기대한다고 가정)
+  const [searchParams] = useSearchParams();
+  const pageParam = searchParams.get("page") || "0";
+  // 화면에 보여줄 때는 1-based page 번호로 사용
+  const [currentPage, setCurrentPage] = useState<number>(
+    Number(pageParam) + 1
+  );
+
+  // 3) API에서 받아온 매칭 글 목록 데이터
+  const [listData, setListData] = useState<MatchingPostDto[]>([]);
+  // 4) API 호출 중인 상태
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // 5) 에러 메시지
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  // 6) 페이지네이션 메타에서 내려오는 전체 페이지 수
+  const [totalPages, setTotalPages] = useState<number>(1);
+
+  // ────────────────────────────────────────────────────────────
+  // useEffect: gameIdx 또는 currentPage가 바뀔 때마다 API 호출
+  useEffect(() => {
+    const fetchMatchingPosts = async () => {
+      if (!gameIdx) {
+        setErrorMsg("유효한 게임 ID가 없습니다.");
+        setListData([]);
+        setTotalPages(1);
+        return;
+      }
+
+      setIsLoading(true);
+      setErrorMsg(null);
+
+      try {
+        // GET /matching-post/by-game/{gameIdx}?page={currentPage - 1}
+        // (백엔드는 0-indexed 페이지를 기대한다고 가정)
+        const response = await axios.get<MatchingListResponse | MatchingPostDto[]>(
+          `/matching-post/by-game/${gameIdx}`,
+          {
+            params: {
+              page: currentPage - 1,
+            },
+          }
+        );
+
+        const data = response.data;
+        // ───────────────────────────────────────────────────────
+        // (1) 만약 response.data가 배열(MatchingPostDto[])로 내려온다면
+        if (Array.isArray(data)) {
+          setListData(data as MatchingPostDto[]);
+          setTotalPages(1);
+        }
+        // (2) response.data.posts 형태(메타+배열)로 내려온다면
+        else if ((data as MatchingListResponse).posts !== undefined) {
+          const typed = data as MatchingListResponse;
+          setListData(typed.posts);
+          setTotalPages(typed.totalPages);
+        }
+        // (3) 그 외의 예외: 빈 배열로 초기화
+        else {
+          setListData([]);
+          setTotalPages(1);
+        }
+        // ───────────────────────────────────────────────────────
+      } catch (err) {
+        console.error("게임별 매칭 글 조회 실패:", err);
+        setErrorMsg("게시글을 불러오는 중 오류가 발생했습니다.");
+        setListData([]);
+        setTotalPages(1);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMatchingPosts();
+  }, [gameIdx, currentPage]);
+
+  // ────────────────────────────────────────────────────────────
+  // “매칭 제안하기” 버튼 클릭 시
+  const handleWriteClick = () => {
+    navigate("/matching/write");
   };
 
-  const handlePageClick = (id: number) => {
-    navigate(`/matching/articles/${id}`); // 매칭글 상세 페이지로 이동
+  // 개별 게시글 클릭 시 상세 페이지로 이동
+  const handleRowClick = (postIdx: number) => {
+    navigate(`/matching/articles/${postIdx}`);
   };
 
-  // 페이지 번호 배열 (1부터 totalPages까지)
+  // 페이지 번호 클릭 시 호출
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    // URL 쿼리스트링에 ?page={page - 1} 반영
+    navigate({
+      pathname: `/matching/list/${date}/${team}/${gameIdx}`,
+      search: `?page=${page - 1}`,
+    });
+  };
+
+  // 페이지 번호 배열 생성 (1부터 totalPages까지)
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+  // ────────────────────────────────────────────────────────────
   return (
     <div className="mx-auto max-w-[1080px] px-4 py-8">
-      {/* 상단 필터 및 매칭글 작성 영역 (디자인만 보여줌) */}
+      {/* 상단 필터 및 매칭 제안하기 버튼 */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex gap-2">
-          {/* 응원하는 팀 필터 (기능은 구현하지 않음) */}
+          {/* 응원하는 팀 필터 (디자인만, 기능 제거) */}
           <select
             className="rounded border px-4 py-2"
             defaultValue=""
-            // onChange={() => {}} // 기능 구현 제거; 디자인만 남김
+            disabled
           >
             <option value="">응원하는 팀</option>
             <option value="LG 트윈스">LG 트윈스</option>
@@ -135,25 +162,25 @@ export default function MatchingList() {
             <option value="KT 위즈">KT 위즈</option>
           </select>
 
-          {/* 티켓 보유 여부 필터 (기능은 구현하지 않음) */}
+          {/* 티켓 보유 여부 필터 (디자인만) */}
           <select
             className="rounded border px-4 py-2"
             defaultValue=""
-            // onChange={() => {}}
+            disabled
           >
             <option value="">티켓 보유 여부</option>
             <option value="O">O</option>
             <option value="X">X</option>
           </select>
 
-          {/* 검색어 입력 (기능은 구현하지 않음) */}
+          {/* 검색어 입력 (디자인만) */}
           <div className="relative">
             <input
               type="text"
               className="w-[200px] rounded border px-4 py-2 pr-10"
               placeholder="검색어 입력"
               defaultValue=""
-              // onChange={() => {}}
+              disabled
             />
             <svg
               className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-gray-400"
@@ -168,92 +195,86 @@ export default function MatchingList() {
           </div>
         </div>
 
-        {/* 매칭글 작성하기 버튼 */}
+        {/* 매칭 제안하기 버튼 */}
         <button
           className="rounded-md border px-4 py-2 hover:bg-gray-50"
-          onClick={() => handleClick()} // 클릭 시 매칭글 작성 페이지로 이동
+          onClick={handleWriteClick}
         >
-          매칭글 작성하기
+          매칭 제안하기
         </button>
       </div>
 
-      {/* 테이블 영역 */}
-      <div className="mt-6 overflow-hidden rounded-lg bg-white shadow">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="w-[80px] px-6 py-3 text-center text-sm font-medium text-gray-500">
-                글 번호
-              </th>
-              <th className="w-[120px] px-6 py-3 text-left text-sm font-medium text-gray-500">
-                작성자
-              </th>
-              <th className="w-[150px] px-6 py-3 text-left text-sm font-medium text-gray-500">
-                응원하는 팀
-              </th>
-              <th className="w-[400px] px-6 py-3 text-left text-sm font-medium text-gray-500">
-                매칭글 제목
-              </th>
-              <th className="w-[80px] px-6 py-3 text-center text-sm font-medium text-gray-500">
-                티켓
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {pageData.length > 0 ? (
-              pageData.map(item => (
+      {/* 로딩 중 표시 */}
+      {isLoading && (
+        <p className="text-center py-8 text-gray-500">로딩 중...</p>
+      )}
+
+      {/* 에러 메시지 표시 */}
+      {errorMsg && (
+        <p className="text-center py-8 text-red-500">{errorMsg}</p>
+      )}
+
+      {/* 데이터가 비어 있을 때 */}
+      {!isLoading && !errorMsg && listData.length === 0 && (
+        <p className="text-center py-8 text-gray-500">
+          해당 게임에 대한 매칭 글이 없습니다.
+        </p>
+      )}
+
+      {/* 데이터가 있을 때 테이블 렌더링 */}
+      {!isLoading && !errorMsg && listData.length > 0 && (
+        <div className="mt-6 overflow-hidden rounded-lg bg-white shadow">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="w-[80px] px-6 py-3 text-center text-sm font-medium text-gray-500">
+                  글 번호
+                </th>
+                <th className="w-[120px] px-6 py-3 text-left text-sm font-medium text-gray-500">
+                  작성자
+                </th>
+                <th className="w-[400px] px-6 py-3 text-left text-sm font-medium text-gray-500">
+                  매칭글 제목
+                </th>
+                <th className="w-[80px] px-6 py-3 text-center text-sm font-medium text-gray-500">
+                  티켓
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {listData.map((item) => (
                 <tr
-                  key={item.id}
-                  className="hover:bg-gray-50"
-                  onClick={() => handlePageClick(item.id)}
+                  key={item.matchingPostIdx}
+                  className="hover:bg-gray-50 cursor-pointer"
+                  onClick={() => handleRowClick(item.matchingPostIdx)}
                 >
                   <td className="px-6 py-4 text-center whitespace-nowrap text-gray-700">
-                    {item.id}
+                    {item.matchingPostIdx}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                    {item.writer}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center space-x-2">
-                      <img
-                        src={`/images/${item.team.replace(" ", "").toLowerCase()}_emb.png`}
-                        alt={item.team}
-                        className="h-8 w-8 object-contain"
-                      />
-                      <span className="text-base font-medium text-gray-900">
-                        {item.team}
-                      </span>
-                    </div>
+                    {item.authorNickname}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700">
                     {item.title}
                   </td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-gray-700">
-                    {item.hasTicket ? "O" : "X"}
+                    {item.haveTicket ? "O" : "X"}
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                  등록된 매칭글이 없습니다.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {/* 페이징 영역 */}
-      {totalPages > 1 && (
+      {/* 페이지네이션 UI */}
+      {!isLoading && !errorMsg && totalPages > 1 && (
         <div className="mt-4 flex justify-center">
           <ul className="flex items-center gap-4 text-gray-600">
             {/* 이전 버튼 */}
             <li>
               <button
-                onClick={() =>
-                  setCurrentPage(prev => (prev > 1 ? prev - 1 : prev))
-                }
+                onClick={() => goToPage(currentPage > 1 ? currentPage - 1 : 1)}
                 disabled={currentPage === 1}
                 className={`px-4 py-2 text-lg ${
                   currentPage === 1
@@ -264,10 +285,11 @@ export default function MatchingList() {
                 &lt;
               </button>
             </li>
-            {pageNumbers.map(page => (
+            {/* 페이지 번호 버튼들 */}
+            {pageNumbers.map((page) => (
               <li key={page}>
                 <button
-                  onClick={() => setCurrentPage(page)}
+                  onClick={() => goToPage(page)}
                   className={`px-4 py-2 text-lg ${
                     currentPage === page
                       ? "font-bold text-black"
@@ -281,9 +303,7 @@ export default function MatchingList() {
             {/* 다음 버튼 */}
             <li>
               <button
-                onClick={() =>
-                  setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev))
-                }
+                onClick={() => goToPage(currentPage < totalPages ? currentPage + 1 : totalPages)}
                 disabled={currentPage === totalPages}
                 className={`px-4 py-2 text-lg ${
                   currentPage === totalPages

@@ -1,4 +1,5 @@
 // src/App.tsx
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -55,17 +56,21 @@ const router = createBrowserRouter([
         path: "matching",
         element: <SidebarLayout />,
         children: [
-          // 1️⃣ 게임 리스트 진입
+          // 1 게임 리스트 진입
           { index: true, element: <MatchingGameListPage /> },
 
-          // 2️⃣ 날짜/팀 파라미터 받는 상세 리스트
-          { path: "list/:date/:team", element: <MatchingListPage /> },
+          // 2 날짜/팀/게임ID 파라미터를 받는 매칭 글 리스트
+          //    예시 URL: /matching/list/2023-06-19/lg/1234
+          {
+            path: "list/:date/:team/:gameIdx",
+            element: <MatchingListPage />,
+          },
 
           // 채팅 리스트
           { path: "chats", element: <MatchingChatListPage /> },
 
-          // 게시글 상세
-          { path: "articles/:id", element: <MatchingArticlePage /> },
+          // 게시글 상세 → URL 파라미터 이름을 :postIdx로 변경
+          { path: "articles/:postIdx", element: <MatchingArticlePage /> },
         ],
       },
 
