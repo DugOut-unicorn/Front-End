@@ -14,10 +14,9 @@ interface RankingCardProps {
   title: string;
   loading: boolean;
   data: PlayerCardData[];
-  valueLabel: string;
 }
 
-function RankingCard({ title, loading, data, valueLabel }: RankingCardProps) {
+function RankingCard({ title, loading, data }: RankingCardProps) {
   return (
     <div className="bg-gray-50 p-4">
       <div className="mb-2 text-sm text-gray-500">{title}</div>
@@ -158,30 +157,10 @@ export default function PlayerRankingTable() {
       </div>
 
       <div className="grid grid-cols-4 gap-4">
-        <RankingCard
-          title="다승"
-          loading={loading}
-          data={winData}
-          valueLabel="승률"
-        />
-        <RankingCard
-          title="평균자책"
-          loading={loading}
-          data={eraData}
-          valueLabel="ERA"
-        />
-        <RankingCard
-          title="탈삼진"
-          loading={loading}
-          data={soData}
-          valueLabel="탈삼진"
-        />
-        <RankingCard
-          title="세이브"
-          loading={loading}
-          data={svData}
-          valueLabel="세이브"
-        />
+        <RankingCard title="다승" loading={loading} data={winData} />
+        <RankingCard title="평균자책" loading={loading} data={eraData} />
+        <RankingCard title="탈삼진" loading={loading} data={soData} />
+        <RankingCard title="세이브" loading={loading} data={svData} />
       </div>
 
       <div className="mt-8">
@@ -205,8 +184,6 @@ export default function PlayerRankingTable() {
                 <th className="p-3 text-center">볼넷</th>
                 <th className="p-3 text-center">사구</th>
                 <th className="p-3 text-center">탈삼진</th>
-                <th className="p-3 text-center">실점</th>
-                <th className="p-3 text-center">자책</th>
                 <th className="p-3 text-center">WHIP</th>
               </tr>
             ) : (
@@ -257,8 +234,6 @@ export default function PlayerRankingTable() {
                     <td className="p-3 text-center">{player.bb}</td>
                     <td className="p-3 text-center">{player.hbp}</td>
                     <td className="p-3 text-center">{player.so}</td>
-                    <td className="p-3 text-center">{player.runs}</td>
-                    <td className="p-3 text-center">{player.er}</td>
                     <td className="p-3 text-center">{player.whip}</td>
                   </tr>
                 ))
