@@ -61,6 +61,7 @@ export const homeApi = {
       status: item.status,
       createdAt: item.createdAt,
       preferredMatchDate: item.preferredMatchDate,
+      haveTicket: item.haveTicket,
     }));
   },
 
