@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import { chatApi } from "../../api/Chat/apis";
-import { ChatRoomDTO } from "../../types/Chat";
+import { useChat } from "../../contexts/ChatContext";
 
 export default function ChatRoomList({
   onSelect,
@@ -9,31 +7,9 @@ export default function ChatRoomList({
     chatRoomIdx: number;
     peerIdx: number;
     peerNickname: string;
-    peerProfileImageUrl: string;
   }) => void;
 }) {
-  const [chatRooms, setChatRooms] = useState<ChatRoomDTO[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    chatApi
-      .getChatRooms()
-      .then((res: ChatRoomDTO[]) => {
-        setChatRooms(res);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("채팅방 목록을 불러오지 못했습니다.");
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading)
-    return (
-      <div className="w-100 p-4 text-center text-gray-400">로딩 중...</div>
-    );
-  if (error) return <div className="p-4 text-center text-red-400">{error}</div>;
+  const { chatRooms } = useChat();
 
   return (
     <div className="h-[calc(100vh-4rem)] w-100 bg-[var(--surface-1)]">
@@ -50,16 +26,17 @@ export default function ChatRoomList({
                 chatRoomIdx: room.chatRoomIdx,
                 peerIdx: room.peerIdx,
                 peerNickname: room.peerNickname,
-                peerProfileImageUrl: room.peerProfileImageUrl,
               })
             }
           >
             {/* 프로필 이미지 */}
             <img
-              src={room.peerProfileImageUrl}
+              src={room.peerProfileImageUrl || "/images/default-profile.png"}
               alt={room.peerNickname}
               className="mr-4 h-12 w-12 flex-shrink-0 rounded-full bg-gray-200 object-cover"
-              onError={e => (e.currentTarget.src = "/default-profile.png")}
+              onError={e =>
+                (e.currentTarget.src = "/images/default-profile.png")
+              }
             />
             {/* 닉네임, 생성일시 */}
             <div className="flex w-75 min-w-0 flex-1 flex-col gap-1">

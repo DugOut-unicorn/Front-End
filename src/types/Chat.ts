@@ -11,6 +11,7 @@ export interface ChatRoomDTO {
   peerNickname: string;
   peerProfileImageUrl: string;
   createdAt: string;
+  matchingPostIdx: number;
 }
 
 export interface ChatMessagesDTO {

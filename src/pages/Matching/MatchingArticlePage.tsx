@@ -94,7 +94,6 @@ export default function ArticleDetail() {
         chatRoomIdx: response.chatRoomId,
         peerIdx: response.withUserId,
         peerNickname: post.authorNickname,
-        peerProfileImageUrl: "/default-profile.png", // TODO: 작성자 프로필 이미지 추가 필요
       });
     } catch (error: any) {
       console.error("채팅방 생성 실패:", error);

@@ -12,18 +12,15 @@ export default function SidebarLayout() {
     chatRoomIdx,
     peerIdx,
     peerNickname,
-    peerProfileImageUrl,
   }: {
     chatRoomIdx: number;
     peerIdx: number;
     peerNickname: string;
-    peerProfileImageUrl: string;
   }) => {
     setSelectedChatRoom({
       chatRoomIdx,
       peerIdx,
       peerNickname,
-      peerProfileImageUrl,
     });
   };
 
@@ -41,7 +38,6 @@ export default function SidebarLayout() {
               idx={selectedChatRoom.chatRoomIdx}
               peerIdx={selectedChatRoom.peerIdx}
               peerNickname={selectedChatRoom.peerNickname}
-              peerProfileImageUrl={selectedChatRoom.peerProfileImageUrl}
               onBack={clearSelectedChatRoom}
             />
           )}

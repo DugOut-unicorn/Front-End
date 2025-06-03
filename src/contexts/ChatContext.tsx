@@ -1,19 +1,27 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import { chatApi } from "../api/Chat/apis";
+import { ChatRoomDTO } from "../types/Chat";
 
 interface ChatContextType {
   selectedChatRoom: {
     chatRoomIdx: number | null;
     peerIdx: number | null;
     peerNickname: string | null;
-    peerProfileImageUrl: string | null;
   };
+  chatRooms: ChatRoomDTO[];
   setSelectedChatRoom: (room: {
     chatRoomIdx: number;
     peerIdx: number;
     peerNickname: string;
-    peerProfileImageUrl: string;
   }) => void;
   clearSelectedChatRoom: () => void;
+  refreshChatRooms: () => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextType | null>(null);
@@ -23,21 +31,30 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     chatRoomIdx: number | null;
     peerIdx: number | null;
     peerNickname: string | null;
-    peerProfileImageUrl: string | null;
   }>({
     chatRoomIdx: null,
     peerIdx: null,
     peerNickname: null,
-    peerProfileImageUrl: null,
   });
 
+  const [chatRooms, setChatRooms] = useState<ChatRoomDTO[]>([]);
+
+  const refreshChatRooms = useCallback(async () => {
+    try {
+      const rooms = await chatApi.getChatRooms();
+      setChatRooms(rooms);
+    } catch (error) {
+      console.error("채팅방 목록을 불러오지 못했습니다:", error);
+    }
+  }, []);
+
+  // 초기 채팅방 목록 로드
+  useEffect(() => {
+    refreshChatRooms();
+  }, [refreshChatRooms]);
+
   const setSelectedChatRoom = useCallback(
-    (room: {
-      chatRoomIdx: number;
-      peerIdx: number;
-      peerNickname: string;
-      peerProfileImageUrl: string;
-    }) => {
+    (room: { chatRoomIdx: number; peerIdx: number; peerNickname: string }) => {
       setSelectedChatRoomState(room);
     },
     [],
@@ -48,7 +65,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       chatRoomIdx: null,
       peerIdx: null,
       peerNickname: null,
-      peerProfileImageUrl: null,
     });
   }, []);
 
@@ -56,8 +72,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     <ChatContext.Provider
       value={{
         selectedChatRoom,
+        chatRooms,
         setSelectedChatRoom,
         clearSelectedChatRoom,
+        refreshChatRooms,
       }}
     >
       {children}
