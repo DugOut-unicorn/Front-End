@@ -36,7 +36,15 @@ export default function EntryBanner() {
   }, [entryBanner]);
 
   if (entryBanner.length === 0) {
-    return null;
+    return (
+      <div className="flex h-39 w-full flex-row items-center justify-between overflow-hidden px-8 py-9">
+        <div className="t-h2 text-[var(--on-surface-grey1)]">
+          안녕하세요!
+          <br />
+          로그인하고 직관의 설렘을 시작해보세요!
+        </div>
+      </div>
+    );
   }
 
   const teamColor = teamColorMap[teamName] || teamColorMap.default;
