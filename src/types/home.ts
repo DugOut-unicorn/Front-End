@@ -23,6 +23,7 @@ export type recentMatchingDto = {
   status: number;
   createdAt: string;
   preferredMatchDate: string;
+  haveTicket: boolean;
 };
 
 export type calendarGameDto = {
