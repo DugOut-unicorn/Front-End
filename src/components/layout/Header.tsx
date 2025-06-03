@@ -56,6 +56,16 @@ const Header: React.FC = () => {
           >
             순위/기록
           </Link>
+          <Link
+            to="/prediction"
+            className={`t-body1 no-underline hover:text-[#007bff] ${
+              location.pathname.startsWith("/prediction")
+                ? "font-bold text-black"
+                : "text-[var(--on-surface-grey1)]"
+            }`}
+          >
+            승부 예측
+          </Link>
         </div>
       </div>
 

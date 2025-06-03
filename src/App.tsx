@@ -31,6 +31,7 @@ import MatchingWritePage from "./pages/Matching/MatchingWritePage";
 // SignupStep3: Home + Completion
 import Completion from "./pages/Login/components/Complection";
 import SidebarLayout from "./components/layout/SidebarLayout";
+import PredictionPage from "./pages/Prediction/PredictionPage";
 
 function SignupStep3() {
   const navigate = useNavigate();
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
         ],
       },
 
+      { path: "prediction", element: <PredictionPage /> },
       // 매칭 글쓰기
       { path: "matching/write", element: <MatchingWritePage /> },
 
