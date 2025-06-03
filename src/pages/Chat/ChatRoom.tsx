@@ -12,6 +12,7 @@ type ChatRoomProps = {
   idx: number | null;
   peerIdx: number | null;
   peerNickname: string | null;
+  peerProfileImageUrl: string | null;
   onBack: () => void;
 };
 
@@ -19,11 +20,13 @@ function ChatRoomInner({
   idx,
   peerIdx,
   peerNickname,
+  peerProfileImageUrl,
   onBack,
 }: {
   idx: number;
   peerIdx: number;
   peerNickname: string;
+  peerProfileImageUrl: string;
   onBack: () => void;
 }) {
   const [input, setInput] = useState("");
@@ -155,7 +158,12 @@ function ChatRoomInner({
           <button className="text-2xl text-gray-400" onClick={onBack}>
             <ChevronLeft />
           </button>
-          <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-200" />
+          <img
+            src={peerProfileImageUrl}
+            alt={peerNickname}
+            className="h-8 w-8 rounded-full bg-gray-200 object-cover"
+            onError={e => (e.currentTarget.src = "/default-profile.png")}
+          />
           <span className="text-base font-bold">{peerNickname}</span>
         </div>
         <button className="rounded-lg border px-3 py-1 text-sm text-gray-700">
@@ -176,7 +184,12 @@ function ChatRoomInner({
             <div key={msg.messageIdx} className="flex items-end gap-2">
               {/* 프로필 이미지는 첫 메시지에만 보여주기 */}
               {idx === 0 || messages[idx - 1].senderIdx !== msg.senderIdx ? (
-                <div className="h-6 w-6 rounded-full bg-gray-200" />
+                <img
+                  src={peerProfileImageUrl}
+                  alt={peerNickname}
+                  className="h-6 w-6 rounded-full bg-gray-200 object-cover"
+                  onError={e => (e.currentTarget.src = "/default-profile.png")}
+                />
               ) : (
                 <div style={{ width: 24 }} /> // 빈 공간
               )}
@@ -214,14 +227,22 @@ export default function ChatRoom({
   idx,
   peerIdx,
   peerNickname,
+  peerProfileImageUrl,
   onBack,
 }: ChatRoomProps) {
-  if (idx === null || peerIdx === null || peerNickname === null) return null;
+  if (
+    idx === null ||
+    peerIdx === null ||
+    peerNickname === null ||
+    peerProfileImageUrl === null
+  )
+    return null;
   return (
     <ChatRoomInner
       idx={idx}
       peerIdx={peerIdx}
       peerNickname={peerNickname}
+      peerProfileImageUrl={peerProfileImageUrl}
       onBack={onBack}
     />
   );

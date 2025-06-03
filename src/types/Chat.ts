@@ -35,3 +35,14 @@ export interface ChatMessageDetailDTO {
   content: string;
   sentAt: string;
 }
+
+// 채팅방 생성 요청 DTO
+export interface ChatRoomCreateRequestDTO {
+  matchingPostId: number;
+}
+
+// 채팅방 생성 응답 DTO
+export interface ChatRoomResponseDTO {
+  chatRoomId: number;
+  withUserId: number;
+}

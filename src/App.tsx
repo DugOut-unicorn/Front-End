@@ -32,6 +32,7 @@ import MatchingWritePage from "./pages/Matching/MatchingWritePage";
 import Completion from "./pages/Login/components/Complection";
 import SidebarLayout from "./components/layout/SidebarLayout";
 import PredictionPage from "./pages/Prediction/PredictionPage";
+import { ChatProvider } from "./contexts/ChatContext";
 
 function SignupStep3() {
   const navigate = useNavigate();
@@ -107,8 +108,10 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[var(--surface-2)]">
-      <RouterProvider router={router} />
-    </div>
+    <ChatProvider>
+      <div className="min-h-screen bg-[var(--surface-2)]">
+        <RouterProvider router={router} />
+      </div>
+    </ChatProvider>
   );
 }
