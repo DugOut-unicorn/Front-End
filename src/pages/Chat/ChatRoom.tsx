@@ -5,14 +5,15 @@ import {
   ChatMessageDTO,
   ChatMessageDetailDTO,
   ChatMessagesDTO,
+  ChatRoomDTO,
 } from "../../types/Chat";
 import { chatClient } from "../../hooks/useStompClient";
+import { useChat } from "../../contexts/ChatContext";
 
 type ChatRoomProps = {
   idx: number | null;
   peerIdx: number | null;
   peerNickname: string | null;
-  peerProfileImageUrl: string | null;
   onBack: () => void;
 };
 
@@ -20,13 +21,11 @@ function ChatRoomInner({
   idx,
   peerIdx,
   peerNickname,
-  peerProfileImageUrl,
   onBack,
 }: {
   idx: number;
   peerIdx: number;
   peerNickname: string;
-  peerProfileImageUrl: string;
   onBack: () => void;
 }) {
   const [input, setInput] = useState("");
@@ -35,8 +34,22 @@ function ChatRoomInner({
   const [otherUserId, setOtherUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [chatRoomDetail, setChatRoomDetail] = useState<ChatRoomDTO | null>(
+    null,
+  );
+  const { chatRooms } = useChat();
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // 채팅방 상세 정보 불러오기
+  useEffect(() => {
+    if (idx == null) return;
+
+    const currentRoom = chatRooms.find(room => room.chatRoomIdx === idx);
+    if (currentRoom) {
+      setChatRoomDetail(currentRoom);
+    }
+  }, [idx, chatRooms]);
 
   // 과거 대화 불러오기
   useEffect(() => {
@@ -159,10 +172,13 @@ function ChatRoomInner({
             <ChevronLeft />
           </button>
           <img
-            src={peerProfileImageUrl}
+            src={
+              chatRoomDetail?.peerProfileImageUrl ||
+              "/images/default-profile.png"
+            }
             alt={peerNickname}
             className="h-8 w-8 rounded-full bg-gray-200 object-cover"
-            onError={e => (e.currentTarget.src = "/default-profile.png")}
+            onError={e => (e.currentTarget.src = "/images/default-profile.png")}
           />
           <span className="text-base font-bold">{peerNickname}</span>
         </div>
@@ -185,10 +201,15 @@ function ChatRoomInner({
               {/* 프로필 이미지는 첫 메시지에만 보여주기 */}
               {idx === 0 || messages[idx - 1].senderIdx !== msg.senderIdx ? (
                 <img
-                  src={peerProfileImageUrl}
+                  src={
+                    chatRoomDetail?.peerProfileImageUrl ||
+                    "/images/default-profile.png"
+                  }
                   alt={peerNickname}
                   className="h-6 w-6 rounded-full bg-gray-200 object-cover"
-                  onError={e => (e.currentTarget.src = "/default-profile.png")}
+                  onError={e =>
+                    (e.currentTarget.src = "/images/default-profile.png")
+                  }
                 />
               ) : (
                 <div style={{ width: 24 }} /> // 빈 공간
@@ -227,22 +248,14 @@ export default function ChatRoom({
   idx,
   peerIdx,
   peerNickname,
-  peerProfileImageUrl,
   onBack,
 }: ChatRoomProps) {
-  if (
-    idx === null ||
-    peerIdx === null ||
-    peerNickname === null ||
-    peerProfileImageUrl === null
-  )
-    return null;
+  if (idx === null || peerIdx === null || peerNickname === null) return null;
   return (
     <ChatRoomInner
       idx={idx}
       peerIdx={peerIdx}
       peerNickname={peerNickname}
-      peerProfileImageUrl={peerProfileImageUrl}
       onBack={onBack}
     />
   );

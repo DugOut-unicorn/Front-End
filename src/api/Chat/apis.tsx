@@ -16,6 +16,7 @@ export const chatApi = {
       peerNickname: item.peerNickname,
       peerProfileImageUrl: item.peerProfileImageUrl,
       createdAt: item.createdAt,
+      matchingPostIdx: item.matchingPostIdx,
     }));
   },
 
