@@ -9,6 +9,7 @@ export default function ChatRoomList({
     chatRoomIdx: number;
     peerIdx: number;
     peerNickname: string;
+    peerProfileImageUrl: string;
   }) => void;
 }) {
   const [chatRooms, setChatRooms] = useState<ChatRoomDTO[]>([]);
@@ -49,6 +50,7 @@ export default function ChatRoomList({
                 chatRoomIdx: room.chatRoomIdx,
                 peerIdx: room.peerIdx,
                 peerNickname: room.peerNickname,
+                peerProfileImageUrl: room.peerProfileImageUrl,
               })
             }
           >

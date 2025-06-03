@@ -29,7 +29,7 @@ export default function WinnerPrediction() {
         <h3 className="t-h3 text-[var(--on-surface-grey1)]">최종 순위 예측</h3>
       </div>
       <p className="t-body1 mb-3 text-[var(--on-surface-grey1)]">
-        시즌 최종 순위를 예측해보세요.
+        AI 기반 최종 순위 예측 결과입니다.
       </p>
       <table className="min-w-full table-fixed border-collapse text-[var(--on-surface-default)]">
         <thead className="h-[48px] border-b border-[#E5EAF2]">

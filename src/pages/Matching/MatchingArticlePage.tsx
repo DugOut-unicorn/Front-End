@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
+import { chatApi } from "../../api/Chat/apis";
+import { useChat } from "../../contexts/ChatContext";
 
 interface MatchingPostDetailResponse {
   matchingPostIdx: number;
@@ -16,13 +18,15 @@ interface MatchingPostDetailResponse {
 export default function ArticleDetail() {
   const { postIdx } = useParams<{ postIdx: string }>();
   const navigate = useNavigate();
+  const [isCreatingChat, setIsCreatingChat] = useState(false);
+  const { setSelectedChatRoom } = useChat();
 
   // 1) API 응답을 담을 상태
   const [post, setPost] = useState<MatchingPostDetailResponse | null>(null);
   // 2) 로딩 / 에러 상태
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  // 3) “로그인 모달”을 보여줄지 여부
+  // 3) "로그인 모달"을 보여줄지 여부
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
   useEffect(() => {
@@ -55,7 +59,7 @@ export default function ArticleDetail() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setPost(resp.data);
       } catch (err: any) {
@@ -64,7 +68,9 @@ export default function ArticleDetail() {
         if (err.response && err.response.status === 404) {
           setErrorMsg("해당 글을 찾을 수 없습니다.");
         } else if (err.response && err.response.status === 401) {
-          setErrorMsg("로그인 정보가 만료되었거나 권한이 없습니다. 다시 로그인하세요.");
+          setErrorMsg(
+            "로그인 정보가 만료되었거나 권한이 없습니다. 다시 로그인하세요.",
+          );
         } else {
           setErrorMsg("서버 오류가 발생했습니다. 잠시 후 다시 시도하세요.");
         }
@@ -76,23 +82,51 @@ export default function ArticleDetail() {
     fetchDetail();
   }, [postIdx]);
 
+  const handleCreateChat = async () => {
+    if (!post) return;
+
+    try {
+      setIsCreatingChat(true);
+      const response = await chatApi.postMakeChatRoom(post.matchingPostIdx);
+
+      // 채팅방 생성 성공 시 사이드바의 채팅방을 선택
+      setSelectedChatRoom({
+        chatRoomIdx: response.chatRoomId,
+        peerIdx: response.withUserId,
+        peerNickname: post.authorNickname,
+        peerProfileImageUrl: "/default-profile.png", // TODO: 작성자 프로필 이미지 추가 필요
+      });
+    } catch (error: any) {
+      console.error("채팅방 생성 실패:", error);
+      if (error.response?.status === 409) {
+        alert("이미 존재하는 채팅방입니다.");
+      } else {
+        alert("채팅방 생성에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      }
+    } finally {
+      setIsCreatingChat(false);
+    }
+  };
+
   // -- 로딩 중 표시 --
   if (loading) {
     return (
-      <div className="h-64 flex items-center justify-center text-gray-500">
+      <div className="flex h-64 items-center justify-center text-gray-500">
         로딩 중...
       </div>
     );
   }
 
-  // -- “로그인 모달”이 보여지는 상태일 때 --
+  // -- "로그인 모달"이 보여지는 상태일 때 --
   if (showLoginModal) {
     return (
       // ▶ 오버레이 백그라운드
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
         {/* ▶ 모달 박스 */}
-        <div className="w-[300px] bg-white rounded-lg p-6 text-center shadow-lg">
-          <p className="mb-6 text-base text-gray-800">로그인 후 계속 이용하실 수 있어요.</p>
+        <div className="w-[300px] rounded-lg bg-white p-6 text-center shadow-lg">
+          <p className="mb-6 text-base text-gray-800">
+            로그인 후 계속 이용하실 수 있어요.
+          </p>
           <button
             onClick={() => {
               navigate("/login");
@@ -109,7 +143,7 @@ export default function ArticleDetail() {
   // -- 에러 상태가 있을 때 (404 등) --
   if (errorMsg) {
     return (
-      <div className="h-64 flex flex-col items-center justify-center text-red-500">
+      <div className="flex h-64 flex-col items-center justify-center text-red-500">
         <p className="mb-4">{errorMsg}</p>
         <button
           onClick={() => navigate(-1)}
@@ -128,32 +162,34 @@ export default function ArticleDetail() {
 
   // -- 정상적으로 post를 불러온 경우 본문 렌더링 --
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 space-y-6 relative">
+    <div className="relative mx-auto max-w-2xl space-y-6 px-4 py-8">
       {/* 뒤로가기 화살표 */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center text-gray-600 hover:text-gray-800 mb-2"
+        className="mb-2 flex items-center text-gray-600 hover:text-gray-800"
       >
         <ArrowLeft size={20} className="mr-1" />
         <span className="text-sm">뒤로</span>
       </button>
 
       {/* 점 3개 아이콘 */}
-      <button className="absolute top-4 right-0 text-gray-400 hover:text-black text-xl">
+      <button className="absolute top-4 right-0 text-xl text-gray-400 hover:text-black">
         ⋯
       </button>
 
       {/* 제목 */}
-      <div className="border-t pt-4 mb-2">
+      <div className="mb-2 border-t pt-4">
         <h1 className="text-xl font-bold">{post.title}</h1>
       </div>
 
       {/* 메타 정보 */}
-      <div className="flex justify-between text-sm text-gray-500 items-start">
+      <div className="flex items-start justify-between text-sm text-gray-500">
         <div className="space-y-1">
           <div>
             작성자:{" "}
-            <span className="font-medium text-gray-800">{post.authorNickname}</span>
+            <span className="font-medium text-gray-800">
+              {post.authorNickname}
+            </span>
           </div>
           <div>
             작성일:{" "}
@@ -170,14 +206,14 @@ export default function ArticleDetail() {
           <div>
             티켓 보유:{" "}
             {post.haveTicket ? (
-              <span className="text-green-600 font-medium">O</span>
+              <span className="font-medium text-green-600">O</span>
             ) : (
-              <span className="text-red-600 font-medium">X</span>
+              <span className="font-medium text-red-600">X</span>
             )}
           </div>
         </div>
 
-        <div className="text-right space-y-1">
+        <div className="space-y-1 text-right">
           <div>
             사용자 ID:{" "}
             <span className="font-medium text-gray-800">{post.userIdx}</span>
@@ -186,19 +222,25 @@ export default function ArticleDetail() {
       </div>
 
       {/* 본문 */}
-      <div className="bg-white border border-gray-300 rounded-lg p-4 text-sm whitespace-pre-line">
+      <div className="rounded-lg border border-gray-300 bg-white p-4 text-sm whitespace-pre-line">
         {post.context}
       </div>
 
       {/* 채팅하기 버튼 */}
-      <div className="text-right mt-2">
-        <button className="bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800">
-          채팅하기
+      <div className="mt-2 text-right">
+        <button
+          onClick={handleCreateChat}
+          disabled={isCreatingChat}
+          className={`rounded bg-black px-4 py-2 text-sm text-white hover:bg-gray-800 ${
+            isCreatingChat ? "cursor-not-allowed opacity-50" : ""
+          }`}
+        >
+          {isCreatingChat ? "채팅방 생성 중..." : "채팅하기"}
         </button>
       </div>
 
       {/* 이전/다음 글 네비게이션 (추후 API 연결 필요시 수정) */}
-      <div className="flex justify-center gap-8 text-sm text-gray-400 border-t py-4">
+      <div className="flex justify-center gap-8 border-t py-4 text-sm text-gray-400">
         <button className="flex items-center gap-2 hover:underline">
           <span className="text-base">〈</span>
           <span>이전 글</span>
