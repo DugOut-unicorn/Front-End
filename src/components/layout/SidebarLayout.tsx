@@ -1,15 +1,12 @@
-import { useState } from "react";
 import ChatRoom from "../../pages/Chat/ChatRoom";
 import ChatRoomList from "../../pages/Chat/ChatRoomList";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
+import { useChat } from "../../contexts/ChatContext";
 
 export default function SidebarLayout() {
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [selectedPeerIdx, setSelectedPeerIdx] = useState<number | null>(null);
-  const [selectedPeerNickname, setSelectedPeerNickname] = useState<
-    string | null
-  >(null);
+  const { selectedChatRoom, setSelectedChatRoom, clearSelectedChatRoom } =
+    useChat();
 
   const handleChatRoomSelect = ({
     chatRoomIdx,
@@ -20,9 +17,11 @@ export default function SidebarLayout() {
     peerIdx: number;
     peerNickname: string;
   }) => {
-    setSelectedIdx(chatRoomIdx);
-    setSelectedPeerIdx(peerIdx);
-    setSelectedPeerNickname(peerNickname);
+    setSelectedChatRoom({
+      chatRoomIdx,
+      peerIdx,
+      peerNickname,
+    });
   };
 
   return (
@@ -32,18 +31,14 @@ export default function SidebarLayout() {
       </div>
       <div className="w-[400px] flex-shrink-0">
         <Sidebar>
-          {selectedIdx === null ? (
+          {selectedChatRoom.chatRoomIdx === null ? (
             <ChatRoomList onSelect={handleChatRoomSelect} />
           ) : (
             <ChatRoom
-              idx={selectedIdx}
-              peerIdx={selectedPeerIdx}
-              peerNickname={selectedPeerNickname}
-              onBack={() => {
-                setSelectedIdx(null);
-                setSelectedPeerIdx(null);
-                setSelectedPeerNickname(null);
-              }}
+              idx={selectedChatRoom.chatRoomIdx}
+              peerIdx={selectedChatRoom.peerIdx}
+              peerNickname={selectedChatRoom.peerNickname}
+              onBack={clearSelectedChatRoom}
             />
           )}
         </Sidebar>

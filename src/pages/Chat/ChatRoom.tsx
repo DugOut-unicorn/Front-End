@@ -1,8 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { chatApi } from "../../api/Chat/apis";
-import { ChatMessageDTO, ChatMessageDetailDTO } from "../../types/Chat";
+import {
+  ChatMessageDTO,
+  ChatMessageDetailDTO,
+  ChatMessagesDTO,
+  ChatRoomDTO,
+} from "../../types/Chat";
 import { chatClient } from "../../hooks/useStompClient";
+import { useChat } from "../../contexts/ChatContext";
 
 type ChatRoomProps = {
   idx: number | null;
@@ -28,8 +34,22 @@ function ChatRoomInner({
   const [otherUserId, setOtherUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [chatRoomDetail, setChatRoomDetail] = useState<ChatRoomDTO | null>(
+    null,
+  );
+  const { chatRooms } = useChat();
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // 채팅방 상세 정보 불러오기
+  useEffect(() => {
+    if (idx == null) return;
+
+    const currentRoom = chatRooms.find(room => room.chatRoomIdx === idx);
+    if (currentRoom) {
+      setChatRoomDetail(currentRoom);
+    }
+  }, [idx, chatRooms]);
 
   // 과거 대화 불러오기
   useEffect(() => {
@@ -43,10 +63,9 @@ function ChatRoomInner({
 
     chatApi
       .getChatHistory(idx)
-      .then(res => {
+      .then((res: ChatMessagesDTO) => {
         setMessages(res.messages);
         setMyId(res.myId);
-        // peerIdx를 직접 사용
         setOtherUserId(peerIdx);
       })
       .catch(() => {
@@ -152,7 +171,15 @@ function ChatRoomInner({
           <button className="text-2xl text-gray-400" onClick={onBack}>
             <ChevronLeft />
           </button>
-          <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-200" />
+          <img
+            src={
+              chatRoomDetail?.peerProfileImageUrl ||
+              "/images/default-profile.png"
+            }
+            alt={peerNickname}
+            className="h-8 w-8 rounded-full bg-gray-200 object-cover"
+            onError={e => (e.currentTarget.src = "/images/default-profile.png")}
+          />
           <span className="text-base font-bold">{peerNickname}</span>
         </div>
         <button className="rounded-lg border px-3 py-1 text-sm text-gray-700">
@@ -173,7 +200,17 @@ function ChatRoomInner({
             <div key={msg.messageIdx} className="flex items-end gap-2">
               {/* 프로필 이미지는 첫 메시지에만 보여주기 */}
               {idx === 0 || messages[idx - 1].senderIdx !== msg.senderIdx ? (
-                <div className="h-6 w-6 rounded-full bg-gray-200" />
+                <img
+                  src={
+                    chatRoomDetail?.peerProfileImageUrl ||
+                    "/images/default-profile.png"
+                  }
+                  alt={peerNickname}
+                  className="h-6 w-6 rounded-full bg-gray-200 object-cover"
+                  onError={e =>
+                    (e.currentTarget.src = "/images/default-profile.png")
+                  }
+                />
               ) : (
                 <div style={{ width: 24 }} /> // 빈 공간
               )}

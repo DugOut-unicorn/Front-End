@@ -1,14 +1,25 @@
 import {
   calendarGamesDetailDto,
-  cheeringTeamDto,
+  entryBannerDto,
   newsDto,
   rankingDto,
   recentMatchingDto,
+  recentResultsDto,
   StadiumWeatherDto,
 } from "../../types/home";
 import axiosInstance from "../axiosInstance";
 
 export const homeApi = {
+  getEntryBanner: async () => {
+    const { data: raw } =
+      await axiosInstance.get<entryBannerDto>("/home/entry-banner");
+    return [
+      {
+        cheeringTeamId: raw.cheeringTeamId,
+        nickname: raw.nickname,
+      },
+    ];
+  },
   getNewsFetch: async () => {
     const { data: raw } =
       await axiosInstance.get<newsDto[]>("/home/news-fetch");
@@ -50,11 +61,8 @@ export const homeApi = {
       status: item.status,
       createdAt: item.createdAt,
       preferredMatchDate: item.preferredMatchDate,
+      haveTicket: item.haveTicket,
     }));
-  },
-  getRecentResults: async () => {
-    const response = await axiosInstance.get("/home/recent-results");
-    return response.data;
   },
 
   getCalendarGames: async (
@@ -107,12 +115,30 @@ export const homeApi = {
       condition: item.condition,
     }));
   },
+  getRecentResults: async (date?: string, limit: number = 5) => {
+    const queryParams = new URLSearchParams();
 
-  getCheeringTeam: async () => {
-    const { data: raw } = await axiosInstance.get<cheeringTeamDto[]>(
-      "/home/users/cheering-team",
+    if (date) {
+      queryParams.append("date", date);
+    }
+    queryParams.append("limit", String(limit));
+
+    const { data: raw } = await axiosInstance.get<recentResultsDto>(
+      `/home/recent-results?${queryParams.toString()}`,
     );
-    return raw;
+    return {
+      baseDate: raw.baseDate,
+      matchDate: raw.matchDate,
+      results: raw.results.map(result => ({
+        gameIdx: result.gameIdx,
+        homeTeamIdx: result.homeTeamIdx,
+        awayTeamIdx: result.awayTeamIdx,
+        homeScore: result.homeScore,
+        awayScore: result.awayScore,
+        recordedAt: result.recordedAt,
+        scheduledAt: result.scheduledAt,
+      })),
+    };
   },
 };
 

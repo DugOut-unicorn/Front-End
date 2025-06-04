@@ -46,3 +46,12 @@ export function getTeamLogoByIdx(teamIdx: number): string {
   const englishName = getEnglishTeamName(teamIdxToName[teamIdx]);
   return `/images/${englishName}_big_emb.png`;
 }
+
+export function getEnglishTeamNameByIdx(teamIdx: number): string {
+  const koreanName = teamIdxToName[teamIdx];
+  if (!koreanName) {
+    console.warn(`팀 인덱스 매핑을 찾을 수 없습니다: ${teamIdx}`);
+    return String(teamIdx);
+  }
+  return getEnglishTeamName(koreanName);
+}

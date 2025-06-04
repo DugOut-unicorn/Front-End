@@ -39,14 +39,14 @@ class ChatClient {
       // Handshake 시 쿼리 파라미터로 토큰 전달
       webSocketFactory: () =>
         new SockJS(
-          `https://dev.dug-out.store/ws-chat?token=${encodeURIComponent(`Bearer ${token}`)}`,
+          `https://dev.dug-out.store/ws-chat?token=${encodeURIComponent(token)}`,
         ),
       debug: str => console.log("[STOMP]", str),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       connectHeaders: {
-        // 서버쪽 HandshakeHandler에서 Authorization 헤더 대신 token 파라미터 사용
+        Authorization: `Bearer ${token}`,
       },
       onConnect: () => {
         console.log("[STOMP] WebSocket 연결 성공");

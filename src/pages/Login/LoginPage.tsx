@@ -31,7 +31,7 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
     if (!id && token) {
-      navigate("/");
+      window.location.href = "/";
     }
   }, [id, navigate]);
 
@@ -99,7 +99,7 @@ const LoginPage: React.FC = () => {
           // 4) 분기 처리
           if (hasJson.data.hasSignedIn) {
             // 이미 모두 완료된 회원: 홈으로
-            navigate("/");
+            window.location.href = "/";
           } else {
             // 닉네임/응원팀 설정 필요
             if (resp.data.properties?.nickname) {
@@ -227,7 +227,7 @@ const LoginPage: React.FC = () => {
         />
       );
     case "3":
-      return <Completion onGoToMain={() => navigate("/")} />;
+      return <Completion onGoToMain={() => (window.location.href = "/")} />;
     default:
       return (
         <div className="flex h-screen items-center justify-center">

@@ -1,4 +1,9 @@
-import { ChatMessagesDTO, ChatRoomDTO } from "../../types/Chat";
+import {
+  ChatMessagesDTO,
+  ChatRoomDTO,
+  ChatRoomCreateRequestDTO,
+  ChatRoomResponseDTO,
+} from "../../types/Chat";
 import axiosInstance from "../axiosInstance";
 
 export const chatApi = {
@@ -11,6 +16,7 @@ export const chatApi = {
       peerNickname: item.peerNickname,
       peerProfileImageUrl: item.peerProfileImageUrl,
       createdAt: item.createdAt,
+      matchingPostIdx: item.matchingPostIdx,
     }));
   },
 
@@ -24,6 +30,13 @@ export const chatApi = {
   getChatHistory: async (chatRoomIdx: number) => {
     const { data } = await axiosInstance.get<ChatMessagesDTO>(
       `/api/chat/history?roomId=${chatRoomIdx}`,
+    );
+    return data;
+  },
+  postMakeChatRoom: async (matchingPostIdx: number) => {
+    const { data } = await axiosInstance.post<ChatRoomResponseDTO>(
+      `/api/chat`,
+      { matchingPostId: matchingPostIdx } as ChatRoomCreateRequestDTO,
     );
     return data;
   },

@@ -11,6 +11,7 @@ export interface ChatRoomDTO {
   peerNickname: string;
   peerProfileImageUrl: string;
   createdAt: string;
+  matchingPostIdx: number;
 }
 
 export interface ChatMessagesDTO {
@@ -34,4 +35,15 @@ export interface ChatMessageDetailDTO {
   receiverIdx: number;
   content: string;
   sentAt: string;
+}
+
+// 채팅방 생성 요청 DTO
+export interface ChatRoomCreateRequestDTO {
+  matchingPostId: number;
+}
+
+// 채팅방 생성 응답 DTO
+export interface ChatRoomResponseDTO {
+  chatRoomId: number;
+  withUserId: number;
 }

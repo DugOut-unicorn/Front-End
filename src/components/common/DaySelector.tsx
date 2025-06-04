@@ -33,6 +33,16 @@ export default function DaySelector({
     onDateChange(newDate);
   };
 
+  // 날짜 선택 핸들러
+  const handleDateSelect = (date: Date) => {
+    // 선택된 날짜가 현재 표시된 월과 다른 경우
+    if (date.getMonth() !== selectedDate.getMonth()) {
+      onDateChange(date);
+    } else {
+      onDateChange(date);
+    }
+  };
+
   // 요일 변환
   const getDayText = (date: Date) => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
@@ -59,17 +69,21 @@ export default function DaySelector({
             const isSelected =
               date.toDateString() === selectedDate.toDateString();
             const hasNoGame = isNoGameDay(date);
+            const isDifferentMonth =
+              date.getMonth() !== selectedDate.getMonth();
 
             return (
               <button
                 key={date.toISOString()}
-                onClick={() => onDateChange(date)}
+                onClick={() => handleDateSelect(date)}
                 className={`flex min-w-[48px] flex-col items-center ${
                   isSelected
                     ? "border-b-2 border-green-600 text-green-600"
                     : hasNoGame
                       ? "text-gray-400"
-                      : "text-gray-900"
+                      : isDifferentMonth
+                        ? "text-gray-400"
+                        : "text-gray-900"
                 }`}
               >
                 <span className="text-sm font-medium">{getDayText(date)}</span>
