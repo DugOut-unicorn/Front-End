@@ -177,12 +177,7 @@ export default function ArticleDetail() {
           </div>
         </div>
 
-        <div className="text-right space-y-1">
-          <div>
-            사용자 ID:{" "}
-            <span className="font-medium text-gray-800">{post.userIdx}</span>
-          </div>
-        </div>
+
       </div>
 
       {/* 본문 */}
