@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Check } from "lucide-react";
 
 interface Team {
   id: number;
@@ -8,70 +8,105 @@ interface Team {
   img: string;
 }
 
+// 여기에서 onNext를 Props에 추가했습니다.
 interface TeamSelectionProps {
   selectedTeam: string | null;
   setSelectedTeam: React.Dispatch<React.SetStateAction<string | null>>;
-  onNext: () => void;
+  onNext: () => void;   // ← 추가된 부분
 }
 
 // 팀 목록에 id와 name, img를 정의
 const teams: Team[] = [
-  { id: 7, name: '두산 베어스',   img: '/images/doosan_emb.png' },
-  { id: 1, name: 'LG 트윈스',     img: '/images/lg_emb.png' },
-  { id: 8, name: '키움 히어로즈', img: '/images/kiwoom_emb.png' },
-  { id: 3, name: '삼성 라이온즈', img: '/images/samsung_emb.png' },
-  { id: 4, name: 'KT 위즈',       img: '/images/kt_emb.png' },
-  { id: 2, name: 'SSG 랜더스',    img: '/images/ssg_emb.png' },
-  { id: 10, name: '한화 이글스',    img: '/images/hanwha_emb.png' },
-  { id: 5, name: '롯데 자이언츠', img: '/images/lotte_emb.png' },
-  { id: 6, name: 'NC 다이노스',    img: '/images/nc_emb.png' },
-  { id: 9, name: 'KIA 타이거즈',  img: '/images/kia_emb.png' },
+  { id: 7, name: "두산 베어스",   img: "/images/doosan_emb.png" },
+  { id: 1, name: "LG 트윈스",     img: "/images/lg_emb.png" },
+  { id: 8, name: "키움 히어로즈", img: "/images/kiwoom_emb.png" },
+  { id: 3, name: "삼성 라이온즈", img: "/images/samsung_emb.png" },
+  { id: 4, name: "KT 위즈",       img: "/images/kt_emb.png" },
+  { id: 2, name: "SSG 랜더스",    img: "/images/ssg_emb.png" },
+  { id: 10, name: "한화 이글스",    img: "/images/hanwha_emb.png" },
+  { id: 5, name: "롯데 자이언츠", img: "/images/lotte_emb.png" },
+  { id: 6, name: "NC 다이노스",    img: "/images/nc_emb.png" },
+  { id: 9, name: "KIA 타이거즈",  img: "/images/kia_emb.png" },
 ];
 
 const TeamSelection: React.FC<TeamSelectionProps> = ({
   selectedTeam,
   setSelectedTeam,
-  onNext,
+  onNext,   // ← 구조분해에 추가
 }) => {
   const navigate = useNavigate();
 
   const handleNext = async () => {
     if (!selectedTeam) return;
+
     // 선택된 팀 이름으로 id 찾기
     const team = teams.find((t) => t.name === selectedTeam);
     if (!team) {
-      alert('선택된 팀을 찾을 수 없습니다.');
+      alert("선택된 팀을 찾을 수 없습니다.");
       return;
     }
 
     try {
-      const token = localStorage.getItem('jwtToken');
-      console.log('Selected team:', selectedTeam, 'Team ID:', team.id);
-      console.log('Using token:', token);
+      const token = localStorage.getItem("jwtToken");
+      console.log("Selected team:", selectedTeam, "Team ID:", team.id);
+      console.log("Using token:", token);
 
-      const res = await fetch('/login/cheeringTeamId', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ cheeringTeamId: team.id }),
-      });
+      // 1) 응원팀 업데이트 API 호출 (절대경로)
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/login/cheeringTeamId`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ cheeringTeamId: team.id }),
+        }
+      );
 
-      console.log('Response status:', res.status);
+      console.log("Response status:", res.status);
       const data = await res.json().catch(() => null);
-      console.log('Response body:', data);
+      console.log("Response body:", data);
 
       if (res.ok) {
-        onNext();
+        // 2) 응원팀 설정 성공 시 hasSignedIn 재호출
+        const hasRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/login/hasSignedIn`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+          }
+        );
+
+        if (!hasRes.ok) {
+          throw new Error(`hasSignedIn 호출 실패: ${hasRes.status}`);
+        }
+
+        const hasJson = (await hasRes.json()) as {
+          success: boolean;
+          message: string;
+          data: { hasSignedIn: boolean };
+        };
+        console.log("hasSignedIn response:", hasJson);
+
+        if (hasJson.data.hasSignedIn) {
+          // 이미 가입 완료된 상태이면 메인으로 리다이렉트
+          window.location.href = "/";
+        } else {
+          // 아직 가입 완료 상태가 아니면, LoginPage에서 넘어온 onNext() 호출
+          onNext();
+        }
       } else {
-        console.error('Error updating cheering team:', res.status, data);
-        alert(data?.message || '응원 팀 업데이트에 실패했습니다.');
+        console.error("Error updating cheering team:", res.status, data);
+        alert(data?.message || "응원 팀 업데이트에 실패했습니다.");
       }
     } catch (err) {
-      console.error('Network error:', err);
-      alert('네트워크 오류로 응원 팀 설정에 실패했습니다.');
+      console.error("Network error:", err);
+      alert("네트워크 오류로 응원 팀 설정에 실패했습니다.");
     }
   };
 
@@ -97,11 +132,11 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({
             key={team.id}
             type="button"
             onClick={() => setSelectedTeam(team.name)}
-            className={
-              `relative flex flex-col items-center p-6 rounded-xl cursor-pointer transition ${
-                selectedTeam === team.name ? 'bg-blue-50' : 'bg-white hover:bg-gray-100'
-              }`
-            }
+            className={`relative flex flex-col items-center p-6 rounded-xl cursor-pointer transition ${
+              selectedTeam === team.name
+                ? "bg-blue-50"
+                : "bg-white hover:bg-gray-100"
+            }`}
           >
             <img
               src={team.img}
@@ -125,13 +160,11 @@ const TeamSelection: React.FC<TeamSelectionProps> = ({
         type="button"
         onClick={handleNext}
         disabled={!selectedTeam}
-        className={
-          `w-full max-w-[800px] py-3 rounded-xl mb-4 transition ${
-            selectedTeam
-              ? 'bg-black text-white hover:bg-gray-800'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-          }`
-        }
+        className={`w-full max-w-[800px] py-3 rounded-xl mb-4 transition ${
+          selectedTeam
+            ? "bg-black text-white hover:bg-gray-800"
+            : "bg-gray-200 text-gray-400 cursor-not-allowed"
+        }`}
       >
         선택 완료
       </button>

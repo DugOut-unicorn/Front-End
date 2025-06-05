@@ -10,7 +10,6 @@ declare global {
   }
 }
 
-// Swagger 실제 응답 스키마에 맞춰 data 내부 필드를 최소화합니다.
 interface KakaoUserInfoResponse {
   success: boolean;
   message: string;
@@ -69,7 +68,7 @@ const LoginPage: React.FC = () => {
             throw new Error(`HTTP ${res.status}`);
           }
 
-          // 2) 백엔드가 내려준 JSON 파싱 (응답 스키마에 따라 interface를 수정했기 때문에 data 내부에는 accessToken, tokenType, expiresIn만 있음)
+          // 2) 백엔드가 내려준 JSON 파싱
           const resp = (await res.json()) as KakaoUserInfoResponse;
 
           // 3) JWT를 로컬스토리지에 저장
@@ -229,7 +228,7 @@ const LoginPage: React.FC = () => {
         <TeamSelection
           selectedTeam={selectedTeam}
           setSelectedTeam={setSelectedTeam}
-          onNext={goStep3}
+          onNext={goStep3}   // ← 여기서 goStep3를 넘겨줍니다
         />
       );
     case "3":

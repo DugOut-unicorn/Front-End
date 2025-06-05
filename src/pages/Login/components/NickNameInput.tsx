@@ -26,7 +26,7 @@ const NicknameInput: React.FC<NicknameInputProps> = ({
       console.log('Nickname to check:', nickname);
       console.log('Using token:', token);
 
-      const res = await fetch('/login/nickname', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/login/nickname`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
