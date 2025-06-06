@@ -1,6 +1,8 @@
+// src/pages/Profile/Info.tsx
 import { useEffect, useState } from "react";
-import { ChevronLeft, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import BackHeader from "./components/BackHeader";
+import { X } from "lucide-react";
 
 interface ProfileInfo {
   nickname: string;
@@ -26,6 +28,7 @@ export default function Info() {
     gender: 0,
   });
 
+  // 서버에서 내 프로필 정보 가져오기
   useEffect(() => {
     const jwt = localStorage.getItem("jwtToken");
     if (!jwt) {
@@ -39,7 +42,7 @@ export default function Info() {
           `${import.meta.env.VITE_API_URL}/mypage/myTemp`,
           {
             headers: { Authorization: `Bearer ${jwt}` },
-          },
+          }
         );
         if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         const data = await res.json();
@@ -86,7 +89,7 @@ export default function Info() {
             Authorization: `Bearer ${jwt}`,
           },
           body: JSON.stringify(body),
-        },
+        }
       );
       if (!res.ok) {
         const errJson = await res.json().catch(() => null);
@@ -108,7 +111,6 @@ export default function Info() {
     setIsEditingBirthday(false);
     setIsEditingPhone(false);
     setIsEditingGender(false);
-    // 필요 시, 원래 값으로 복원하려면 fetch 다시 호출
   };
 
   const handleConfirmWithdrawal = async () => {
@@ -153,17 +155,16 @@ export default function Info() {
   const { nickname, email, birthday, phone, gender } = profile;
 
   return (
-    <div className="mx-auto mt-8 w-[400px] bg-gray-100">
-      <div className="relative space-y-6 rounded-lg bg-white px-6 pt-16 pb-6 shadow">
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute top-6 left-6 flex items-center text-gray-700"
-        >
-          <ChevronLeft size={24} />
-          <span className="t-button2 ml-2">개인정보</span>
-        </button>
+    <>
+      {/* ─── 최상위 래퍼: 화면을 채우고 회색 배경으로 만듭니다 ─── */}
+      <div className="relative flex min-h-screen justify-center bg-gray-100 py-8">
+        {/* ① BackHeader를 화면 왼쪽 상단에 고정 (절대 위치) */}
+        <div className="absolute top-4 left-4 h-14">
+          <BackHeader title="개인정보" />
+        </div>
 
-        <div className="space-y-5">
+        {/* ② 메인 콘텐츠: 흰색 카드 없이 */}
+        <div className="w-full max-w-md mx-auto px-6 space-y-5">
           {/* 이름 */}
           <div>
             <label className="mb-1 block font-bold">이름</label>
@@ -174,14 +175,15 @@ export default function Info() {
               className="w-full cursor-not-allowed rounded border border-gray-300 bg-gray-100 p-3"
             />
           </div>
+
           {/* 생년월일 */}
           <div>
             <label className="mb-1 block font-bold">생년월일</label>
             <input
               type="date"
               value={birthday}
-              onChange={e =>
-                setProfile(prev => ({ ...prev, birthday: e.target.value }))
+              onChange={(e) =>
+                setProfile((prev) => ({ ...prev, birthday: e.target.value }))
               }
               readOnly={!isEditingBirthday}
               className={`w-full rounded border border-gray-300 p-3 ${
@@ -189,6 +191,7 @@ export default function Info() {
               }`}
             />
           </div>
+
           {/* 성별 */}
           <div>
             <label className="mb-1 block font-bold">성별</label>
@@ -200,7 +203,7 @@ export default function Info() {
                     name="gender"
                     checked={gender === 0}
                     onChange={() =>
-                      setProfile(prev => ({ ...prev, gender: 0 }))
+                      setProfile((prev) => ({ ...prev, gender: 0 }))
                     }
                     className="mr-2"
                   />
@@ -212,7 +215,7 @@ export default function Info() {
                     name="gender"
                     checked={gender === 1}
                     onChange={() =>
-                      setProfile(prev => ({ ...prev, gender: 1 }))
+                      setProfile((prev) => ({ ...prev, gender: 1 }))
                     }
                     className="mr-2"
                   />
@@ -228,6 +231,7 @@ export default function Info() {
               />
             )}
           </div>
+
           {/* 이메일 */}
           <div>
             <label className="mb-1 block font-bold">이메일</label>
@@ -238,14 +242,15 @@ export default function Info() {
               className="w-full cursor-not-allowed rounded border border-gray-300 bg-gray-100 p-3"
             />
           </div>
+
           {/* 전화번호 */}
           <div>
             <label className="mb-1 block font-bold">전화번호</label>
             <input
               type="tel"
               value={phone}
-              onChange={e =>
-                setProfile(prev => ({ ...prev, phone: e.target.value }))
+              onChange={(e) =>
+                setProfile((prev) => ({ ...prev, phone: e.target.value }))
               }
               readOnly={!isEditingPhone}
               className={`w-full rounded border border-gray-300 p-3 ${
@@ -253,77 +258,77 @@ export default function Info() {
               }`}
             />
           </div>
-        </div>
 
-        {/* 버튼 그룹 */}
-        <div className="flex items-center justify-end space-x-4 pt-4">
-          {isEditing ? (
-            <>
+          {/* 버튼 그룹 */}
+          <div className="flex items-center justify-end space-x-4 pt-4">
+            {isEditing ? (
+              <>
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  className="rounded bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
+                >
+                  저장하기
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="rounded bg-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-400"
+                >
+                  취소
+                </button>
+              </>
+            ) : (
               <button
                 type="button"
-                onClick={handleSave}
-                className="rounded bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
+                onClick={handleToggleEdit}
+                className="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
               >
-                저장하기
+                수정하기
               </button>
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="rounded bg-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-400"
-              >
-                취소
-              </button>
-            </>
-          ) : (
+            )}
             <button
               type="button"
-              onClick={handleToggleEdit}
-              className="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+              onClick={() => setIsModalOpen(true)}
+              className="rounded-lg bg-red-500 px-6 py-2 text-white transition hover:bg-red-600"
             >
-              수정하기
+              회원탈퇴
             </button>
-          )}
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="rounded-lg bg-red-500 px-6 py-2 text-white transition hover:bg-red-600"
-          >
-            회원탈퇴
-          </button>
-        </div>
-      </div>
-
-      {/* 회원탈퇴 모달 */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-sm">
-          <div className="relative w-full max-w-sm rounded-xl bg-white/90 p-6 shadow-lg">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              <X size={20} />
-            </button>
-            <h2 className="mb-2 text-xl font-bold">회원 탈퇴</h2>
-            <p className="mb-6 text-center text-gray-600">
-              탈퇴 시, 모든 데이터가 영구적으로 사라집니다.
-            </p>
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="flex-1 rounded-lg border border-gray-300 py-2 text-gray-700 transition hover:bg-gray-100"
-              >
-                취소하기
-              </button>
-              <button
-                onClick={handleConfirmWithdrawal}
-                className="flex-1 rounded-lg bg-red-500 py-2 text-white transition hover:bg-red-600"
-              >
-                회원 탈퇴하기
-              </button>
-            </div>
           </div>
         </div>
-      )}
-    </div>
+
+        {/* 회원탈퇴 모달 (흰 배경 카드 그대로 유지) */}
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-sm">
+            <div className="relative w-full max-w-sm rounded-xl bg-white/90 p-6 shadow-lg">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              >
+                <X size={20} />
+              </button>
+              <h2 className="mb-2 text-xl font-bold">회원 탈퇴</h2>
+              <p className="mb-6 text-center text-gray-600">
+                탈퇴 시, 모든 데이터가 영구적으로 사라집니다.
+              </p>
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="flex-1 rounded-lg border border-gray-300 py-2 text-gray-700 transition hover:bg-gray-100"
+                >
+                  취소하기
+                </button>
+                <button
+                  onClick={handleConfirmWithdrawal}
+                  className="flex-1 rounded-lg bg-red-500 py-2 text-white transition hover:bg-red-600"
+                >
+                  회원 탈퇴하기
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

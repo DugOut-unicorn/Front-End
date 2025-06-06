@@ -16,54 +16,56 @@ export interface RankingDto {
   data: TeamRank[];
 }
 
-export interface PitcherWinRate {
+export interface PitcherRanking<T> {
   playerName: string;
   backNumber: number;
-  wpct: number;
   playerImageUrl: string;
+  value: T;
 }
 
-export interface PitcherWinRateDto {
+export interface PitcherRankingDto<T> {
   success: boolean;
   message: string;
-  data: PitcherWinRate[];
+  data: PitcherRanking<T>[];
 }
 
-export interface PitcherSave {
+// 타입 별칭 정의
+export type PitcherWinRate = PitcherRanking<number>;
+export type PitcherWinRateDto = PitcherRankingDto<number>;
+
+export type PitcherSave = PitcherRanking<number>;
+export type PitcherSaveDto = PitcherRankingDto<number>;
+
+export type PitcherStrikeout = PitcherRanking<number>;
+export type PitcherStrikeoutDto = PitcherRankingDto<number>;
+
+export type PitcherEra = PitcherRanking<number>;
+export type PitcherEraDto = PitcherRankingDto<number>;
+
+// 타자 랭킹 관련 인터페이스
+export interface PlayerRanking<T> {
   playerName: string;
   backNumber: number;
-  sv: number;
+  playerIdx: number;
   playerImageUrl: string;
+  value: T;
 }
 
-export interface PitcherSaveDto {
+export interface PlayerRankingDto<T> {
   success: boolean;
   message: string;
-  data: PitcherSave[];
+  data: PlayerRanking<T>[];
 }
 
-export interface PitcherStrikeout {
-  playerName: string;
-  backNumber: number;
-  so: number;
-  playerImageUrl: string;
-}
+// 타자 랭킹 타입 별칭
+export type PlayerHR = PlayerRanking<number>;
+export type PlayerHRDto = PlayerRankingDto<number>;
 
-export interface PitcherStrikeoutDto {
-  success: boolean;
-  message: string;
-  data: PitcherStrikeout[];
-}
+export type PlayerRBI = PlayerRanking<number>;
+export type PlayerRBIDto = PlayerRankingDto<number>;
 
-export interface PitcherEra {
-  playerName: string;
-  backNumber: number;
-  era: number;
-  playerImageUrl: string;
-}
+export type PlayerAVG = PlayerRanking<number>;
+export type PlayerAVGDto = PlayerRankingDto<number>;
 
-export interface PitcherEraDto {
-  success: boolean;
-  message: string;
-  data: PitcherEra[];
-}
+export type PlayerHit = PlayerRanking<number>;
+export type PlayerHitDto = PlayerRankingDto<number>;

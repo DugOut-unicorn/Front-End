@@ -4,6 +4,10 @@ import {
   PitcherSaveDto,
   PitcherStrikeoutDto,
   PitcherWinRateDto,
+  PlayerAVGDto,
+  PlayerHitDto,
+  PlayerHRDto,
+  PlayerRBIDto,
   RankingDto,
 } from "../../types/ranking";
 import {
@@ -41,7 +45,7 @@ export const rankingApi = {
     return response.data.data.map(item => ({
       playerName: item.playerName,
       backNumber: item.backNumber,
-      wpct: item.wpct,
+      wpct: item.value,
       playerImageUrl: item.playerImageUrl,
     }));
   },
@@ -52,7 +56,7 @@ export const rankingApi = {
     return response.data.data.map(item => ({
       playerName: item.playerName,
       backNumber: item.backNumber,
-      sv: item.sv,
+      sv: item.value,
       playerImageUrl: item.playerImageUrl,
     }));
   },
@@ -63,7 +67,7 @@ export const rankingApi = {
     return response.data.data.map(item => ({
       playerName: item.playerName,
       backNumber: item.backNumber,
-      so: item.so,
+      so: item.value,
       playerImageUrl: item.playerImageUrl,
     }));
   },
@@ -74,7 +78,51 @@ export const rankingApi = {
     return response.data.data.map(item => ({
       playerName: item.playerName,
       backNumber: item.backNumber,
-      era: item.era,
+      era: item.value,
+      playerImageUrl: item.playerImageUrl,
+    }));
+  },
+  getRankPlayerHR: async () => {
+    const response = await axiosInstance.get<PlayerHRDto>(
+      "/record/personalRank/hitter/HR",
+    );
+    return response.data.data.map(item => ({
+      playerName: item.playerName,
+      backNumber: item.backNumber,
+      hr: item.value,
+      playerImageUrl: item.playerImageUrl,
+    }));
+  },
+  getRankPlayerRBI: async () => {
+    const response = await axiosInstance.get<PlayerRBIDto>(
+      "/record/personalRank/hitter/rbi",
+    );
+    return response.data.data.map(item => ({
+      playerName: item.playerName,
+      backNumber: item.backNumber,
+      rbi: item.value,
+      playerImageUrl: item.playerImageUrl,
+    }));
+  },
+  getRankPlayerAVG: async () => {
+    const response = await axiosInstance.get<PlayerAVGDto>(
+      "/record/personalRank/hitter/avg",
+    );
+    return response.data.data.map(item => ({
+      playerName: item.playerName,
+      backNumber: item.backNumber,
+      avg: item.value,
+      playerImageUrl: item.playerImageUrl,
+    }));
+  },
+  getRankPlayerHit: async () => {
+    const response = await axiosInstance.get<PlayerHitDto>(
+      "/record/personalRank/hitter/H",
+    );
+    return response.data.data.map(item => ({
+      playerName: item.playerName,
+      backNumber: item.backNumber,
+      hit: item.value,
       playerImageUrl: item.playerImageUrl,
     }));
   },
