@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackHeader from "./components/BackHeader";
-import ImageUploader from "./components/ImageUpLoader";
+import ImageUploader from "./components/ImageUploader";
 import NicknameField from "./components/NicknameField";
 import IntroductionField from "./components/IntroductionField";
-import TeamSelect from "./components/TeamSelect";
+import TeamSelect from "./components/Teamselect";
 import SubmitButton from "./components/SubmitButton";
 
 const teamsList = [
