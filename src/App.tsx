@@ -17,9 +17,9 @@ import PlayerProfilePage from "./pages/playerProfile/PlayerProfilePage";
 
 // 프로필(MyPage)
 import MyPage from "./pages/Profile/MyPage";
-import Profile from "./pages/Profile/components/Profile";
-import Info from "./pages/Profile/components/Info";
-import ProfileEdit from "./pages/Profile/components/ProfileEdit";
+import Profile from "./pages/Profile/Profile";
+import Info from "./pages/Profile/Info";
+import ProfileEdit from "./pages/Profile/ProfileEdit";
 
 // 매칭
 import MatchingGameListPage from "./pages/Matching/MatchingGameListPage";
