@@ -307,6 +307,10 @@ export default function KoreaMap({
             )}
           </a>
         </div>
+        {/* 데이터 출처 */}
+        <div className="absolute right-0 bottom-0 text-[10px] text-[var(--on-surface-grey2)]">
+          (공공데이터 포털 한국환경공단 데이터를 사용 중입니다.)
+        </div>
       </div>
     </div>
   );
