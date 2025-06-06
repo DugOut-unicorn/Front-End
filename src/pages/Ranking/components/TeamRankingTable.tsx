@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { rankingApi } from "../../../api/ranking/apis";
 // import {
 //   getEnglishTeamName,
