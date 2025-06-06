@@ -25,7 +25,9 @@ export default function ProfileEdit() {
   const navigate = useNavigate();
 
   const [nickname, setNickname] = useState("");
-  const [checkResult, setCheckResult] = useState<"none" | "available" | "duplicate">("none");
+  const [checkResult, setCheckResult] = useState<
+    "none" | "available" | "duplicate"
+  >("none");
   const [introduction, setIntroduction] = useState("");
   const [team, setTeam] = useState(teamsList[0]);
 
@@ -46,7 +48,7 @@ export default function ProfileEdit() {
           {
             credentials: "include",
             headers: { Authorization: `Bearer ${jwt}` },
-          }
+          },
         );
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
@@ -82,7 +84,7 @@ export default function ProfileEdit() {
             Authorization: `Bearer ${jwt}`,
           },
           body: JSON.stringify({ nickname }),
-        }
+        },
       );
       if (res.status === 200) {
         setCheckResult("available");
@@ -116,7 +118,7 @@ export default function ProfileEdit() {
         credentials: "include",
         headers: { Authorization: `Bearer ${jwt}` },
         body: form,
-      }
+      },
     );
     if (!res.ok) throw new Error(res.statusText);
     const body = await res.json();
@@ -145,7 +147,7 @@ export default function ProfileEdit() {
             Authorization: `Bearer ${jwt}`,
           },
           body: JSON.stringify({ nickname, bio: introduction, cheeringTeamId }),
-        }
+        },
       );
       if (!res.ok) {
         const err = await res.json();
@@ -167,7 +169,7 @@ export default function ProfileEdit() {
       </div>
 
       {/* 2) 메인 컨테이너: 화면 중앙에 너비 제한 없이 채움 */}
-      <div className="w-full max-w-2xl mx-auto px-8">
+      <div className="mx-auto w-full max-w-2xl px-8">
         {/* 3) 카드 배경 없이 바로 폼 콘텐츠 */}
         <div className="flex flex-col items-center space-y-8 px-8 py-6">
           {/* ▷ 이미지 업로더 */}

@@ -1,27 +1,38 @@
 import { Trophy } from "lucide-react";
-
-interface Team {
-  id: number;
-  name: string;
-  logo: string;
-  prediction: number;
-}
-
-// 임시 데이터 - 실제로는 API에서 가져올 데이터
-const mockTeams: Team[] = [
-  { id: 1, name: "SSG 랜더스", logo: "ssg", prediction: 1 },
-  { id: 2, name: "키움 히어로즈", logo: "kiwoom", prediction: 2 },
-  { id: 3, name: "LG 트윈스", logo: "lg", prediction: 3 },
-  { id: 4, name: "KT 위즈", logo: "kt", prediction: 4 },
-  { id: 5, name: "KIA 타이거즈", logo: "kia", prediction: 5 },
-  { id: 6, name: "NC 다이노스", logo: "nc", prediction: 6 },
-  { id: 7, name: "두산 베어스", logo: "doosan", prediction: 7 },
-  { id: 8, name: "롯데 자이언츠", logo: "lotte", prediction: 8 },
-  { id: 9, name: "삼성 라이온즈", logo: "samsung", prediction: 9 },
-  { id: 10, name: "한화 이글스", logo: "hanwha", prediction: 10 },
-];
+import { useEffect, useState } from "react";
+import { aiApi } from "../../../api/ai/apis";
+import { TeamRankDTO } from "../../../types/ai";
+import { getEnglishTeamName } from "../../../hooks/TeamNameChanger";
 
 export default function WinnerPrediction() {
+  const [teams, setTeams] = useState<TeamRankDTO[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const data = await aiApi.getFinalRank();
+        setTeams(data);
+      } catch (error) {
+        console.error("팀 순위 데이터를 불러오는데 실패했습니다:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="h-[730px] w-[497px] flex-1 rounded-lg border border-[#E5EAF2] bg-white p-6 pb-10">
+        <div className="flex h-full items-center justify-center">
+          <p className="t-body1 text-[var(--on-surface-grey2)]">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[730px] w-[497px] flex-1 rounded-lg border border-[#E5EAF2] bg-white p-6 pb-10">
       <div className="mb-2 flex items-center gap-2">
@@ -40,30 +51,26 @@ export default function WinnerPrediction() {
             <th className="t-caption h-[48px] w-24 px-4 text-center">
               현재 순위
             </th>
-            <th className="t-caption h-[48px] w-24 px-4 text-center">승률</th>
           </tr>
         </thead>
         <tbody>
-          {mockTeams.map(team => (
+          {teams.map(team => (
             <tr key={team.id} className="h-[56px]">
               <td className="t-h3 h-[56px] w-13 px-4 text-center align-middle text-[var(--on-surface-grey2)]">
-                {team.prediction}
+                {team.rank}
               </td>
               <td className="t-body1 h-[56px] w-9 text-left align-middle">
                 <img
-                  src={`/images/${team.logo}_emb.png`}
-                  alt={team.name}
-                  className="h-6 w-9 object-contain"
+                  src={`/images/${getEnglishTeamName(team.teamName)}_big_emb.png`}
+                  alt={team.teamName}
+                  className="h-10 w-10 object-contain"
                 />
               </td>
               <td className="t-body1 h-[56px] w-32 pl-4 text-left align-middle">
-                {team.name}
+                {team.teamName}
               </td>
               <td className="t-body1 h-[56px] w-24 px-4 text-center align-middle">
-                {team.prediction}
-              </td>
-              <td className="t-body1 h-[56px] w-24 px-4 text-center align-middle">
-                {(Math.random() * 0.3 + 0.4).toFixed(3)}
+                {team.currentRank}
               </td>
             </tr>
           ))}
