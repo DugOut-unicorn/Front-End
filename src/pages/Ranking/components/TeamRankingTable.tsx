@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { rankingApi } from "../../../api/ranking/apis";
-import {
-  getEnglishTeamName,
-  getTeamNameByIdx,
-} from "../../../hooks/TeamNameChanger";
+// import {
+//   getEnglishTeamName,
+//   getTeamNameByIdx,
+// } from "../../../hooks/TeamNameChanger";
 
 interface RankingResponse {
   rank: number;
@@ -22,7 +22,7 @@ interface RankingResponse {
 }
 
 export default function TeamRankingTable() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [rankings, setRankings] = useState<RankingResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
