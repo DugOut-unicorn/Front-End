@@ -3,22 +3,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ArrowLeft } from "lucide-react";
+import BackHeader from "../Profile/components/BackHeader"; // 뒤로가기 재사용 컴포넌트
 
 // ────────────────────────────────────────────────────────────
-// (옵션) API로 전송할 데이터 타입 정의 (타입스크립트용)
+// 요청/응답 타입 정의
 interface CreateMatchingPostRequest {
   title: string;
   context: string;
   haveTicket: boolean;
   gameIdx: number;
 }
-// (옵션) API 응답 타입 정의
 interface CreateMatchingPostResponse {
   postIdx: number;
   message: string;
 }
-// 달력 API에서 내려주는 형태 (필드 중 우리는 day와 games 배열만 사용)
 interface CalendarGamesDay {
   day: number;
   games: {
@@ -110,15 +108,13 @@ function TicketSelector({
           X
         </button>
       </div>
-      {hasTicket && (
-        <button
-          type="button"
-          className="rounded border border-gray-300 px-4 py-1 text-sm"
-          onClick={onVerify}
-        >
-          티켓 인증하기
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={onVerify}
+        className="text-xs text-blue-600 hover:underline"
+      >
+        티켓 인증하기
+      </button>
     </div>
   );
 }
@@ -174,102 +170,64 @@ function GameSelector({
 export default function MatchingWritePage() {
   const navigate = useNavigate();
 
-  // ────────────────────────────────────────────────────────────
-  // 폼 상태
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [hasTicket, setHasTicket] = useState<boolean | null>(null);
-  const [date, setDate] = useState<string>(""); // "YYYY-MM-DD"
-  const [game, setGame] = useState<string>(""); // 선택된 gameIdx(문자열)
-
-  // 실제 백엔드에서 받아온 gameIdx 목록
+  const [date, setDate] = useState<string>("");
+  const [game, setGame] = useState<string>("");
   const [gameOptions, setGameOptions] = useState<{ id: string; label: string }[]>([]);
 
-  // ────────────────────────────────────────────────────────────
-  // 1) “날짜(date)”가 선택될 때마다 백엔드에서 해당 날짜의 모든 경기 목록을 가져오기
+  // 날짜 선택 시 경기 목록 불러오기
   useEffect(() => {
     if (!date) {
-      setGameOptions([]); // 날짜가 비어 있으면 옵션 초기화
+      setGameOptions([]);
       return;
     }
-
     const [yyyy, mm, dd] = date.split("-");
     const monthParam = `${yyyy}-${mm}`;
     const dayParam = parseInt(dd, 10);
 
-    const fetchGames = async () => {
+    (async () => {
       try {
-        // cheeringTeamIdx 파라미터 없이 호출 → 해당 날짜에 열리는 모든 경기 반환
         const resp = await axios.get<CalendarGamesResponse>("/home/calendar-games", {
-          params: {
-            month: monthParam,
-            day: dayParam
-          },
+          params: { month: monthParam, day: dayParam },
         });
-        const todayObj = resp.data.days.find((d) => d.day === dayParam);
-        if (todayObj) {
-          const opts = todayObj.games.map((g) => ({
-            id: String(g.gameIdx),
-            label: `${g.homeTeamName} vs ${g.awayTeamName} (${g.startTime})`,
-          }));
-          setGameOptions(opts);
-        } else {
-          setGameOptions([]);
-        }
-      } catch (e) {
-        console.error("달력 API 호출 실패:", e);
+        const today = resp.data.days.find((d) => d.day === dayParam);
+        setGameOptions(
+          today
+            ? today.games.map((g) => ({
+                id: String(g.gameIdx),
+                label: `${g.homeTeamName} vs ${g.awayTeamName} (${g.startTime})`,
+              }))
+            : []
+        );
+      } catch {
         setGameOptions([]);
       }
-    };
-
-    fetchGames();
+    })();
   }, [date]);
 
-  // ────────────────────────────────────────────────────────────
-  // 티켓 인증 (더미)
   const handleVerifyTicket = () => {
     alert("티켓 인증 요청(구현 필요)");
   };
 
-  // ────────────────────────────────────────────────────────────
-  // 매칭 글 등록 제출 처리
   const handleSubmit = async () => {
-    // 1) 유효성 검사
-    if (!title.trim()) {
-      alert("제목을 입력해 주세요.");
-      return;
-    }
-    if (!content.trim()) {
-      alert("내용을 입력해 주세요.");
-      return;
-    }
-    if (hasTicket === null) {
-      alert("티켓 보유 여부를 선택해 주세요.");
-      return;
-    }
-    if (!date) {
-      alert("경기 날짜를 선택해 주세요.");
-      return;
-    }
-    if (!game) {
-      alert("경기를 선택해 주세요.");
-      return;
-    }
+    if (!title.trim()) return alert("제목을 입력해 주세요.");
+    if (!content.trim()) return alert("내용을 입력해 주세요.");
+    if (hasTicket === null) return alert("티켓 보유 여부를 선택해 주세요.");
+    if (!date) return alert("경기 날짜를 선택해 주세요.");
+    if (!game) return alert("경기를 선택해 주세요.");
 
-    // 2) 요청 바디 생성 (스펙에 맞춰 정확히 보내기)
     const body: CreateMatchingPostRequest = {
       title: title.trim(),
       context: content.trim(),
       haveTicket: hasTicket,
-      gameIdx: parseInt(game, 10), // 반드시 숫자 타입(정수)로
+      gameIdx: parseInt(game, 10),
     };
 
     try {
-      // (예시) 로컬 스토리지에 저장된 JWT 토큰 꺼내기
       const token = localStorage.getItem("jwtToken") || "";
-
-      // 3) POST /matching-post API 호출 (Authorization 헤더 포함)
-      const response = await axios.post<CreateMatchingPostResponse>(
+      const res = await axios.post<CreateMatchingPostResponse>(
         "/matching-post",
         body,
         {
@@ -279,41 +237,30 @@ export default function MatchingWritePage() {
           },
         }
       );
-
-      // 4) 성공 시 반환된 postIdx로 상세 페이지로 이동
-      const { postIdx } = response.data;
       alert("매칭 글이 성공적으로 등록되었습니다.");
-      navigate(`/matching/articles/${postIdx}`);
-    } catch (error) {
-      console.error("매칭 글 등록 실패:", error);
-      alert("매칭 글 등록 중 오류가 발생했습니다. 서버 로그를 확인해 주세요.");
+      navigate(`/matching/articles/${res.data.postIdx}`);
+    } catch (err) {
+      console.error(err);
+      alert("매칭 글 등록 중 오류가 발생했습니다.");
     }
   };
 
   return (
-    <div className="mx-auto max-w-md">
-      {/* 헤더 */}
-      <header className="flex items-center border-b py-4 px-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center text-gray-600 hover:text-gray-800"
-        >
-          <ArrowLeft size={16} className="mr-2" />
-          <span className="font-semibold text-lg">매칭 글 작성하기</span>
-        </button>
-      </header>
+    <div className="relative w-full min-h-screen bg-gray-50">
+      {/* 뒤로가기 버튼 (뷰포트 기준 좌상단 고정) */}
+      <div className="absolute top-4 left-4 z-10">
+        <BackHeader title="매칭 글 작성하기" />
+      </div>
 
-      {/* 폼 */}
-      <div className="space-y-6 py-6 px-4">
+      {/* 중앙 폼 컨테이너: space-y-6으로 섹션 간격 균일하게 */}
+      <div className="mx-auto max-w-md pt-16 px-4 space-y-6">
         <WriteTitleInput value={title} onChange={setTitle} />
         <WriteContentInput value={content} onChange={setContent} />
-
         <TicketSelector
           hasTicket={hasTicket}
           setHasTicket={setHasTicket}
           onVerify={handleVerifyTicket}
         />
-
         <GameDatePicker date={date} setDate={setDate} />
         <GameSelector game={game} setGame={setGame} options={gameOptions} />
 
