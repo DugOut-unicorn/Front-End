@@ -3,7 +3,7 @@
 import React from "react";
 import Logo from "/images/blue.png";
 import { Link, useLocation } from "react-router-dom";
-import { Bell, User2 } from "lucide-react";
+import { User2, MessageCircle } from "lucide-react";
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -79,7 +79,12 @@ const Header: React.FC = () => {
             >
               로그아웃
             </button>
-            <Bell className="cursor-pointer" />
+            <Link
+              to="/matching"
+              className="t-body1 text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff]"
+            >
+              <MessageCircle />
+            </Link>
             <Link
               to="/mypage"
               className="t-body1 text-[var(--on-surface-grey1)] no-underline hover:text-[#007bff]"
