@@ -44,9 +44,9 @@ function WriteTitleInput({
       <input
         type="text"
         placeholder="매칭 글 제목을 입력해 주세요."
-        className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+        className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-pink-500 focus:ring-2 focus:ring-pink-500 focus:outline-none"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
       />
     </div>
   );
@@ -65,11 +65,11 @@ function WriteContentInput({
       <textarea
         rows={5}
         placeholder="글 내용을 자유롭게 입력해 주세요."
-        className="w-full resize-none rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+        className="w-full resize-none rounded border border-gray-300 px-3 py-2 text-sm focus:border-pink-500 focus:ring-2 focus:ring-pink-500 focus:outline-none"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
       />
-      <div className="absolute bottom-1 right-2 text-xs text-gray-400">
+      <div className="absolute right-2 bottom-1 text-xs text-gray-400">
         {value.length} / 300
       </div>
     </div>
@@ -79,20 +79,20 @@ function WriteContentInput({
 function TicketSelector({
   hasTicket,
   setHasTicket,
-  onVerify,
 }: {
   hasTicket: boolean | null;
   setHasTicket: (b: boolean) => void;
-  onVerify: () => void;
 }) {
   return (
     <div>
       <label className="mb-1 block font-medium">티켓 보유 여부</label>
-      <div className="flex gap-2 mb-2">
+      <div className="mb-2 flex gap-2">
         <button
           type="button"
           className={`flex-1 rounded border border-gray-300 px-4 py-2 text-sm ${
-            hasTicket === true ? "bg-black text-white" : "bg-white text-gray-700"
+            hasTicket === true
+              ? "bg-black text-white"
+              : "bg-white text-gray-700"
           }`}
           onClick={() => setHasTicket(true)}
         >
@@ -101,20 +101,15 @@ function TicketSelector({
         <button
           type="button"
           className={`flex-1 rounded border border-gray-300 px-4 py-2 text-sm ${
-            hasTicket === false ? "bg-black text-white" : "bg-white text-gray-700"
+            hasTicket === false
+              ? "bg-black text-white"
+              : "bg-white text-gray-700"
           }`}
           onClick={() => setHasTicket(false)}
         >
           X
         </button>
       </div>
-      <button
-        type="button"
-        onClick={onVerify}
-        className="text-xs text-blue-600 hover:underline"
-      >
-        티켓 인증하기
-      </button>
     </div>
   );
 }
@@ -131,9 +126,9 @@ function GameDatePicker({
       <label className="mb-1 block font-medium">경기 날짜 선택</label>
       <input
         type="date"
-        className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+        className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-pink-500 focus:ring-2 focus:ring-pink-500 focus:outline-none"
         value={date}
-        onChange={(e) => setDate(e.target.value)}
+        onChange={e => setDate(e.target.value)}
       />
     </div>
   );
@@ -152,12 +147,12 @@ function GameSelector({
     <div>
       <label className="mb-1 block font-medium">경기 선택</label>
       <select
-        className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+        className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-pink-500 focus:ring-2 focus:ring-pink-500 focus:outline-none"
         value={game}
-        onChange={(e) => setGame(e.target.value)}
+        onChange={e => setGame(e.target.value)}
       >
         <option value="">예정 날짜의 경기를 선택해 주세요.</option>
-        {options.map((opt) => (
+        {options.map(opt => (
           <option key={opt.id} value={opt.id}>
             {opt.label}
           </option>
@@ -175,7 +170,9 @@ export default function MatchingWritePage() {
   const [hasTicket, setHasTicket] = useState<boolean | null>(null);
   const [date, setDate] = useState<string>("");
   const [game, setGame] = useState<string>("");
-  const [gameOptions, setGameOptions] = useState<{ id: string; label: string }[]>([]);
+  const [gameOptions, setGameOptions] = useState<
+    { id: string; label: string }[]
+  >([]);
 
   // 날짜 선택 시 경기 목록 불러오기
   useEffect(() => {
@@ -189,17 +186,20 @@ export default function MatchingWritePage() {
 
     (async () => {
       try {
-        const resp = await axios.get<CalendarGamesResponse>("/home/calendar-games", {
-          params: { month: monthParam, day: dayParam },
-        });
-        const today = resp.data.days.find((d) => d.day === dayParam);
+        const resp = await axios.get<CalendarGamesResponse>(
+          "/home/calendar-games",
+          {
+            params: { month: monthParam, day: dayParam },
+          },
+        );
+        const today = resp.data.days.find(d => d.day === dayParam);
         setGameOptions(
           today
-            ? today.games.map((g) => ({
+            ? today.games.map(g => ({
                 id: String(g.gameIdx),
                 label: `${g.homeTeamName} vs ${g.awayTeamName} (${g.startTime})`,
               }))
-            : []
+            : [],
         );
       } catch {
         setGameOptions([]);
@@ -207,9 +207,9 @@ export default function MatchingWritePage() {
     })();
   }, [date]);
 
-  const handleVerifyTicket = () => {
-    alert("티켓 인증 요청(구현 필요)");
-  };
+  // const handleVerifyTicket = () => {
+  //   alert("티켓 인증 요청(구현 필요)");
+  // };
 
   const handleSubmit = async () => {
     if (!title.trim()) return alert("제목을 입력해 주세요.");
@@ -235,7 +235,7 @@ export default function MatchingWritePage() {
             Authorization: token ? `Bearer ${token}` : "",
             "Content-Type": "application/json",
           },
-        }
+        },
       );
       alert("매칭 글이 성공적으로 등록되었습니다.");
       navigate(`/matching/articles/${res.data.postIdx}`);
@@ -246,21 +246,17 @@ export default function MatchingWritePage() {
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-gray-50">
+    <div className="relative min-h-screen w-full bg-gray-50">
       {/* 뒤로가기 버튼 (뷰포트 기준 좌상단 고정) */}
       <div className="absolute top-4 left-4 z-10">
         <BackHeader title="매칭 글 작성하기" />
       </div>
 
       {/* 중앙 폼 컨테이너: space-y-6으로 섹션 간격 균일하게 */}
-      <div className="mx-auto max-w-md pt-16 px-4 space-y-6">
+      <div className="mx-auto max-w-md space-y-6 px-4 pt-16">
         <WriteTitleInput value={title} onChange={setTitle} />
         <WriteContentInput value={content} onChange={setContent} />
-        <TicketSelector
-          hasTicket={hasTicket}
-          setHasTicket={setHasTicket}
-          onVerify={handleVerifyTicket}
-        />
+        <TicketSelector hasTicket={hasTicket} setHasTicket={setHasTicket} />
         <GameDatePicker date={date} setDate={setDate} />
         <GameSelector game={game} setGame={setGame} options={gameOptions} />
 

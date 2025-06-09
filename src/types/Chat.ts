@@ -44,6 +44,7 @@ export interface ChatRoomCreateRequestDTO {
 
 // 채팅방 생성 응답 DTO
 export interface ChatRoomResponseDTO {
+  data(data: any): unknown;
   chatRoomId: number;
   withUserId: number;
 }

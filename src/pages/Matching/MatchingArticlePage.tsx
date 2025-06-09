@@ -171,11 +171,6 @@ export default function ArticleDetail() {
         <span className="text-sm">뒤로</span>
       </button>
 
-      {/* 점 3개 아이콘 */}
-      <button className="absolute top-4 right-0 text-xl text-gray-400 hover:text-black">
-        ⋯
-      </button>
-
       {/* 제목 */}
       <div className="mb-2 border-t pt-4">
         <h1 className="text-xl font-bold">{post.title}</h1>
