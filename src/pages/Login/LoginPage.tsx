@@ -47,7 +47,8 @@ const LoginPage: React.FC = () => {
   // 카카오 로그인 버튼 클릭 시 실행될 함수
   const kakaoLogin = () => {
     if (!window.Kakao) {
-      return alert("카카오 SDK가 로드되지 않았습니다.");
+      alert("카카오 SDK가 로드되지 않았습니다.");
+      return;
     }
 
     window.Kakao.Auth.login({
@@ -64,9 +65,7 @@ const LoginPage: React.FC = () => {
               body: JSON.stringify({ accessToken: authObj.access_token }),
             }
           );
-          if (!res.ok) {
-            throw new Error(`HTTP ${res.status}`);
-          }
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
           // 2) 백엔드가 내려준 JSON 파싱
           const resp = (await res.json()) as KakaoUserInfoResponse;
@@ -86,11 +85,9 @@ const LoginPage: React.FC = () => {
               },
             }
           );
-          if (!hasRes.ok) {
-            throw new Error(`hasSignedIn 호출 실패: ${hasRes.status}`);
-          }
+          if (!hasRes.ok) throw new Error(`hasSignedIn 호출 실패: ${hasRes.status}`);
 
-          const hasJson = await hasRes.json() as {
+          const hasJson = (await hasRes.json()) as {
             success: boolean;
             message: string;
             data: { hasSignedIn: boolean };
@@ -98,10 +95,8 @@ const LoginPage: React.FC = () => {
 
           // 5) 분기 처리
           if (hasJson.data.hasSignedIn) {
-            // 이미 가입된 회원: 홈으로 이동
             window.location.href = "/";
           } else {
-            // 신규 회원: 닉네임/응원팀 설정 단계로 이동
             navigate("/signup/1");
           }
         } catch (err) {
@@ -147,64 +142,20 @@ const LoginPage: React.FC = () => {
             <div className="h-px flex-1 bg-gray-300" />
           </div>
 
+          {/* 카카오 로그인 버튼 */}
           <div className="w-full space-y-4">
-            <button
-              onClick={kakaoLogin}
-              className="flex h-12 w-full items-center justify-center rounded-lg bg-[#FEE500] shadow transition hover:opacity-90"
-            >
+            <button onClick={kakaoLogin} className="w-full">
               <img
-                src="/images/kakao_login.png"
-                alt="kakao"
-                className="mr-2 h-6 w-6"
+                src="/images/kakao_login_medium_wide.png"
+                alt="카카오 로그인"
+                className="w-full h-auto"
               />
-              <span className="text-base font-medium text-gray-900">
-                카카오톡으로 계속하기
-              </span>
-            </button>
-            <button
-              onClick={() => navigate("/signup/1")}
-              className="flex h-12 w-full items-center justify-center rounded-lg bg-[#03C75A] shadow transition hover:opacity-90"
-            >
-              <img
-                src="/images/naver_login.png"
-                alt="naver"
-                className="mr-2 h-6 w-6"
-              />
-              <span className="text-base font-medium text-white">
-                네이버로 계속하기
-              </span>
-            </button>
-            <button
-              onClick={() => navigate("/signup/1")}
-              className="flex h-12 w-full items-center justify-center rounded-lg border border-gray-200 bg-white shadow transition hover:bg-gray-50"
-            >
-              <img
-                src="/images/google_login.png"
-                alt="google"
-                className="mr-2 h-6 w-6"
-              />
-              <span className="text-base font-medium text-gray-800">
-                구글로 계속하기
-              </span>
             </button>
           </div>
 
+          {/* plain text로된 약관 문구 */}
           <p className="mt-6 px-2 text-center text-sm text-gray-500">
-            계속 진행 시{" "}
-            <button
-              onClick={() => window.open("/terms", "_blank")}
-              className="underline hover:text-gray-700"
-            >
-              이용약관
-            </button>{" "}
-            및{" "}
-            <button
-              onClick={() => window.open("/privacy", "_blank")}
-              className="underline hover:text-gray-700"
-            >
-              개인정보처리방침
-            </button>{" "}
-            에 동의한 것으로 간주됩니다.
+            계속 진행 시 이용약관 및 개인정보처리방침에 동의한 것으로 간주됩니다.
           </p>
         </div>
       </div>
@@ -228,7 +179,7 @@ const LoginPage: React.FC = () => {
         <TeamSelection
           selectedTeam={selectedTeam}
           setSelectedTeam={setSelectedTeam}
-          onNext={goStep3}   // ← 여기서 goStep3를 넘겨줍니다
+          onNext={goStep3}
         />
       );
     case "3":

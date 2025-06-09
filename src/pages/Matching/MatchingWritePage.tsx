@@ -108,13 +108,7 @@ function TicketSelector({
           X
         </button>
       </div>
-      <button
-        type="button"
-        onClick={onVerify}
-        className="text-xs text-blue-600 hover:underline"
-      >
-        티켓 인증하기
-      </button>
+
     </div>
   );
 }
