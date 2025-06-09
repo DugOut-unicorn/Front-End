@@ -252,7 +252,8 @@ export default function LivePrediction() {
                 <div className="flex min-w-[140px] items-center justify-center">
                   <div className="rounded-full bg-[#d6d7e1] px-4 py-1">
                     <span className="t-h3 font-bold text-black">
-                      {match.inning}회
+                      {/* {match.inning}회 */}
+                      경기 종료
                     </span>
                   </div>
                 </div>
