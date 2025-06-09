@@ -207,9 +207,9 @@ export default function MatchingWritePage() {
     })();
   }, [date]);
 
-  const handleVerifyTicket = () => {
-    alert("티켓 인증 요청(구현 필요)");
-  };
+  // const handleVerifyTicket = () => {
+  //   alert("티켓 인증 요청(구현 필요)");
+  // };
 
   const handleSubmit = async () => {
     if (!title.trim()) return alert("제목을 입력해 주세요.");
