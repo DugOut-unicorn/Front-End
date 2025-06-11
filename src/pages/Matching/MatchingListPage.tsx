@@ -1,11 +1,7 @@
 // src/pages/Matching/MatchingListPage.tsx
 
 import { useState, useEffect, ReactNode } from "react";
-import {
-  useParams,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { getEnglishTeamName } from "../../hooks/TeamNameChanger";
 
@@ -13,25 +9,20 @@ import { getEnglishTeamName } from "../../hooks/TeamNameChanger";
 // API DTOs
 interface MatchingPostDto {
   matchingPostIdx: number;
-  authorNickname: string;
+  nickname: string;     // ← Swagger 예시에 맞춰 `nickname`
   title: string;
   context: string;
   haveTicket: boolean;
   isMatched: boolean;
   createdAt: string;
 }
-interface MatchingListResponse {
-  posts: MatchingPostDto[];
-  totalPages: number;
-  totalElements: number;
-}
-// Calendar API types
+
 interface ApiGame {
   gameIdx: number;
   homeTeamName: string;
   awayTeamName: string;
   stadiumName: string;
-  startTime: string; // e.g. "13:00"
+  startTime: string;
 }
 interface CalendarGamesDay {
   day: number;
@@ -103,22 +94,12 @@ export default function MatchingListPage() {
     setErrorMsg(null);
 
     axios
-      .get<MatchingListResponse | MatchingPostDto[]>(
-        `/matching-post/by-game/${gameIdx}`,
-        { params: { page: currentPage - 1 } }
-      )
+      .get<MatchingPostDto[]>(`/matching-post/by-game/${gameIdx}`, {
+        params: { page: currentPage - 1 },
+      })
       .then((res) => {
-        const data = res.data;
-        if (Array.isArray(data)) {
-          setListData(data);
-          setTotalPages(1);
-        } else if ("posts" in data) {
-          setListData(data.posts);
-          setTotalPages(data.totalPages);
-        } else {
-          setListData([]);
-          setTotalPages(1);
-        }
+        setListData(res.data);
+        setTotalPages(1);
       })
       .catch(() => {
         setErrorMsg("게시글을 불러오는 중 오류가 발생했습니다.");
@@ -157,7 +138,7 @@ export default function MatchingListPage() {
 
   return (
     <div className="mx-auto max-w-[1080px] px-4 py-8">
-      {/* ─── 상단: 경기 로고 + VS + 시간 ───────────────────────── */}
+      {/* 상단: 경기 로고 + VS + 시간 */}
       {selectedGame && (
         <div className="mb-8 flex flex-col items-center">
           <div className="flex items-center space-x-8">
@@ -183,7 +164,7 @@ export default function MatchingListPage() {
         </div>
       )}
 
-      {/* ─── 필터 / 검색 / 제안 버튼 ─────────────────────────────── */}
+      {/* 필터 / 검색 / 제안 버튼 */}
       <div className="mb-6 flex items-center justify-between gap-4">
         <select
           className="rounded border px-4 py-2"
@@ -195,7 +176,6 @@ export default function MatchingListPage() {
           <option value="" disabled>
             응원 팀 선택
           </option>
-          {/* 두 팀만 */}
           {selectedGame && (
             <>
               <option value={selectedGame.homeTeamName}>
@@ -236,10 +216,8 @@ export default function MatchingListPage() {
         </button>
       </div>
 
-      {/* ─── 목록 / 테이블 / 페이지네이션 ───────────────────────── */}
-      {isLoading && (
-        <p className="text-center py-8 text-gray-500">로딩 중...</p>
-      )}
+      {/* 목록 / 테이블 / 페이지네이션 */}
+      {isLoading && <p className="text-center py-8 text-gray-500">로딩 중...</p>}
       {errorMsg && <p className="text-center py-8 text-red-500">{errorMsg}</p>}
       {!isLoading && !errorMsg && listData.length === 0 && (
         <p className="text-center py-8 text-gray-500">
@@ -277,7 +255,7 @@ export default function MatchingListPage() {
                     {item.matchingPostIdx}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                    {item.authorNickname}
+                    {item.nickname}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700">
                     {highlightText(item.title, searchTerm)}
