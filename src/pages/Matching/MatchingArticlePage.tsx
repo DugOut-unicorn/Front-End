@@ -226,7 +226,6 @@ export default function ArticleDetail() {
           {isCreatingChat ? "채팅방 생성 중..." : "채팅하기"}
         </button>
       </div>
-
     </div>
   );
 }
