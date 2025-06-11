@@ -17,6 +17,7 @@
     "@tailwindcss/vite": "^4.0.17",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.507.0",
     "react": "^19.0.0",
     "react-day-picker": "^9.6.7",
