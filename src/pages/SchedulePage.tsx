@@ -12,6 +12,18 @@ import { format } from "date-fns";
 import { aiApi } from "../api/ai/apis";
 import { AIPredictionResponse } from "../types/ai";
 
+// 구장 이름 매핑 테이블
+const STADIUM_NAME_MAP: Record<string, string> = {
+  "서울종합운동장 야구장": "잠실야구장",
+  "서울종합운동장 야구장 (두산)": "잠실야구장",
+  "서울종합운동장 야구장 (LG)": "잠실야구장",
+  인천SSG랜더스필드: "인천SSG랜더스필드",
+  대구삼성라이온즈파크: "대구삼성라이온즈파크",
+  수원KT위즈파크: "수원KT위즈파크",
+  광주기아챔피언스필드: "광주기아챔피언스필드",
+  대전한화생명볼파크: "대전 한화생명 볼파크",
+};
+
 // 팀 인덱스에 따른 구장 이름 매핑 함수
 const getStadiumNameByTeamIdx = (teamIdx: number): string => {
   const stadiumMap: Record<number, string> = {
@@ -192,7 +204,7 @@ export default function SchedulePage() {
               ? "종료"
               : "진행전",
         },
-        stadiumName: getStadiumNameByTeamIdx(game.homeTeamIdx),
+        stadiumName: STADIUM_NAME_MAP[game.stadiumName] || game.stadiumName,
         prediction: prediction
           ? {
               homeWinPercent: Math.round(prediction.winProbability),
