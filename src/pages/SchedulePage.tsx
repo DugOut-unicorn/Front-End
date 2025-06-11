@@ -9,20 +9,25 @@ import {
   getTeamLogoByIdx,
 } from "../hooks/TeamNameChanger";
 import { format } from "date-fns";
-import { Stadiums } from "../types/Stadium";
 import { aiApi } from "../api/ai/apis";
 import { AIPredictionResponse } from "../types/ai";
 
-// 구장 이름 매핑 테이블
-const STADIUM_NAME_MAP: Record<string, string> = {
-  "서울종합운동장 야구장": "잠실야구장",
-  "서울종합운동장 야구장 (두산)": "잠실야구장",
-  "서울종합운동장 야구장 (LG)": "잠실야구장",
-  인천SSG랜더스필드: "인천SSG랜더스필드",
-  대구삼성라이온즈파크: "대구삼성라이온즈파크",
-  수원KT위즈파크: "수원KT위즈파크",
-  광주기아챔피언스필드: "광주기아챔피언스필드",
-  대전한화생명볼파크: "대전 한화생명 볼파크",
+// 팀 인덱스에 따른 구장 이름 매핑 함수
+const getStadiumNameByTeamIdx = (teamIdx: number): string => {
+  const stadiumMap: Record<number, string> = {
+    1: "잠실야구장", // LG 트윈스
+    2: "인천SSG랜더스필드", // SSG 랜더스
+    3: "대구삼성라이온즈파크", // 삼성 라이온즈
+    4: "수원KT위즈파크", // KT 위즈
+    5: "사직야구장", // 롯데 자이언츠
+    6: "창원NC파크", // NC 다이노스
+    7: "잠실야구장", // 두산 베어스 (LG와 같은 구장)
+    8: "고척스카이돔", // 키움 히어로즈
+    9: "광주기아챔피언스필드", // KIA 타이거즈
+    10: "대전 한화생명 볼파크", // 한화 이글스
+  };
+
+  return stadiumMap[teamIdx] || "구장";
 };
 
 interface BaseGame {
@@ -140,9 +145,7 @@ export default function SchedulePage() {
               text: "경기 종료",
               type: "종료",
             },
-            stadiumName:
-              Stadiums.find(s => s.mappingNumber === game.homeTeamIdx)?.name ||
-              "구장",
+            stadiumName: getStadiumNameByTeamIdx(game.homeTeamIdx),
             result: {
               homeScore: game.homeScore,
               awayScore: game.awayScore,
@@ -189,7 +192,7 @@ export default function SchedulePage() {
               ? "종료"
               : "진행전",
         },
-        stadiumName: STADIUM_NAME_MAP[game.stadiumName] || game.stadiumName,
+        stadiumName: getStadiumNameByTeamIdx(game.homeTeamIdx),
         prediction: prediction
           ? {
               homeWinPercent: Math.round(prediction.winProbability),
