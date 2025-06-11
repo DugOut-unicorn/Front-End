@@ -79,7 +79,6 @@ function WriteContentInput({
 function TicketSelector({
   hasTicket,
   setHasTicket,
-  onVerify,
 }: {
   hasTicket: boolean | null;
   setHasTicket: (b: boolean) => void;
