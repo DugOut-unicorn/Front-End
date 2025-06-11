@@ -227,18 +227,7 @@ export default function ArticleDetail() {
         </button>
       </div>
 
-      {/* 이전/다음 글 네비게이션 (추후 API 연결 필요시 수정) */}
-      <div className="flex justify-center gap-8 border-t py-4 text-sm text-gray-400">
-        <button className="flex items-center gap-2 hover:underline">
-          <span className="text-base">〈</span>
-          <span>이전 글</span>
-        </button>
-        <span>|</span>
-        <button className="flex items-center gap-2 hover:underline">
-          <span>다음 글</span>
-          <span className="text-base">〉</span>
-        </button>
-      </div>
+
     </div>
   );
 }
